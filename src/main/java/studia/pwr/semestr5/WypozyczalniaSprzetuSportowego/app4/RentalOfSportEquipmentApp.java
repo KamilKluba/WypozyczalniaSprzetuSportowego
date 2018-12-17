@@ -1,3 +1,6 @@
+package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app4;
+
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Account;
 
 public class RentalOfSportEquipmentApp
 {
@@ -10,7 +13,7 @@ public class RentalOfSportEquipmentApp
 	
 
 	private static final String MAIN_MENU = 
-			"Witamy w wypo¿yczalni sprzêtu sportowego       \n" +
+			"Witamy w wypoï¿½yczalni sprzï¿½tu sportowego       \n" +
 			"1 - Utworz nowe konto           \n" +
 			"2 - Zaloguj sie jako klient     \n" + 
 			"3 - Zaloguj sie jako pracownik  \n" +

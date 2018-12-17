@@ -1,9 +1,11 @@
+package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app4;
+
 
 
 public interface UserDialog 
 {
   static final String ERROR_MESSAGE = 
-		  "B³êdne dane! \n Spróbuj ponownie.";
+		  "Bï¿½ï¿½dne dane! \n Sprï¿½buj ponownie.";
   
   public void printMessage(String message);
   

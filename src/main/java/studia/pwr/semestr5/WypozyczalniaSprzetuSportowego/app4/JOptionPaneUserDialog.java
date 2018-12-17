@@ -1,3 +1,5 @@
+package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app4;
+
 
 
 import javax.swing.JOptionPane;
@@ -77,8 +79,7 @@ public class JOptionPaneUserDialog implements UserDialog
     }
 	
 	
-    @Override
-	public float enterFloat(String prompt) {
+    public float enterFloat(String prompt) {
         boolean Error;
         float d = 0;
         do{
@@ -94,8 +95,7 @@ public class JOptionPaneUserDialog implements UserDialog
     }   
 	
 	
-    @Override
-	public double enterDouble(String prompt) {
+    public double enterDouble(String prompt) {
         boolean Error;
         double d = 0;
         do{
