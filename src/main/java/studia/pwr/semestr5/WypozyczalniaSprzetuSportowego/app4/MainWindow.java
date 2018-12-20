@@ -14,7 +14,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 public class MainWindow{
@@ -49,19 +51,35 @@ public class MainWindow{
 	JButton buttonReturnScreen;
 	
 	//elementy przegląania sprzętu
+	private List<Component> itemInfoScreenComponents;
 	JLabel labelLogo1;
+	JButton buttonLogin2;
+	JButton buttonCreateAccount2;
+	JButton buttonToCart;
+	JButton buttonSearch;
+	JButton buttonFilter;
+	JTextField textFieldItemName;
+	JPanel panelItems; //tutaj zaczynają się elementy scrollowalnego panelu
+	JScrollPane scrollPaneItemPanel;
+	List<JLabel> listOfAllItems;
+	
 	
 	
 	public MainWindow(){
-		initComponents();
+		initComponents(); //tylko tworzenie i dodawanie elementów do okna
+		initListeners(); //tworzenie i obsługa listenerów, 
 		
 		for(Component c : mainScreenComponents) c.setVisible(false);
-		for(Component c : createAccountScreenComponents) c.setVisible(true);
+		for(Component c : createAccountScreenComponents) c.setVisible(false);
+		for(Component c : itemInfoScreenComponents) c.setVisible(true);
+		
+		mainFrame.setVisible(true);
 	}
 	
 	private void initComponents(){
 		mainScreenComponents = new ArrayList<Component>();
 		createAccountScreenComponents = new ArrayList<Component>();
+		itemInfoScreenComponents = new ArrayList<Component>();
 		
 		//ELEMENTY EKRANU STARTOWEGO ------------------------------------------------------------------------------------
 		mainFrame = new JFrame("Wypozyczalnia sprzetu sportowego");
@@ -169,20 +187,6 @@ public class MainWindow{
 		textFieldLogin.setBounds(500, 250, 300, 40);
 		textFieldLogin.setFont(new Font("Times New Roman", Font.ITALIC, 14));
 		textFieldLogin.setForeground(Color.GRAY);
-		textFieldLogin.addFocusListener(new FocusListener(){
-			public void focusGained(FocusEvent e) {
-				textFieldLogin.setForeground(Color.BLACK);
-				textFieldLogin.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-				if(textFieldLogin.getText().equals("Login")) textFieldLogin.setText("");
-			}
-			public void focusLost(FocusEvent e) {
-				if(textFieldLogin.getText().equals("")){
-					textFieldLogin.setForeground(Color.GRAY);
-					textFieldLogin.setText("Login");
-					textFieldLogin.setFont(new Font("Times New Roman", Font.ITALIC, 14));
-				}
-			}
-		});
 		mainFrame.add(textFieldLogin);
 		createAccountScreenComponents.add(textFieldLogin);
 		
@@ -191,24 +195,6 @@ public class MainWindow{
 		passwordFieldPassword.setFont(new Font("Times New Roman", Font.ITALIC, 14));
 		passwordFieldPassword.setEchoChar((char)0);
 		passwordFieldPassword.setForeground(Color.GRAY);
-		passwordFieldPassword.addFocusListener(new FocusListener(){
-			@SuppressWarnings("deprecation")
-			public void focusGained(FocusEvent e) {
-				passwordFieldPassword.setEchoChar('*');
-				passwordFieldPassword.setForeground(Color.BLACK);
-				passwordFieldPassword.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-				if(passwordFieldPassword.getText().equals("Haslo")) passwordFieldPassword.setText("");
-			}
-			@SuppressWarnings("deprecation")
-			public void focusLost(FocusEvent e) {
-				if(passwordFieldPassword.getText().equals("")){
-					passwordFieldPassword.setEchoChar((char)0);
-					passwordFieldPassword.setForeground(Color.GRAY);
-					passwordFieldPassword.setText("Haslo");
-					passwordFieldPassword.setFont(new Font("Times New Roman", Font.ITALIC, 14));
-				}
-			}
-		});
 		mainFrame.add(passwordFieldPassword);
 		createAccountScreenComponents.add(passwordFieldPassword);
 		
@@ -239,8 +225,86 @@ public class MainWindow{
 		createAccountScreenComponents.add(buttonReturnScreen);
 		
 		//ELEMENTY EKRANU PRZEGLADANIA SPRZETU------------------------------------------------------------------------------------
+		labelLogo1 = new JLabel();
+		labelLogo1.setBounds(500, 20, 400, 150);
+		labelLogo1.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		mainFrame.add(labelLogo1);
+		itemInfoScreenComponents.add(labelLogo1);
 		
-		mainFrame.setVisible(true);
+		buttonLogin2 = new JButton("Logowanie");
+		buttonLogin2.setBounds(1050, 50, 150, 30);
+		mainFrame.add(buttonLogin2);
+		itemInfoScreenComponents.add(buttonLogin2);
+		
+		buttonCreateAccount2 = new JButton("Logowanie");
+		buttonCreateAccount2.setBounds(1050, 100, 150, 30);
+		mainFrame.add(buttonCreateAccount2);
+		itemInfoScreenComponents.add(buttonCreateAccount2);
+		
+		buttonToCart = new JButton("Koszyk");
+		buttonToCart.setBounds(1050, 150, 150, 30);
+		mainFrame.add(buttonToCart);
+		itemInfoScreenComponents.add(buttonToCart);
+		
+		buttonSearch = new JButton("Szukaj");
+		buttonSearch.setBounds(50, 100, 100, 30);
+		mainFrame.add(buttonSearch);
+		itemInfoScreenComponents.add(buttonSearch);
+		
+		buttonFilter = new JButton("Filtrowanie");
+		buttonFilter.setBounds(200, 100, 100, 30);
+		mainFrame.add(buttonFilter);
+		itemInfoScreenComponents.add(buttonFilter);
+		
+		textFieldItemName = new JTextField();
+		textFieldItemName.setBounds(50, 50, 350, 30);
+		mainFrame.add(textFieldItemName);
+		itemInfoScreenComponents.add(textFieldItemName);
+		
+		panelItems = new JPanel();
+		panelItems.setBackground(Color.PINK);
+		
+		scrollPaneItemPanel = new JScrollPane();
+		scrollPaneItemPanel.setViewportView(panelItems);
+		scrollPaneItemPanel.setBounds(50, 200, 1170, 450);
+		mainFrame.add(scrollPaneItemPanel);
+		itemInfoScreenComponents.add(scrollPaneItemPanel);
+		
+	}
+	
+	private void initListeners(){
+		textFieldLogin.addFocusListener(new FocusListener(){
+			public void focusGained(FocusEvent e) {
+				textFieldLogin.setForeground(Color.BLACK);
+				textFieldLogin.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+				if(textFieldLogin.getText().equals("Login")) textFieldLogin.setText("");
+			}
+			public void focusLost(FocusEvent e) {
+				if(textFieldLogin.getText().equals("")){
+					textFieldLogin.setForeground(Color.GRAY);
+					textFieldLogin.setText("Login");
+					textFieldLogin.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+				}
+			}
+		});
+		passwordFieldPassword.addFocusListener(new FocusListener(){
+			@SuppressWarnings("deprecation")
+			public void focusGained(FocusEvent e) {
+				passwordFieldPassword.setEchoChar('*');
+				passwordFieldPassword.setForeground(Color.BLACK);
+				passwordFieldPassword.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+				if(passwordFieldPassword.getText().equals("Haslo")) passwordFieldPassword.setText("");
+			}
+			@SuppressWarnings("deprecation")
+			public void focusLost(FocusEvent e) {
+				if(passwordFieldPassword.getText().equals("")){
+					passwordFieldPassword.setEchoChar((char)0);
+					passwordFieldPassword.setForeground(Color.GRAY);
+					passwordFieldPassword.setText("Haslo");
+					passwordFieldPassword.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+				}
+			}
+		});
 	}
 	
 	private void setStartScreenVisible(){
