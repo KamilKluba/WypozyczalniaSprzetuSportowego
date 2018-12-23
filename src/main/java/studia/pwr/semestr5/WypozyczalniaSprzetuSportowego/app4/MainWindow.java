@@ -4,20 +4,30 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.toedter.calendar.JCalendar;
 
 public class MainWindow{
 	private JFrame mainFrame;
@@ -41,44 +51,57 @@ public class MainWindow{
 	JLabel labelPopularItemDesc5;
 	
 	//elementy ekranu logowania
-	private List<Component> createAccountScreenComponents;
+	private List<Component> loginScreenComponents;
 	JTextField textFieldLogin;
 	JPasswordField passwordFieldPassword;
 	JCheckBox checkBoxShowPassword;
 	JButton buttonLogin1;
 	JButton buttonRemindPassword;
 	JButton buttonCreateAccount1;
-	JButton buttonReturnScreen;
+	JButton buttonReturnToMainScreen;
 	
 	//elementy przegląania sprzętu
-	private List<Component> itemInfoScreenComponents;
+	private List<Component> itemBrowseScreenComponents;
 	JLabel labelLogo1;
 	JButton buttonLogin2;
 	JButton buttonCreateAccount2;
 	JButton buttonToCart;
 	JButton buttonSearch;
 	JButton buttonFilter;
+	JButton buttonReturnToMainScreen2;
 	JTextField textFieldItemName;
 	JPanel panelItems; //tutaj zaczynają się elementy scrollowalnego panelu
 	JScrollPane scrollPaneItemPanel;
 	List<JLabel> listOfAllItems;
 	
-	
+	//elementy ekranu dla każdego ze sprzętów
+	private List<Component> itemInfoScreenComponents;
+	JLabel labelLogo2;
+	JButton buttonReturnToBrowse;
+	JButton buttonLogin3;
+	JButton buttonCreateAccount3;
+	JButton buttonToCart2;
+	JLabel labelItemPhoto;
+	JButton buttonAddToCart;
+	JTextArea textAreaItemDescription;
+	JCalendar calendar;
 	
 	public MainWindow(){
 		initComponents(); //tylko tworzenie i dodawanie elementów do okna
 		initListeners(); //tworzenie i obsługa listenerów, 
 		
-		for(Component c : mainScreenComponents) c.setVisible(false);
-		for(Component c : createAccountScreenComponents) c.setVisible(false);
-		for(Component c : itemInfoScreenComponents) c.setVisible(true);
+		for(Component c : mainScreenComponents) c.setVisible(true);
+		for(Component c : loginScreenComponents) c.setVisible(false);
+		for(Component c : itemBrowseScreenComponents) c.setVisible(false);
+		for(Component c : itemInfoScreenComponents) c.setVisible(false);
 		
 		mainFrame.setVisible(true);
 	}
 	
 	private void initComponents(){
 		mainScreenComponents = new ArrayList<Component>();
-		createAccountScreenComponents = new ArrayList<Component>();
+		loginScreenComponents = new ArrayList<Component>();
+		itemBrowseScreenComponents = new ArrayList<Component>();
 		itemInfoScreenComponents = new ArrayList<Component>();
 		
 		//ELEMENTY EKRANU STARTOWEGO ------------------------------------------------------------------------------------
@@ -182,13 +205,13 @@ public class MainWindow{
 		mainFrame.add(labelPopularItemDesc5);
 		mainScreenComponents.add(labelPopularItemDesc5);
 		
-		//ELEMENTY EKRANU TWORZENIA KONTA  ------------------------------------------------------------------------------------
+		//ELEMENTY EKRANU LOGOWANIA ------------------------------------------------------------------------------------
 		textFieldLogin = new JTextField("Login");
 		textFieldLogin.setBounds(500, 250, 300, 40);
 		textFieldLogin.setFont(new Font("Times New Roman", Font.ITALIC, 14));
 		textFieldLogin.setForeground(Color.GRAY);
 		mainFrame.add(textFieldLogin);
-		createAccountScreenComponents.add(textFieldLogin);
+		loginScreenComponents.add(textFieldLogin);
 		
 		passwordFieldPassword = new JPasswordField("Haslo");
 		passwordFieldPassword.setBounds(500, 300, 300, 40);
@@ -196,70 +219,74 @@ public class MainWindow{
 		passwordFieldPassword.setEchoChar((char)0);
 		passwordFieldPassword.setForeground(Color.GRAY);
 		mainFrame.add(passwordFieldPassword);
-		createAccountScreenComponents.add(passwordFieldPassword);
+		loginScreenComponents.add(passwordFieldPassword);
 		
 		checkBoxShowPassword = new JCheckBox("Pokaż hasło");
 		checkBoxShowPassword.setBounds(810, 305, 150, 30);
 		mainFrame.add(checkBoxShowPassword);
-		createAccountScreenComponents.add(checkBoxShowPassword);
+		loginScreenComponents.add(checkBoxShowPassword);
 		
 		buttonLogin1 = new JButton("Zaloguj się");
 		buttonLogin1.setBounds(600, 350, 100, 40);
-		buttonLogin1.requestFocus(); //tylko po ro zeby na textfieldach byl szary tekst
 		mainFrame.add(buttonLogin1);
-		createAccountScreenComponents.add(buttonLogin1);
+		loginScreenComponents.add(buttonLogin1);
 		
 		buttonCreateAccount1 = new JButton("Utwórz konto");
 		buttonCreateAccount1.setBounds(590, 550, 120, 40);
 		mainFrame.add(buttonCreateAccount1);
-		createAccountScreenComponents.add(buttonCreateAccount1);
+		loginScreenComponents.add(buttonCreateAccount1);
 		
 		buttonRemindPassword = new JButton("Zapomniałem hasła");
 		buttonRemindPassword.setBounds(350, 550, 200, 40);
 		mainFrame.add(buttonRemindPassword);
-		createAccountScreenComponents.add(buttonRemindPassword);
+		loginScreenComponents.add(buttonRemindPassword);
 		
-		buttonReturnScreen = new JButton("Powrót do ekranu głównego");
-		buttonReturnScreen.setBounds(750, 550, 200, 40);
-		mainFrame.add(buttonReturnScreen);
-		createAccountScreenComponents.add(buttonReturnScreen);
+		buttonReturnToMainScreen = new JButton("Powrót do ekranu głównego");
+		buttonReturnToMainScreen.setBounds(750, 550, 200, 40);
+		mainFrame.add(buttonReturnToMainScreen);
+		loginScreenComponents.add(buttonReturnToMainScreen);
 		
 		//ELEMENTY EKRANU PRZEGLADANIA SPRZETU------------------------------------------------------------------------------------
 		labelLogo1 = new JLabel();
 		labelLogo1.setBounds(500, 20, 400, 150);
 		labelLogo1.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
 		mainFrame.add(labelLogo1);
-		itemInfoScreenComponents.add(labelLogo1);
+		itemBrowseScreenComponents.add(labelLogo1);
 		
 		buttonLogin2 = new JButton("Logowanie");
 		buttonLogin2.setBounds(1050, 50, 150, 30);
 		mainFrame.add(buttonLogin2);
-		itemInfoScreenComponents.add(buttonLogin2);
+		itemBrowseScreenComponents.add(buttonLogin2);
 		
-		buttonCreateAccount2 = new JButton("Logowanie");
+		buttonCreateAccount2 = new JButton("Utwórz konto");
 		buttonCreateAccount2.setBounds(1050, 100, 150, 30);
 		mainFrame.add(buttonCreateAccount2);
-		itemInfoScreenComponents.add(buttonCreateAccount2);
+		itemBrowseScreenComponents.add(buttonCreateAccount2);
 		
 		buttonToCart = new JButton("Koszyk");
 		buttonToCart.setBounds(1050, 150, 150, 30);
 		mainFrame.add(buttonToCart);
-		itemInfoScreenComponents.add(buttonToCart);
+		itemBrowseScreenComponents.add(buttonToCart);
 		
 		buttonSearch = new JButton("Szukaj");
-		buttonSearch.setBounds(50, 100, 100, 30);
+		buttonSearch.setBounds(50, 150, 100, 30);
 		mainFrame.add(buttonSearch);
-		itemInfoScreenComponents.add(buttonSearch);
+		itemBrowseScreenComponents.add(buttonSearch);
 		
 		buttonFilter = new JButton("Filtrowanie");
-		buttonFilter.setBounds(200, 100, 100, 30);
+		buttonFilter.setBounds(200, 150, 100, 30);
 		mainFrame.add(buttonFilter);
-		itemInfoScreenComponents.add(buttonFilter);
+		itemBrowseScreenComponents.add(buttonFilter);
+		
+		buttonReturnToMainScreen2 = new JButton("Powrót do ekranu głównego");
+		buttonReturnToMainScreen2.setBounds(250, 20, 200, 30);
+		mainFrame.add(buttonReturnToMainScreen2);
+		itemBrowseScreenComponents.add(buttonReturnToMainScreen2);
 		
 		textFieldItemName = new JTextField();
-		textFieldItemName.setBounds(50, 50, 350, 30);
+		textFieldItemName.setBounds(50, 100, 350, 30);
 		mainFrame.add(textFieldItemName);
-		itemInfoScreenComponents.add(textFieldItemName);
+		itemBrowseScreenComponents.add(textFieldItemName);
 		
 		panelItems = new JPanel();
 		panelItems.setBackground(Color.PINK);
@@ -268,11 +295,99 @@ public class MainWindow{
 		scrollPaneItemPanel.setViewportView(panelItems);
 		scrollPaneItemPanel.setBounds(50, 200, 1170, 450);
 		mainFrame.add(scrollPaneItemPanel);
-		itemInfoScreenComponents.add(scrollPaneItemPanel);
+		itemBrowseScreenComponents.add(scrollPaneItemPanel);
+		
+		//ELEMENTY SZEGÓŁÓW KAŻDEGO ZE SPRZĘTÓW
+		labelLogo2 = new JLabel();
+		labelLogo2.setBounds(500, 20, 400, 150);
+		labelLogo2.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		mainFrame.add(labelLogo2);
+		itemInfoScreenComponents.add(labelLogo2);
+		
+		buttonReturnToBrowse = new JButton("Powrót do przeglądania sprzętu");
+		buttonReturnToBrowse.setBounds(50, 50, 250, 30);
+		mainFrame.add(buttonReturnToBrowse);
+		itemInfoScreenComponents.add(buttonReturnToBrowse);
+		
+		buttonLogin3 = new JButton("Logowanie");
+		buttonLogin3.setBounds(1050, 50, 150, 30);
+		mainFrame.add(buttonLogin3);
+		itemInfoScreenComponents.add(buttonLogin3);
+		
+		buttonCreateAccount3 = new JButton("Utwórz konto");
+		buttonCreateAccount3.setBounds(1050, 100, 150, 30);
+		mainFrame.add(buttonCreateAccount3);
+		itemInfoScreenComponents.add(buttonCreateAccount3);
+		
+		buttonToCart2 = new JButton("Koszyk");
+		buttonToCart2.setBounds(1050, 150, 150, 30);
+		mainFrame.add(buttonToCart2);
+		itemInfoScreenComponents.add(buttonToCart2);
+		
+		labelItemPhoto = new JLabel();
+		labelItemPhoto.setBounds(50, 200, 150, 150);
+		labelItemPhoto.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		mainFrame.add(labelItemPhoto);
+		itemInfoScreenComponents.add(labelItemPhoto);
+		
+		buttonAddToCart = new JButton("Dodaj do koszyka");
+		buttonAddToCart.setBounds(220, 320, 150, 30);
+		mainFrame.add(buttonAddToCart);
+		itemInfoScreenComponents.add(buttonAddToCart);
+		
+		textAreaItemDescription = new JTextArea();
+		textAreaItemDescription.setBounds(50, 370, 1170, 450);
+		textAreaItemDescription.setEnabled(false);
+		mainFrame.add(textAreaItemDescription);
+		itemInfoScreenComponents.add(textAreaItemDescription);
+		
+		calendar = new JCalendar();
+		calendar.setBounds(900, 200, 300, 150);
+		calendar.setMinSelectableDate(Calendar.getInstance().getTime());
+		mainFrame.add(calendar);
+		itemInfoScreenComponents.add(calendar);
 		
 	}
 	
 	private void initListeners(){
+		//listenery ekranu głównego-------------------------------------------------------------------------------------------
+		buttonLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(Component c : mainScreenComponents) c.setVisible(false);
+				for(Component c : loginScreenComponents) c.setVisible(true);
+				buttonLogin1.requestFocus(); //tylko po ro zeby na textfieldach byl szary tekst
+			}
+		});
+		buttonBrowseEquipment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(Component c : mainScreenComponents) c.setVisible(false);
+				for(Component c : itemBrowseScreenComponents) c.setVisible(true);
+			}
+		});
+		buttonCreateAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createAccount();
+			}
+		});
+		buttonFirmInfo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(mainFrame, "Jeszcze sie napisze");
+			}
+		});
+		//listenery ekranu logowania------------------------------------------------------------------------------------------
+		buttonReturnToMainScreen.addActionListener(new ActionListener() {		
+			public void actionPerformed(ActionEvent e) {
+				for(Component c : loginScreenComponents) c.setVisible(false);
+				for(Component c : mainScreenComponents) c.setVisible(true);
+				textFieldLogin.setForeground(Color.GRAY);
+				textFieldLogin.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+				textFieldLogin.setText("Login");
+				passwordFieldPassword.setForeground(Color.GRAY);
+				passwordFieldPassword.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+				passwordFieldPassword.setEchoChar((char)0);
+				passwordFieldPassword.setText("Haslo");
+			}
+		});
 		textFieldLogin.addFocusListener(new FocusListener(){
 			public void focusGained(FocusEvent e) {
 				textFieldLogin.setForeground(Color.BLACK);
@@ -305,6 +420,26 @@ public class MainWindow{
 				}
 			}
 		});
+		
+
+		//listenery ekranu przegląania sprzętu--------------------------------------------------------------------------------
+		buttonReturnToMainScreen2.addActionListener(new ActionListener() {		
+			public void actionPerformed(ActionEvent e) {
+				for(Component c : itemBrowseScreenComponents) c.setVisible(false);
+				for(Component c : mainScreenComponents) c.setVisible(true);
+			}
+		});
+
+		//listenery ekranu informacji o sprzęcie--------------------------------------------------------------------------------
+	}
+	
+	private void createAccount(){
+		JDialog dialogCreateAccount = new JDialog();
+		dialogCreateAccount.setSize(new Dimension(600,600));
+		dialogCreateAccount.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialogCreateAccount.setResizable(false);
+		dialogCreateAccount.setModal(true);
+		dialogCreateAccount.setVisible(true);
 	}
 	
 	private void setStartScreenVisible(){
