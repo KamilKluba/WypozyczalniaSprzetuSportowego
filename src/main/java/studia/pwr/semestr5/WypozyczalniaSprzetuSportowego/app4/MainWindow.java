@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -388,6 +392,7 @@ public class MainWindow{
 				passwordFieldPassword.setText("Haslo");
 			}
 		});
+		
 		textFieldLogin.addFocusListener(new FocusListener(){
 			public void focusGained(FocusEvent e) {
 				textFieldLogin.setForeground(Color.BLACK);
@@ -402,6 +407,7 @@ public class MainWindow{
 				}
 			}
 		});
+		
 		passwordFieldPassword.addFocusListener(new FocusListener(){
 			@SuppressWarnings("deprecation")
 			public void focusGained(FocusEvent e) {
@@ -421,12 +427,86 @@ public class MainWindow{
 			}
 		});
 		
+		buttonCreateAccount1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				createAccount();
+			}
+		});
+		
+		buttonRemindPassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				remindPassword();
+			}
+		});
 
+		buttonLogin1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				logIn();
+			}
+		});
+		
+		checkBoxShowPassword.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
+			public void actionPerformed(ActionEvent e) {
+				if(!passwordFieldPassword.getText().equals("Haslo"))
+					if(checkBoxShowPassword.isSelected()) passwordFieldPassword.setEchoChar((char)0);
+					else passwordFieldPassword.setEchoChar('*');
+			}
+		});
+		
+		passwordFieldPassword.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {
+				checkBoxShowPassword.setSelected(false);
+			}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {}
+		});
+		passwordFieldPassword.addKeyListener(new KeyListener() {		
+			public void keyTyped(KeyEvent e) {}
+			public void keyReleased(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {
+				checkBoxShowPassword.setSelected(false);
+			}
+		});
+		
 		//listenery ekranu przegląania sprzętu--------------------------------------------------------------------------------
 		buttonReturnToMainScreen2.addActionListener(new ActionListener() {		
 			public void actionPerformed(ActionEvent e) {
 				for(Component c : itemBrowseScreenComponents) c.setVisible(false);
 				for(Component c : mainScreenComponents) c.setVisible(true);
+			}
+		});
+		
+		buttonLogin2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(Component c : itemBrowseScreenComponents) c.setVisible(false);
+				for(Component c : loginScreenComponents) c.setVisible(true);
+			}
+		});
+		
+		buttonCreateAccount2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createAccount();
+			}
+		});
+		
+		buttonToCart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				toCart();
+			}
+		});
+		
+		buttonSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				searchInAssortment();
+			}
+		});
+		
+		buttonFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterAssortment();
 			}
 		});
 
@@ -435,15 +515,104 @@ public class MainWindow{
 	
 	private void createAccount(){
 		JDialog dialogCreateAccount = new JDialog();
-		dialogCreateAccount.setSize(new Dimension(600,600));
+		dialogCreateAccount.setTitle("Tworzenie konta");
+		dialogCreateAccount.setSize(new Dimension(370,330));
 		dialogCreateAccount.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialogCreateAccount.setResizable(false);
 		dialogCreateAccount.setModal(true);
+		dialogCreateAccount.setLayout(null);
+
+		JLabel label_login = new JLabel("Login:");
+		label_login.setBounds(30, 30, 150, 30);
+		dialogCreateAccount.add(label_login);
+		
+		JTextField textField_login = new JTextField();
+		textField_login.setBounds(180, 30, 150, 30);
+		dialogCreateAccount.add(textField_login);
+		
+		JLabel label_password = new JLabel("Hasło:");
+		label_password.setBounds(30, 70, 150, 30);
+		dialogCreateAccount.add(label_password);
+		
+		final JPasswordField passwordField_password = new JPasswordField();
+		passwordField_password.setBounds(180, 70, 150, 30);
+		passwordField_password.setEchoChar('*');
+		dialogCreateAccount.add(passwordField_password);
+		
+		JLabel label_repeat_password = new JLabel("Powtórz hasło:");
+		label_repeat_password.setBounds(30, 110, 150, 30);
+		dialogCreateAccount.add(label_repeat_password);
+		
+		final JPasswordField passwordField_repeat_password = new JPasswordField();
+		passwordField_repeat_password.setBounds(180, 110, 150, 30);
+		passwordField_repeat_password.setEchoChar('*');
+		dialogCreateAccount.add(passwordField_repeat_password);
+		
+		JLabel label_show_password = new JLabel("Pokaz haslo:");
+		label_show_password.setBounds(200, 140, 100, 30);
+		dialogCreateAccount.add(label_show_password);
+		
+		final JCheckBox checkBox_show_password = new JCheckBox();
+		checkBox_show_password.setBounds(280, 145, 20, 20);
+		checkBox_show_password.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (checkBox_show_password.isSelected()){
+					passwordField_password.setEchoChar((char)0);
+					passwordField_repeat_password.setEchoChar((char)0);
+				}
+				else{
+					passwordField_password.setEchoChar('*');
+					passwordField_repeat_password.setEchoChar('*');
+				}
+			}
+		});
+		dialogCreateAccount.add(checkBox_show_password);
+		
+		JLabel label_security_question = new JLabel("Pytanie bezpieczeństwa:");
+		label_security_question.setBounds(30, 170, 150, 30);
+		dialogCreateAccount.add(label_security_question);
+		
+		JTextField textField_security_question = new JTextField();
+		textField_security_question.setBounds(180, 170, 150, 30);
+		dialogCreateAccount.add(textField_security_question);
+
+		JLabel label_security_answer = new JLabel("Odpowiedz:");
+		label_security_answer.setBounds(30, 210, 150, 30);
+		dialogCreateAccount.add(label_security_answer);
+		
+		JTextField textField_security_answer = new JTextField();
+		textField_security_answer.setBounds(180, 210, 150, 30);
+		dialogCreateAccount.add(textField_security_answer);
+		
+		JButton button_create_account = new JButton("Utworz");
+		button_create_account.setBounds(90, 250, 80, 30);
+		dialogCreateAccount.add(button_create_account);
+		
+		JButton button_cancel = new JButton("Anuluj");
+		button_cancel.setBounds(180, 250, 80, 30);
+		dialogCreateAccount.add(button_cancel);
+		
 		dialogCreateAccount.setVisible(true);
 	}
 	
-	private void setStartScreenVisible(){
-		
+	private void remindPassword(){
+		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+	}
+	
+	private void logIn(){
+		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+	}
+	
+	private void toCart(){
+		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+	}
+	
+	private void searchInAssortment(){
+		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+	}
+	
+	private void filterAssortment(){
+		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
 	}
 	
 }
