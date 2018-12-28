@@ -33,8 +33,20 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JCalendar;
 
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Account;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Address;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Client;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Person;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Worker;
+
 public class MainWindow{
 	private JFrame mainFrame;
+	
+	ArrayList<Client> arrayListClients;
+	ArrayList<Worker> arrayListWorkers;
+	ArrayList<Person> arrayListPeople;
+	ArrayList<Account> arrayListAccounts;
+	ArrayList<Address> arrayListAddresses;
 	
 	//elementy ekranu startowego aplikacji
 	private List<Component> mainScreenComponents;
@@ -91,6 +103,7 @@ public class MainWindow{
 	JCalendar calendar;
 	
 	public MainWindow(){
+		initArrays();
 		initComponents(); //tylko tworzenie i dodawanie elementów do okna
 		initListeners(); //tworzenie i obsługa listenerów, 
 		
@@ -102,12 +115,20 @@ public class MainWindow{
 		mainFrame.setVisible(true);
 	}
 	
-	private void initComponents(){
+	private void initArrays(){
+		arrayListClients = new ArrayList<Client>();
+		arrayListWorkers = new ArrayList<Worker>();
+		arrayListPeople = new ArrayList<Person>();
+		arrayListAccounts = new ArrayList<Account>();
+		arrayListAddresses = new ArrayList<Address>();
+		
 		mainScreenComponents = new ArrayList<Component>();
 		loginScreenComponents = new ArrayList<Component>();
 		itemBrowseScreenComponents = new ArrayList<Component>();
 		itemInfoScreenComponents = new ArrayList<Component>();
-		
+	}
+	
+	private void initComponents(){		
 		//ELEMENTY EKRANU STARTOWEGO ------------------------------------------------------------------------------------
 		mainFrame = new JFrame("Wypozyczalnia sprzetu sportowego");
 		mainFrame.setSize(new Dimension(1280,720));
@@ -409,16 +430,14 @@ public class MainWindow{
 		});
 		
 		passwordFieldPassword.addFocusListener(new FocusListener(){
-			@SuppressWarnings("deprecation")
 			public void focusGained(FocusEvent e) {
 				passwordFieldPassword.setEchoChar('*');
 				passwordFieldPassword.setForeground(Color.BLACK);
 				passwordFieldPassword.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-				if(passwordFieldPassword.getText().equals("Haslo")) passwordFieldPassword.setText("");
+				if(String.valueOf(passwordFieldPassword.getPassword()).equals("Haslo")) passwordFieldPassword.setText("");
 			}
-			@SuppressWarnings("deprecation")
 			public void focusLost(FocusEvent e) {
-				if(passwordFieldPassword.getText().equals("")){
+				if(String.valueOf(passwordFieldPassword.getPassword()).equals("")){
 					passwordFieldPassword.setEchoChar((char)0);
 					passwordFieldPassword.setForeground(Color.GRAY);
 					passwordFieldPassword.setText("Haslo");
@@ -514,35 +533,32 @@ public class MainWindow{
 	}
 	
 	private void createAccount(){
-		JDialog dialogCreateAccount = new JDialog();
+		final JDialog dialogCreateAccount = new JDialog();
 		dialogCreateAccount.setTitle("Tworzenie konta");
-		dialogCreateAccount.setSize(new Dimension(370,330));
+		dialogCreateAccount.setSize(new Dimension(700,400));
 		dialogCreateAccount.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialogCreateAccount.setResizable(false);
 		dialogCreateAccount.setModal(true);
 		dialogCreateAccount.setLayout(null);
 
-		JLabel label_login = new JLabel("Login:");
+		JLabel label_login = new JLabel("Login:*");
 		label_login.setBounds(30, 30, 150, 30);
 		dialogCreateAccount.add(label_login);
-		
-		JTextField textField_login = new JTextField();
+		final JTextField textField_login = new JTextField();
 		textField_login.setBounds(180, 30, 150, 30);
 		dialogCreateAccount.add(textField_login);
 		
-		JLabel label_password = new JLabel("Hasło:");
+		JLabel label_password = new JLabel("Hasło:*");
 		label_password.setBounds(30, 70, 150, 30);
 		dialogCreateAccount.add(label_password);
-		
 		final JPasswordField passwordField_password = new JPasswordField();
 		passwordField_password.setBounds(180, 70, 150, 30);
 		passwordField_password.setEchoChar('*');
 		dialogCreateAccount.add(passwordField_password);
 		
-		JLabel label_repeat_password = new JLabel("Powtórz hasło:");
+		JLabel label_repeat_password = new JLabel("Powtórz hasło:*");
 		label_repeat_password.setBounds(30, 110, 150, 30);
-		dialogCreateAccount.add(label_repeat_password);
-		
+		dialogCreateAccount.add(label_repeat_password);		
 		final JPasswordField passwordField_repeat_password = new JPasswordField();
 		passwordField_repeat_password.setBounds(180, 110, 150, 30);
 		passwordField_repeat_password.setEchoChar('*');
@@ -550,8 +566,7 @@ public class MainWindow{
 		
 		JLabel label_show_password = new JLabel("Pokaz haslo:");
 		label_show_password.setBounds(200, 140, 100, 30);
-		dialogCreateAccount.add(label_show_password);
-		
+		dialogCreateAccount.add(label_show_password);	
 		final JCheckBox checkBox_show_password = new JCheckBox();
 		checkBox_show_password.setBounds(280, 145, 20, 20);
 		checkBox_show_password.addActionListener(new ActionListener() {
@@ -568,30 +583,126 @@ public class MainWindow{
 		});
 		dialogCreateAccount.add(checkBox_show_password);
 		
-		JLabel label_security_question = new JLabel("Pytanie bezpieczeństwa:");
+		JLabel label_security_question = new JLabel("Pytanie bezpieczeństwa:*");
 		label_security_question.setBounds(30, 170, 150, 30);
 		dialogCreateAccount.add(label_security_question);
-		
-		JTextField textField_security_question = new JTextField();
+		final JTextField textField_security_question = new JTextField();
 		textField_security_question.setBounds(180, 170, 150, 30);
 		dialogCreateAccount.add(textField_security_question);
 
-		JLabel label_security_answer = new JLabel("Odpowiedz:");
+		JLabel label_security_answer = new JLabel("Odpowiedz:*");
 		label_security_answer.setBounds(30, 210, 150, 30);
 		dialogCreateAccount.add(label_security_answer);
-		
-		JTextField textField_security_answer = new JTextField();
+		final JTextField textField_security_answer = new JTextField();
 		textField_security_answer.setBounds(180, 210, 150, 30);
 		dialogCreateAccount.add(textField_security_answer);
 		
-		JButton button_create_account = new JButton("Utworz");
-		button_create_account.setBounds(90, 250, 80, 30);
-		dialogCreateAccount.add(button_create_account);
+		JLabel label_name = new JLabel("Imie:*");
+		label_name.setBounds(30, 250, 150, 30);
+		dialogCreateAccount.add(label_name);
+		final JTextField textField_name = new JTextField();
+		textField_name.setBounds(180, 250, 150, 30);
+		dialogCreateAccount.add(textField_name);
+		
+		JLabel label_last_name = new JLabel("Nazwisko:*");
+		label_last_name.setBounds(30, 290, 150, 30);
+		dialogCreateAccount.add(label_last_name);
+		final JTextField textField_last_name = new JTextField();
+		textField_last_name.setBounds(180, 290, 150, 30);
+		dialogCreateAccount.add(textField_last_name);
+		
+		JLabel label_birth_date = new JLabel("Data urodzenia:* **");
+		label_birth_date.setBounds(350, 30, 150, 30);
+		dialogCreateAccount.add(label_birth_date);
+		final JTextField textField_birth_date = new JTextField();
+		textField_birth_date.setBounds(500, 30, 150, 30);
+		dialogCreateAccount.add(textField_birth_date);
+		
+		JLabel label_city = new JLabel("Miasto:");
+		label_city.setBounds(350, 70, 150, 30);
+		dialogCreateAccount.add(label_city);
+		final JTextField textField_city = new JTextField();
+		textField_city.setBounds(500, 70, 150, 30);
+		dialogCreateAccount.add(textField_city);
+		
+		JLabel label_postal_code = new JLabel("Kod pocztowy:");
+		label_postal_code.setBounds(350, 110, 150, 30);
+		dialogCreateAccount.add(label_postal_code);
+		final JTextField textField_postal_code = new JTextField();
+		textField_postal_code.setBounds(500, 110, 150, 30);
+		dialogCreateAccount.add(textField_postal_code);
+		
+		JLabel label_street = new JLabel("Ulica:");
+		label_street.setBounds(350, 150, 150, 30);
+		dialogCreateAccount.add(label_street);	
+		final JTextField textField_street = new JTextField();
+		textField_street.setBounds(500, 150, 150, 30);
+		dialogCreateAccount.add(textField_street);
+		
+		JLabel label_house_number = new JLabel("Numer domu:");
+		label_house_number.setBounds(350, 190, 150, 30);
+		dialogCreateAccount.add(label_house_number);		
+		final JTextField textField_house_number = new JTextField();
+		textField_house_number.setBounds(500, 190, 150, 30);
+		dialogCreateAccount.add(textField_house_number);
+		
+		JLabel label_flat_number = new JLabel("Numer mieszkania:");
+		label_flat_number.setBounds(350, 230, 150, 30);
+		dialogCreateAccount.add(label_flat_number);	
+		final JTextField textField_flat_number = new JTextField();
+		textField_flat_number.setBounds(500, 230, 150, 30);
+		dialogCreateAccount.add(textField_flat_number);
+		
+		JLabel label_required_fields = new JLabel("* - wymagane pola       ** - format dd/mm/yyyy");
+		label_required_fields.setBounds(40, 340, 350, 30);
+		dialogCreateAccount.add(label_required_fields);
 		
 		JButton button_cancel = new JButton("Anuluj");
-		button_cancel.setBounds(180, 250, 80, 30);
+		button_cancel.setBounds(500, 310, 80, 30);
+		button_cancel.addActionListener(new ActionListener() {		
+			public void actionPerformed(ActionEvent e) {
+				dialogCreateAccount.dispose();
+			}
+		});
 		dialogCreateAccount.add(button_cancel);
 		
+		JButton button_create_account = new JButton("Utworz");
+		button_create_account.setBounds(410, 310, 80, 30);
+		button_create_account.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String login = textField_login.getText();
+				String password = String.valueOf(passwordField_password.getPassword());
+				String repeated_password = String.valueOf(passwordField_repeat_password.getPassword());
+				String security_question = textField_security_question.getText();
+				String security_answer = textField_security_answer.getText();
+				String name = textField_name.getText();
+				String last_name = textField_last_name.getText();
+				java.util.Date birth_date = null;
+						try{birth_date = new SimpleDateFormat("dd/MM/yyyy").parse(textField_birth_date.getText());} catch(Exception ex){ex.printStackTrace();}
+				String city = textField_city.getText();
+				String postal_code = textField_postal_code.getText();
+				String street = textField_street.getText();
+				String house_number = textField_house_number.getText();
+				String flat_number = textField_flat_number.getText();
+				
+				if(login.equals("")) JOptionPane.showMessageDialog(dialogCreateAccount, "Login nie moze byc pusty");
+				else if(password.equals("")) JOptionPane.showMessageDialog(dialogCreateAccount, "Haslo nie moze byc puste");
+				else if(!repeated_password.equals(password)) JOptionPane.showMessageDialog(dialogCreateAccount, "Hasla nie są takie same");
+				else if(security_question.equals("")) JOptionPane.showMessageDialog(dialogCreateAccount, "Pytanie pomocnicze nie moze byc puste");
+				else if(security_answer.equals("")) JOptionPane.showMessageDialog(dialogCreateAccount, "Odpowiedz na pytanie pomocnicze nie moze byc pusta");
+				else if(name.equals("")) JOptionPane.showMessageDialog(dialogCreateAccount, "Imie nie moze byc puste");
+				else if(last_name.equals("")) JOptionPane.showMessageDialog(dialogCreateAccount, "Nazwisko nie moze byc puste");
+				else if(birth_date == null) JOptionPane.showMessageDialog(dialogCreateAccount, "Data urodzenia nie moze byc pusta");
+				else {
+					arrayListAddresses.add(new Address(arrayListAddresses.size() + 1, city, postal_code, street, house_number, flat_number));
+					arrayListPeople.add(new Person(arrayListPeople.size() + 1, name, last_name, birth_date, arrayListAddresses.size(), login, password));
+				}
+				//Poza tym co tu jest trzeba dodać w klasie Person oraz bazie danych
+				//pytanie pomocnicze oraz odpowiedz na nie
+			}
+		});
+		dialogCreateAccount.add(button_create_account);
+
 		dialogCreateAccount.setVisible(true);
 	}
 	
