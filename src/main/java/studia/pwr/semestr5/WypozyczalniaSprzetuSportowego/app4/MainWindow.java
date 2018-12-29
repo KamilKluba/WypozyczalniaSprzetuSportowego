@@ -41,6 +41,7 @@ import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Worker;
 
 public class MainWindow {
 	private JFrame mainFrame;
+	private boolean loggedIn;
 
 	ArrayList<Client> arrayListClients;
 	ArrayList<Worker> arrayListWorkers;
@@ -65,21 +66,23 @@ public class MainWindow {
 	JLabel labelPopularItemDesc4;
 	JButton buttonPopularItemPhoto5;
 	JLabel labelPopularItemDesc5;
+	JLabel labelLoggedAs;
 
 	// elementy ekranu logowania
 	private List<Component> loginScreenComponents;
 	JTextField textFieldLogin;
 	JPasswordField passwordFieldPassword;
 	JCheckBox checkBoxShowPassword;
-	JButton buttonLogin1;
+	JButton buttonLogIn;
 	JButton buttonRemindPassword;
 	JButton buttonCreateAccount1;
 	JButton buttonReturnToMainScreen;
+	JLabel labelCorrectData;
 
 	// elementy przegląania sprzętu
 	private List<Component> itemBrowseScreenComponents;
 	JLabel labelLogo1;
-	JButton buttonLogin2;
+	JButton buttonLogin1;
 	JButton buttonCreateAccount2;
 	JButton buttonToCart;
 	JButton buttonSearch;
@@ -94,7 +97,7 @@ public class MainWindow {
 	private List<Component> itemInfoScreenComponents;
 	JLabel labelLogo2;
 	JButton buttonReturnToBrowse;
-	JButton buttonLogin3;
+	JButton buttonLogin2;
 	JButton buttonCreateAccount3;
 	JButton buttonToCart2;
 	JLabel labelItemPhoto;
@@ -103,7 +106,7 @@ public class MainWindow {
 	JCalendar calendar;
 
 	public MainWindow() {
-		initArrays();
+		initVariables();
 		initComponents(); // tylko tworzenie i dodawanie elementów do okna
 		initListeners(); // tworzenie i obsługa listenerów,
 
@@ -119,7 +122,9 @@ public class MainWindow {
 		mainFrame.setVisible(true);
 	}
 
-	private void initArrays() {
+	private void initVariables() {
+		loggedIn = false;
+
 		arrayListClients = new ArrayList<Client>();
 		arrayListWorkers = new ArrayList<Worker>();
 		arrayListPeople = new ArrayList<Person>();
@@ -235,6 +240,11 @@ public class MainWindow {
 		mainFrame.add(labelPopularItemDesc5);
 		mainScreenComponents.add(labelPopularItemDesc5);
 
+		labelLoggedAs = new JLabel();
+		labelLoggedAs.setBounds(30, 10, 150, 30);
+		mainFrame.add(labelLoggedAs);
+		mainScreenComponents.add(labelLoggedAs);
+
 		// ELEMENTY EKRANU LOGOWANIA
 		// ------------------------------------------------------------------------------------
 		textFieldLogin = new JTextField("Login");
@@ -257,10 +267,10 @@ public class MainWindow {
 		mainFrame.add(checkBoxShowPassword);
 		loginScreenComponents.add(checkBoxShowPassword);
 
-		buttonLogin1 = new JButton("Zaloguj się");
-		buttonLogin1.setBounds(600, 350, 100, 40);
-		mainFrame.add(buttonLogin1);
-		loginScreenComponents.add(buttonLogin1);
+		buttonLogIn = new JButton("Zaloguj się");
+		buttonLogIn.setBounds(600, 350, 100, 40);
+		mainFrame.add(buttonLogIn);
+		loginScreenComponents.add(buttonLogIn);
 
 		buttonCreateAccount1 = new JButton("Utwórz konto");
 		buttonCreateAccount1.setBounds(590, 550, 120, 40);
@@ -277,6 +287,11 @@ public class MainWindow {
 		mainFrame.add(buttonReturnToMainScreen);
 		loginScreenComponents.add(buttonReturnToMainScreen);
 
+		labelCorrectData = new JLabel();
+		labelCorrectData.setBounds(590, 420, 150, 30);
+		mainFrame.add(labelCorrectData);
+		loginScreenComponents.add(labelCorrectData);
+
 		// ELEMENTY EKRANU PRZEGLADANIA
 		// SPRZETU------------------------------------------------------------------------------------
 		labelLogo1 = new JLabel();
@@ -285,10 +300,10 @@ public class MainWindow {
 		mainFrame.add(labelLogo1);
 		itemBrowseScreenComponents.add(labelLogo1);
 
-		buttonLogin2 = new JButton("Logowanie");
-		buttonLogin2.setBounds(1050, 50, 150, 30);
-		mainFrame.add(buttonLogin2);
-		itemBrowseScreenComponents.add(buttonLogin2);
+		buttonLogin1 = new JButton("Logowanie");
+		buttonLogin1.setBounds(1050, 50, 150, 30);
+		mainFrame.add(buttonLogin1);
+		itemBrowseScreenComponents.add(buttonLogin1);
 
 		buttonCreateAccount2 = new JButton("Utwórz konto");
 		buttonCreateAccount2.setBounds(1050, 100, 150, 30);
@@ -341,10 +356,10 @@ public class MainWindow {
 		mainFrame.add(buttonReturnToBrowse);
 		itemInfoScreenComponents.add(buttonReturnToBrowse);
 
-		buttonLogin3 = new JButton("Logowanie");
-		buttonLogin3.setBounds(1050, 50, 150, 30);
-		mainFrame.add(buttonLogin3);
-		itemInfoScreenComponents.add(buttonLogin3);
+		buttonLogin2 = new JButton("Logowanie");
+		buttonLogin2.setBounds(1050, 50, 150, 30);
+		mainFrame.add(buttonLogin2);
+		itemInfoScreenComponents.add(buttonLogin2);
 
 		buttonCreateAccount3 = new JButton("Utwórz konto");
 		buttonCreateAccount3.setBounds(1050, 100, 150, 30);
@@ -386,12 +401,7 @@ public class MainWindow {
 		// głównego-------------------------------------------------------------------------------------------
 		buttonLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Component c : mainScreenComponents)
-					c.setVisible(false);
-				for (Component c : loginScreenComponents)
-					c.setVisible(true);
-				buttonLogin1.requestFocus(); // tylko po ro zeby na textfieldach
-												// byl szary tekst
+				loginScreen();
 			}
 		});
 		buttonBrowseEquipment.addActionListener(new ActionListener() {
@@ -479,7 +489,7 @@ public class MainWindow {
 			}
 		});
 
-		buttonLogin1.addActionListener(new ActionListener() {
+		buttonLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logIn();
 			}
@@ -536,12 +546,9 @@ public class MainWindow {
 			}
 		});
 
-		buttonLogin2.addActionListener(new ActionListener() {
+		buttonLogin1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Component c : itemBrowseScreenComponents)
-					c.setVisible(false);
-				for (Component c : loginScreenComponents)
-					c.setVisible(true);
+				loginScreen();
 			}
 		});
 
@@ -581,8 +588,66 @@ public class MainWindow {
 		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
 	}
 
+	private void loginScreen() {
+		if (!loggedIn) {
+			for (Component c : mainScreenComponents)
+				c.setVisible(false);
+			for (Component c : loginScreenComponents)
+				c.setVisible(true);
+			buttonLogIn.requestFocus(); // tylko po ro zeby na textfieldach
+										// byl szary tekst
+		}
+		
+		loggedIn = false;
+		labelLoggedAs.setText("");
+		buttonLogin.setText("Zaloguj");
+		buttonLogin1.setText("Zaloguj");
+		buttonLogin2.setText("Zaloguj");
+		buttonCreateAccount.setEnabled(true);
+		buttonCreateAccount2.setEnabled(true);
+		buttonCreateAccount3.setEnabled(true);
+	}
+
 	private void logIn() {
-		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+		String login = textFieldLogin.getText();
+		String password = String.valueOf(passwordFieldPassword.getPassword());
+		boolean correct = false;
+
+		for (Person p : arrayListPeople) {
+			if (p.getLogin().equals(login) && p.getPassword().equals(password)) {
+				correct = true;
+				break;
+			}
+			System.out.println(login + "  " + password + " " + p.getLogin() + " " + p.getPassword());
+		}
+
+		if (!correct)
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						labelCorrectData.setText("Błędny login lub hasło!");
+						Thread.sleep(3000);
+						labelCorrectData.setText("");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		else {
+			for (Component c : loginScreenComponents)
+				c.setVisible(false);
+			for (Component c : itemBrowseScreenComponents)
+				c.setVisible(true);
+
+			loggedIn = true;
+			labelLoggedAs.setText("Zalogowano jako: " + login);
+			buttonLogin.setText("Wyloguj");
+			buttonLogin1.setText("Wyloguj");
+			buttonLogin2.setText("Wyloguj");
+			buttonCreateAccount.setEnabled(false);
+			buttonCreateAccount2.setEnabled(false);
+			buttonCreateAccount3.setEnabled(false);
+		}
 	}
 
 	private void toCart() {
