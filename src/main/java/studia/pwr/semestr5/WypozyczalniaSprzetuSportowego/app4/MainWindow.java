@@ -585,7 +585,7 @@ public class MainWindow {
 	}
 
 	private void remindPassword() {
-		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+		new RemindPassword(this);
 	}
 
 	private void loginScreen() {
