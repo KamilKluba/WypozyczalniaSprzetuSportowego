@@ -1,9 +1,10 @@
 package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Asortment {
+public class Assortment {
 	private int itemID;
 	private Date pucharseDate;
 	private int loansNumber;
@@ -16,14 +17,13 @@ public class Asortment {
 	private List<Integer> listRepairsNumber;
 	private List<Integer> listMaintenancesNumber;
 
-	public Asortment() {
+	public Assortment() {
 		super();
 	}
 
 
-	public Asortment(int itemID, Date pucharseDate, int loansNumber, Date lastLoanDate, boolean availability,
-			Date nextMaintenanceDate, String condition, int modelID, List<Integer> listOrdersNumber,
-			List<Integer> listRepairsNumber, List<Integer> listMaintenancesNumber) {
+	public Assortment(int itemID, Date pucharseDate, int loansNumber, Date lastLoanDate, boolean availability,
+			Date nextMaintenanceDate, String condition, int modelID) {
 		super();
 		this.itemID = itemID;
 		this.pucharseDate = pucharseDate;
@@ -33,9 +33,9 @@ public class Asortment {
 		this.nextMaintenanceDate = nextMaintenanceDate;
 		this.condition = condition;
 		this.modelID = modelID;
-		this.listOrdersNumber = listOrdersNumber;
-		this.listRepairsNumber = listRepairsNumber;
-		this.listMaintenancesNumber = listMaintenancesNumber;
+		this.listOrdersNumber = new ArrayList<Integer>();
+		this.listRepairsNumber =  new ArrayList<Integer>();
+		this.listMaintenancesNumber =  new ArrayList<Integer>();
 	}
 
 
