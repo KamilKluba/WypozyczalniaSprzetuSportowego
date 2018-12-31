@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -12,8 +14,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -21,7 +21,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,13 +29,20 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 
 import com.toedter.calendar.JCalendar;
 
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Account;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Address;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Assortment;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Client;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.MaintenanceHistory;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Model;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.OrderHistory;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Person;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.RepairHistory;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Worker;
 
 public class MainWindow {
@@ -48,6 +54,11 @@ public class MainWindow {
 	ArrayList<Person> arrayListPeople;
 	ArrayList<Account> arrayListAccounts;
 	ArrayList<Address> arrayListAddresses;
+	ArrayList<Assortment> arrayListAssortment;
+	ArrayList<Model> arrayListModels;
+	ArrayList<OrderHistory> arrayListOrders;
+	ArrayList<MaintenanceHistory> arrayListMaintenances;
+	ArrayList<RepairHistory> arrayListRepairs;
 
 	// elementy ekranu startowego aplikacji
 	private List<Component> mainScreenComponents;
@@ -90,8 +101,10 @@ public class MainWindow {
 	JButton buttonReturnToMainScreen2;
 	JTextField textFieldItemName;
 	JPanel panelItems; // tutaj zaczynają się elementy scrollowalnego panelu
+	GridBagConstraints gridBagConstraints;
 	JScrollPane scrollPaneItemPanel;
-	List<JLabel> listOfAllItems;
+	List<JLabel> listOfAllItemsNames;
+	List<JButton> listOfAllButtonPhotos;
 
 	// elementy ekranu dla każdego ze sprzętów
 	private List<Component> itemInfoScreenComponents;
@@ -105,8 +118,12 @@ public class MainWindow {
 	JTextArea textAreaItemDescription;
 	JCalendar calendar;
 
+	// elementy widziane/nie widziane niezależnie od ekranu;
+	JButton buttonWorkerActions;
+
 	public MainWindow() {
 		initVariables();
+		new TestData(this);
 		initComponents(); // tylko tworzenie i dodawanie elementów do okna
 		initListeners(); // tworzenie i obsługa listenerów,
 
@@ -130,6 +147,11 @@ public class MainWindow {
 		arrayListPeople = new ArrayList<Person>();
 		arrayListAccounts = new ArrayList<Account>();
 		arrayListAddresses = new ArrayList<Address>();
+		arrayListAssortment = new ArrayList<Assortment>();
+		arrayListModels = new ArrayList<Model>();
+		arrayListOrders = new ArrayList<OrderHistory>();
+		arrayListMaintenances = new ArrayList<MaintenanceHistory>();
+		arrayListRepairs = new ArrayList<RepairHistory>();
 
 		mainScreenComponents = new ArrayList<Component>();
 		loginScreenComponents = new ArrayList<Component>();
@@ -241,7 +263,7 @@ public class MainWindow {
 		mainScreenComponents.add(labelPopularItemDesc5);
 
 		labelLoggedAs = new JLabel();
-		labelLoggedAs.setBounds(30, 10, 150, 30);
+		labelLoggedAs.setBounds(30, 650, 350, 30);
 		mainFrame.add(labelLoggedAs);
 		mainScreenComponents.add(labelLoggedAs);
 
@@ -336,13 +358,38 @@ public class MainWindow {
 		itemBrowseScreenComponents.add(textFieldItemName);
 
 		panelItems = new JPanel();
-		panelItems.setBackground(Color.PINK);
-
-		scrollPaneItemPanel = new JScrollPane();
-		scrollPaneItemPanel.setViewportView(panelItems);
+		panelItems.setSize(new Dimension(1170, 800));
+		panelItems.setBackground(Color.LIGHT_GRAY);
+		panelItems.setLayout(new GridBagLayout());
+		gridBagConstraints = new GridBagConstraints();
+		
+		scrollPaneItemPanel = new JScrollPane(panelItems);
 		scrollPaneItemPanel.setBounds(50, 200, 1170, 450);
 		mainFrame.add(scrollPaneItemPanel);
 		itemBrowseScreenComponents.add(scrollPaneItemPanel);
+		
+		listOfAllItemsNames = new ArrayList<JLabel>();
+		listOfAllButtonPhotos = new ArrayList<JButton>();
+		for (int i = 0; i < arrayListModels.size(); i++){
+			Model model = arrayListModels.get(i);
+			
+			JButton button_model = new JButton();
+			button_model.setPreferredSize(new Dimension(170,100));
+			button_model.setIcon(new ImageIcon(getClass().getResource("/Resources/przedmiot.png")));
+			//button_model.setBorderPainted(false);
+			button_model.setContentAreaFilled(false);
+			gridBagConstraints.gridx = i % 5;
+			gridBagConstraints.gridy = i / 5 * 2;
+			panelItems.add(button_model, gridBagConstraints);
+			listOfAllButtonPhotos.add(button_model);		
+			
+			JLabel label_model = new JLabel(model.getModelName(), SwingConstants.CENTER);			
+			label_model.setPreferredSize(new Dimension(200,30));
+			gridBagConstraints.gridx = i % 5;
+			gridBagConstraints.gridy = i / 5 * 2+ 1;
+			panelItems.add(label_model, gridBagConstraints);
+			listOfAllItemsNames.add(label_model);
+		}
 
 		// ELEMENTY SZEGÓŁÓW KAŻDEGO ZE SPRZĘTÓW
 		labelLogo2 = new JLabel();
@@ -394,6 +441,11 @@ public class MainWindow {
 		mainFrame.add(calendar);
 		itemInfoScreenComponents.add(calendar);
 
+		// ELEMENTY WIDZIANE/NIEWIDZIANE NIEZALEZNIE OD EKRANU
+		buttonWorkerActions = new JButton("Opcje pracownika");
+		buttonWorkerActions.setBounds(0, 0, 150, 30);
+		buttonWorkerActions.setVisible(false);
+		mainFrame.add(buttonWorkerActions);
 	}
 
 	private void initListeners() {
@@ -409,7 +461,7 @@ public class MainWindow {
 				for (Component c : mainScreenComponents)
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
-					c.setVisible(true);
+					c.setVisible(true);		
 			}
 		});
 		buttonCreateAccount.addActionListener(new ActionListener() {
@@ -578,6 +630,9 @@ public class MainWindow {
 
 		// listenery ekranu informacji o
 		// sprzęcie--------------------------------------------------------------------------------
+
+		// listenery elementow widzianych/niewidzianych niezaleznie od ekranu
+		// --------------------
 	}
 
 	private void createAccount() {
@@ -592,12 +647,16 @@ public class MainWindow {
 		if (!loggedIn) {
 			for (Component c : mainScreenComponents)
 				c.setVisible(false);
+			for (Component c : itemBrowseScreenComponents)
+				c.setVisible(false);
+			for (Component c : itemInfoScreenComponents)
+				c.setVisible(false);
 			for (Component c : loginScreenComponents)
 				c.setVisible(true);
 			buttonLogIn.requestFocus(); // tylko po ro zeby na textfieldach
 										// byl szary tekst
 		}
-		
+
 		loggedIn = false;
 		labelLoggedAs.setText("");
 		buttonLogin.setText("Zaloguj");
@@ -606,6 +665,7 @@ public class MainWindow {
 		buttonCreateAccount.setEnabled(true);
 		buttonCreateAccount2.setEnabled(true);
 		buttonCreateAccount3.setEnabled(true);
+		buttonWorkerActions.setVisible(false);
 	}
 
 	private void logIn() {
@@ -616,9 +676,13 @@ public class MainWindow {
 		for (Person p : arrayListPeople) {
 			if (p.getLogin().equals(login) && p.getPassword().equals(password)) {
 				correct = true;
+				for (Worker w : arrayListWorkers)
+					if (p.getPersonID() == w.getPersonID()) {
+						buttonWorkerActions.setVisible(true);
+						break;
+					}
 				break;
 			}
-			System.out.println(login + "  " + password + " " + p.getLogin() + " " + p.getPassword());
 		}
 
 		if (!correct)
@@ -702,4 +766,44 @@ public class MainWindow {
 		this.arrayListAddresses = arrayListAddresses;
 	}
 
+	public ArrayList<Assortment> getArrayListAssortment() {
+		return arrayListAssortment;
+	}
+
+	public void setArrayListAssortment(ArrayList<Assortment> arrayListAssortment) {
+		this.arrayListAssortment = arrayListAssortment;
+	}
+
+	public ArrayList<Model> getArrayListModels() {
+		return arrayListModels;
+	}
+
+	public void setArrayListModels(ArrayList<Model> arrayListModels) {
+		this.arrayListModels = arrayListModels;
+	}
+
+	public ArrayList<OrderHistory> getArrayListOrders() {
+		return arrayListOrders;
+	}
+
+	public void setArrayListOrders(ArrayList<OrderHistory> arrayListOrders) {
+		this.arrayListOrders = arrayListOrders;
+	}
+
+	public ArrayList<MaintenanceHistory> getArrayListMaintenances() {
+		return arrayListMaintenances;
+	}
+
+	public void setArrayListMaintenances(ArrayList<MaintenanceHistory> arrayListMaintenances) {
+		this.arrayListMaintenances = arrayListMaintenances;
+	}
+
+	public ArrayList<RepairHistory> getArrayListRepairs() {
+		return arrayListRepairs;
+	}
+
+	public void setArrayListRepairs(ArrayList<RepairHistory> arrayListRepairs) {
+		this.arrayListRepairs = arrayListRepairs;
+	}
+ 
 }
