@@ -111,7 +111,7 @@ public class RemindPassword {
 				
 				for(Person c : mainWindow.getArrayListPeople()){
 					if(c.getSecurityAnswer().equals(answer)){
-						labelRemindedPassword.setText("Haslo" + c.getPassword());
+						labelRemindedPassword.setText("Haslo: " + c.getPassword());
 						correct_answer = true;
 						break;
 					}
