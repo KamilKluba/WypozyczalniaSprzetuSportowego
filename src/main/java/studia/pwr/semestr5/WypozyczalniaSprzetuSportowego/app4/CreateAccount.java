@@ -246,6 +246,12 @@ public class CreateAccount {
 				else if (birth_date == null)
 					JOptionPane.showMessageDialog(dialogCreateAccount, "Data urodzenia nie moze byc pusta");
 				else {
+					for(Person p : mainWindow.getArrayListPeople())
+						if(p.getLogin().equals(login)){
+							JOptionPane.showMessageDialog(dialogCreateAccount, "Użytkownik o podanym nicku już istnieje!");
+							return;
+						}
+					
 					mainWindow.getArrayListAddresses().add(new Address(mainWindow.getArrayListAddresses().size() + 1,
 							city, postal_code, street, house_number, flat_number));
 					mainWindow.getArrayListPeople()
