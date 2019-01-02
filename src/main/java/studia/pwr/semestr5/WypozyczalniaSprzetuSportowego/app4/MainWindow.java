@@ -118,6 +118,15 @@ public class MainWindow {
 	JTextArea textAreaItemDescription;
 	JCalendar calendar;
 
+	// elementy ekranu akcji pracownika
+	private List<Component> workerActionsComponents;
+	JButton buttonReturnToMainScreen3;
+	JButton buttonBrowseOrders;
+	JButton buttonManageAccounts;
+	JButton buttonManageEqupiment;
+	JButton buttonCreateMaintenanceRepair;
+	JButton buttonLogOut;
+
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
 
@@ -134,6 +143,8 @@ public class MainWindow {
 		for (Component c : itemBrowseScreenComponents)
 			c.setVisible(false);
 		for (Component c : itemInfoScreenComponents)
+			c.setVisible(false);
+		for (Component c : workerActionsComponents)
 			c.setVisible(false);
 
 		mainFrame.setVisible(true);
@@ -157,6 +168,7 @@ public class MainWindow {
 		loginScreenComponents = new ArrayList<Component>();
 		itemBrowseScreenComponents = new ArrayList<Component>();
 		itemInfoScreenComponents = new ArrayList<Component>();
+		workerActionsComponents = new ArrayList<Component>();
 	}
 
 	private void initComponents() {
@@ -362,31 +374,31 @@ public class MainWindow {
 		panelItems.setBackground(Color.LIGHT_GRAY);
 		panelItems.setLayout(new GridBagLayout());
 		gridBagConstraints = new GridBagConstraints();
-		
+
 		scrollPaneItemPanel = new JScrollPane(panelItems);
 		scrollPaneItemPanel.setBounds(50, 200, 1170, 450);
 		mainFrame.add(scrollPaneItemPanel);
 		itemBrowseScreenComponents.add(scrollPaneItemPanel);
-		
+
 		listOfAllItemsNames = new ArrayList<JLabel>();
 		listOfAllButtonPhotos = new ArrayList<JButton>();
-		for (int i = 0; i < arrayListModels.size(); i++){
+		for (int i = 0; i < arrayListModels.size(); i++) {
 			Model model = arrayListModels.get(i);
-			
+
 			JButton button_model = new JButton();
-			button_model.setPreferredSize(new Dimension(170,100));
+			button_model.setPreferredSize(new Dimension(170, 100));
 			button_model.setIcon(new ImageIcon(getClass().getResource("/Resources/przedmiot.png")));
-			//button_model.setBorderPainted(false);
+			// button_model.setBorderPainted(false);
 			button_model.setContentAreaFilled(false);
 			gridBagConstraints.gridx = i % 5;
 			gridBagConstraints.gridy = i / 5 * 2;
 			panelItems.add(button_model, gridBagConstraints);
-			listOfAllButtonPhotos.add(button_model);		
-			
-			JLabel label_model = new JLabel(model.getModelName(), SwingConstants.CENTER);			
-			label_model.setPreferredSize(new Dimension(200,30));
+			listOfAllButtonPhotos.add(button_model);
+
+			JLabel label_model = new JLabel(model.getModelName(), SwingConstants.CENTER);
+			label_model.setPreferredSize(new Dimension(200, 30));
 			gridBagConstraints.gridx = i % 5;
-			gridBagConstraints.gridy = i / 5 * 2+ 1;
+			gridBagConstraints.gridy = i / 5 * 2 + 1;
 			panelItems.add(label_model, gridBagConstraints);
 			listOfAllItemsNames.add(label_model);
 		}
@@ -441,6 +453,37 @@ public class MainWindow {
 		mainFrame.add(calendar);
 		itemInfoScreenComponents.add(calendar);
 
+		// ELEMENTY EKRANU Z AKCJAMI PRACOWNIKA
+		buttonReturnToMainScreen3 = new JButton("Powrot do ekranu gl.");
+		buttonReturnToMainScreen3.setBounds(250, 200, 200, 30);
+		mainFrame.add(buttonReturnToMainScreen3);
+		workerActionsComponents.add(buttonReturnToMainScreen3);
+
+		buttonManageAccounts = new JButton("Zarządzaj kontami");
+		buttonManageAccounts.setBounds(500, 200, 200, 30);
+		mainFrame.add(buttonManageAccounts);
+		workerActionsComponents.add(buttonManageAccounts);
+
+		buttonBrowseOrders = new JButton("Przegladaj rezerwacje");
+		buttonBrowseOrders.setBounds(750, 200, 200, 30);
+		mainFrame.add(buttonBrowseOrders);
+		workerActionsComponents.add(buttonBrowseOrders);
+
+		buttonManageEqupiment = new JButton("Zarzadzaj sprzetem");
+		buttonManageEqupiment.setBounds(250, 250, 200, 30);
+		mainFrame.add(buttonManageEqupiment);
+		workerActionsComponents.add(buttonManageEqupiment);
+
+		buttonCreateMaintenanceRepair = new JButton("Dodaj naprawe/konserwacje");
+		buttonCreateMaintenanceRepair.setBounds(500, 250, 200, 30);
+		mainFrame.add(buttonCreateMaintenanceRepair);
+		workerActionsComponents.add(buttonCreateMaintenanceRepair);
+
+		buttonLogOut = new JButton("Wyloguj");
+		buttonLogOut.setBounds(750, 250, 200, 30);
+		mainFrame.add(buttonLogOut);
+		workerActionsComponents.add(buttonLogOut);
+
 		// ELEMENTY WIDZIANE/NIEWIDZIANE NIEZALEZNIE OD EKRANU
 		buttonWorkerActions = new JButton("Opcje pracownika");
 		buttonWorkerActions.setBounds(0, 0, 150, 30);
@@ -461,7 +504,7 @@ public class MainWindow {
 				for (Component c : mainScreenComponents)
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
-					c.setVisible(true);		
+					c.setVisible(true);
 			}
 		});
 		buttonCreateAccount.addActionListener(new ActionListener() {
@@ -628,11 +671,67 @@ public class MainWindow {
 			}
 		});
 
-		// listenery ekranu informacji o
-		// sprzęcie--------------------------------------------------------------------------------
-
+		// listenery ekranu informacji o sprzęcie-----------------------------
+		
+		
 		// listenery elementow widzianych/niewidzianych niezaleznie od ekranu
-		// --------------------
+		buttonWorkerActions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (Component c : mainScreenComponents)
+					c.setVisible(false);
+				for (Component c : loginScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemBrowseScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemInfoScreenComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(true);
+			}
+		});
+
+		// listenery ekranu akcji pracownika--------------------------------
+		buttonReturnToMainScreen3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (Component c : mainScreenComponents)
+					c.setVisible(true);
+				for (Component c : loginScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemBrowseScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemInfoScreenComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+			}
+		});
+		
+		buttonLogOut.addActionListener(new ActionListener() {
+			//ten listener sie rozni od funkcji loginScreen() tym
+			//ze nie wyrzuca do ekranu logowania tylko do glownego
+			public void actionPerformed(ActionEvent e) {
+				for (Component c : mainScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemBrowseScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemInfoScreenComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : mainScreenComponents)
+					c.setVisible(true);
+				
+				loggedIn = false;
+				labelLoggedAs.setText("");
+				buttonLogin.setText("Zaloguj");
+				buttonLogin1.setText("Zaloguj");
+				buttonLogin2.setText("Zaloguj");
+				buttonCreateAccount.setEnabled(true);
+				buttonCreateAccount2.setEnabled(true);
+				buttonCreateAccount3.setEnabled(true);
+				buttonWorkerActions.setVisible(false);
+			}
+		});
 	}
 
 	private void createAccount() {
@@ -650,6 +749,8 @@ public class MainWindow {
 			for (Component c : itemBrowseScreenComponents)
 				c.setVisible(false);
 			for (Component c : itemInfoScreenComponents)
+				c.setVisible(false);
+			for (Component c : workerActionsComponents)
 				c.setVisible(false);
 			for (Component c : loginScreenComponents)
 				c.setVisible(true);
@@ -805,5 +906,5 @@ public class MainWindow {
 	public void setArrayListRepairs(ArrayList<RepairHistory> arrayListRepairs) {
 		this.arrayListRepairs = arrayListRepairs;
 	}
- 
+
 }
