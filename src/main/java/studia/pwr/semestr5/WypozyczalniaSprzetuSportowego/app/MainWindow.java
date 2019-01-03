@@ -124,6 +124,7 @@ public class MainWindow {
 	JButton buttonBrowseOrders;
 	JButton buttonManageAccounts;
 	JButton buttonManageModels;
+	JButton buttonAddEquipment;
 	JButton buttonManageEqupiment;
 	JButton buttonManageMaintenances;
 	JButton buttonManageRepairs;
@@ -132,6 +133,9 @@ public class MainWindow {
 	JScrollPane scrollPaneDBContent;
 	GridBagConstraints gridBagConstraintsWorkerActions;
 	List<JButton> listOfDBContent;
+	
+	
+	
 
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
@@ -393,7 +397,7 @@ public class MainWindow {
 			JButton button_model = new JButton();
 			button_model.setPreferredSize(new Dimension(170, 100));
 			button_model.setIcon(new ImageIcon(getClass().getResource("/Resources/przedmiot.png")));
-			// button_model.setBorderPainted(false);
+			button_model.setBorderPainted(false);
 			button_model.setContentAreaFilled(false);
 			gridBagConstraintsBrowse.gridx = i % 5;
 			gridBagConstraintsBrowse.gridy = i / 5 * 2;
@@ -478,7 +482,7 @@ public class MainWindow {
 		buttonManageModels.setBounds(40, 70, 200, 30);
 		mainFrame.add(buttonManageModels);
 		workerActionsComponents.add(buttonManageModels);
-
+		
 		buttonManageEqupiment = new JButton("Zarzadzaj sprzetem");
 		buttonManageEqupiment.setBounds(290, 70, 200, 30);
 		mainFrame.add(buttonManageEqupiment);
@@ -493,6 +497,11 @@ public class MainWindow {
 		buttonManageRepairs.setBounds(790, 70, 200, 30);
 		mainFrame.add(buttonManageRepairs);
 		workerActionsComponents.add(buttonManageRepairs);
+		
+		buttonAddEquipment = new JButton("Dodaj sprzet");
+		buttonAddEquipment.setBounds(1040, 20, 200, 30);
+		mainFrame.add(buttonAddEquipment);
+		workerActionsComponents.add(buttonAddEquipment);
 
 		buttonLogOut = new JButton("Wyloguj");
 		buttonLogOut.setBounds(1040, 70, 200, 30);
@@ -512,6 +521,7 @@ public class MainWindow {
 		scrollPaneDBContent.setBounds(100, 130, 1080, 500);
 		mainFrame.add(scrollPaneDBContent);
 		workerActionsComponents.add(scrollPaneDBContent);
+		
 
 		// ELEMENTY WIDZIANE/NIEWIDZIANE NIEZALEZNIE OD EKRANU
 		buttonWorkerActions = new JButton("Opcje pracownika");
@@ -923,16 +933,29 @@ public class MainWindow {
 					c.setVisible(true);
 			}
 		});
+		
+		buttonAddEquipment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createAssortment();
+				
+			}
+		});
+		
+
 	}
 
 	private void createAccount() {
 		new CreateAccount(this);
 	}
+	
+	private void createAssortment() {
+		new CreateAssortment(this);
+	}
 
 	private void remindPassword() {
 		new RemindPassword(this);
 	}
-
+	
 	private void loginScreen() {
 		if (!loggedIn) {
 			for (Component c : mainScreenComponents)
