@@ -5,7 +5,7 @@ import java.util.List;
 
 public class RepairHistory {
 	private int repairNumber;
-	private Date reapirDate;
+	private Date repairDate;
 	private List<Integer> listEqupimentID;
 	private int workerID;
 	private int price;
@@ -14,10 +14,10 @@ public class RepairHistory {
 		super();
 	}
 	
-	public RepairHistory(int repairNumber, Date reapirDate, List<Integer> listEqupimentID, int workerID, int price) {
+	public RepairHistory(int repairNumber, Date repairDate, List<Integer> listEqupimentID, int workerID, int price) {
 		super();
 		this.repairNumber = repairNumber;
-		this.reapirDate = reapirDate;
+		this.repairDate = repairDate;
 		this.listEqupimentID = listEqupimentID;
 		this.workerID = workerID;
 		this.price = price;
@@ -31,12 +31,12 @@ public class RepairHistory {
 		this.repairNumber = repairNumber;
 	}
 
-	public Date getReapirDate() {
-		return reapirDate;
+	public Date getRepairDate() {
+		return repairDate;
 	}
 
-	public void setReapirDate(Date reapirDate) {
-		this.reapirDate = reapirDate;
+	public void setRepairDate(Date reapirDate) {
+		this.repairDate = reapirDate;
 	}
 
 	public List<Integer> getListEqupimentID() {
@@ -65,7 +65,7 @@ public class RepairHistory {
 
 	@Override
 	public String toString() {
-		return "RepairHistory [repairNumber=" + repairNumber + ", reapirDate=" + reapirDate + ", listEqupimentID="
+		return "RepairHistory [repairNumber=" + repairNumber + ", reapirDate=" + repairDate + ", listEqupimentID="
 				+ listEqupimentID + ", workerID=" + workerID + ", price=" + price + ", getClass()=" + getClass()
 				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
