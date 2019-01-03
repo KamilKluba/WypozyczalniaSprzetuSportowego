@@ -101,7 +101,7 @@ public class MainWindow {
 	JButton buttonReturnToMainScreen2;
 	JTextField textFieldItemName;
 	JPanel panelItems; // tutaj zaczynają się elementy scrollowalnego panelu
-	GridBagConstraints gridBagConstraints;
+	GridBagConstraints gridBagConstraintsBrowse;
 	JScrollPane scrollPaneItemPanel;
 	List<JLabel> listOfAllItemsNames;
 	List<JButton> listOfAllButtonPhotos;
@@ -123,9 +123,15 @@ public class MainWindow {
 	JButton buttonReturnToMainScreen3;
 	JButton buttonBrowseOrders;
 	JButton buttonManageAccounts;
+	JButton buttonManageModels;
 	JButton buttonManageEqupiment;
-	JButton buttonCreateMaintenanceRepair;
+	JButton buttonManageMaintenances;
+	JButton buttonManageRepairs;
 	JButton buttonLogOut;
+	JPanel panelDBContent;
+	JScrollPane scrollPaneDBContent;
+	GridBagConstraints gridBagConstraintsWorkerActions;
+	List<JButton> listOfDBContent;
 
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
@@ -370,10 +376,9 @@ public class MainWindow {
 		itemBrowseScreenComponents.add(textFieldItemName);
 
 		panelItems = new JPanel();
-		panelItems.setSize(new Dimension(1170, 800));
 		panelItems.setBackground(Color.LIGHT_GRAY);
 		panelItems.setLayout(new GridBagLayout());
-		gridBagConstraints = new GridBagConstraints();
+		gridBagConstraintsBrowse = new GridBagConstraints();
 
 		scrollPaneItemPanel = new JScrollPane(panelItems);
 		scrollPaneItemPanel.setBounds(50, 200, 1170, 450);
@@ -390,16 +395,16 @@ public class MainWindow {
 			button_model.setIcon(new ImageIcon(getClass().getResource("/Resources/przedmiot.png")));
 			// button_model.setBorderPainted(false);
 			button_model.setContentAreaFilled(false);
-			gridBagConstraints.gridx = i % 5;
-			gridBagConstraints.gridy = i / 5 * 2;
-			panelItems.add(button_model, gridBagConstraints);
+			gridBagConstraintsBrowse.gridx = i % 5;
+			gridBagConstraintsBrowse.gridy = i / 5 * 2;
+			panelItems.add(button_model, gridBagConstraintsBrowse);
 			listOfAllButtonPhotos.add(button_model);
 
 			JLabel label_model = new JLabel(model.getModelName(), SwingConstants.CENTER);
 			label_model.setPreferredSize(new Dimension(200, 30));
-			gridBagConstraints.gridx = i % 5;
-			gridBagConstraints.gridy = i / 5 * 2 + 1;
-			panelItems.add(label_model, gridBagConstraints);
+			gridBagConstraintsBrowse.gridx = i % 5;
+			gridBagConstraintsBrowse.gridy = i / 5 * 2 + 1;
+			panelItems.add(label_model, gridBagConstraintsBrowse);
 			listOfAllItemsNames.add(label_model);
 		}
 
@@ -455,34 +460,58 @@ public class MainWindow {
 
 		// ELEMENTY EKRANU Z AKCJAMI PRACOWNIKA
 		buttonReturnToMainScreen3 = new JButton("Powrot do ekranu gl.");
-		buttonReturnToMainScreen3.setBounds(250, 200, 200, 30);
+		buttonReturnToMainScreen3.setBounds(290, 20, 200, 30);
 		mainFrame.add(buttonReturnToMainScreen3);
 		workerActionsComponents.add(buttonReturnToMainScreen3);
 
 		buttonManageAccounts = new JButton("Zarządzaj kontami");
-		buttonManageAccounts.setBounds(500, 200, 200, 30);
+		buttonManageAccounts.setBounds(540, 20, 200, 30);
 		mainFrame.add(buttonManageAccounts);
 		workerActionsComponents.add(buttonManageAccounts);
 
 		buttonBrowseOrders = new JButton("Przegladaj rezerwacje");
-		buttonBrowseOrders.setBounds(750, 200, 200, 30);
+		buttonBrowseOrders.setBounds(790, 20, 200, 30);
 		mainFrame.add(buttonBrowseOrders);
 		workerActionsComponents.add(buttonBrowseOrders);
 
+		buttonManageModels = new JButton("Zarzadzaj modelami");
+		buttonManageModels.setBounds(40, 70, 200, 30);
+		mainFrame.add(buttonManageModels);
+		workerActionsComponents.add(buttonManageModels);
+
 		buttonManageEqupiment = new JButton("Zarzadzaj sprzetem");
-		buttonManageEqupiment.setBounds(250, 250, 200, 30);
+		buttonManageEqupiment.setBounds(290, 70, 200, 30);
 		mainFrame.add(buttonManageEqupiment);
 		workerActionsComponents.add(buttonManageEqupiment);
 
-		buttonCreateMaintenanceRepair = new JButton("Dodaj naprawe/konserwacje");
-		buttonCreateMaintenanceRepair.setBounds(500, 250, 200, 30);
-		mainFrame.add(buttonCreateMaintenanceRepair);
-		workerActionsComponents.add(buttonCreateMaintenanceRepair);
+		buttonManageMaintenances = new JButton("Zarzadzaj konserwacjami");
+		buttonManageMaintenances.setBounds(540, 70, 200, 30);
+		mainFrame.add(buttonManageMaintenances);
+		workerActionsComponents.add(buttonManageMaintenances);
+
+		buttonManageRepairs = new JButton("Zarzadzaj naprawami");
+		buttonManageRepairs.setBounds(790, 70, 200, 30);
+		mainFrame.add(buttonManageRepairs);
+		workerActionsComponents.add(buttonManageRepairs);
 
 		buttonLogOut = new JButton("Wyloguj");
-		buttonLogOut.setBounds(750, 250, 200, 30);
+		buttonLogOut.setBounds(1040, 70, 200, 30);
 		mainFrame.add(buttonLogOut);
 		workerActionsComponents.add(buttonLogOut);
+
+		// panel tylko po to zeby byl kolor tla
+		panelDBContent = new JPanel();
+		panelDBContent.setSize(1000, 1000);
+		panelDBContent.setBackground(Color.LIGHT_GRAY);
+		panelDBContent.setLayout(new GridBagLayout());
+
+		gridBagConstraintsWorkerActions = new GridBagConstraints();
+
+		scrollPaneDBContent = new JScrollPane(panelDBContent, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneDBContent.setBounds(100, 130, 1080, 500);
+		mainFrame.add(scrollPaneDBContent);
+		workerActionsComponents.add(scrollPaneDBContent);
 
 		// ELEMENTY WIDZIANE/NIEWIDZIANE NIEZALEZNIE OD EKRANU
 		buttonWorkerActions = new JButton("Opcje pracownika");
@@ -672,8 +701,7 @@ public class MainWindow {
 		});
 
 		// listenery ekranu informacji o sprzęcie-----------------------------
-		
-		
+
 		// listenery elementow widzianych/niewidzianych niezaleznie od ekranu
 		buttonWorkerActions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -705,10 +733,10 @@ public class MainWindow {
 					c.setVisible(false);
 			}
 		});
-		
+
 		buttonLogOut.addActionListener(new ActionListener() {
-			//ten listener sie rozni od funkcji loginScreen() tym
-			//ze nie wyrzuca do ekranu logowania tylko do glownego
+			// ten listener sie rozni od funkcji loginScreen() tym
+			// ze nie wyrzuca do ekranu logowania tylko do glownego
 			public void actionPerformed(ActionEvent e) {
 				for (Component c : mainScreenComponents)
 					c.setVisible(false);
@@ -720,7 +748,7 @@ public class MainWindow {
 					c.setVisible(false);
 				for (Component c : mainScreenComponents)
 					c.setVisible(true);
-				
+
 				loggedIn = false;
 				labelLoggedAs.setText("");
 				buttonLogin.setText("Zaloguj");
@@ -730,6 +758,169 @@ public class MainWindow {
 				buttonCreateAccount2.setEnabled(true);
 				buttonCreateAccount3.setEnabled(true);
 				buttonWorkerActions.setVisible(false);
+			}
+		});
+
+		buttonManageAccounts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelDBContent.removeAll();
+				listOfDBContent = new ArrayList<JButton>();
+
+				for (int i = 0; i < arrayListPeople.size(); i++) {
+					Person p = arrayListPeople.get(i);
+					JButton temp_button = new JButton(p.getLogin());
+					temp_button.setPreferredSize(new Dimension(500, 30));
+
+					gridBagConstraintsWorkerActions.gridx = 1;
+					gridBagConstraintsWorkerActions.gridy = i + 1;
+
+					listOfDBContent.add(temp_button);
+					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+				}
+
+				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
+				// a nie mam lepszego pomyslu jak to naprawic
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(true);
+			}
+		});
+
+		buttonBrowseOrders.addActionListener(new ActionListener() {
+			// trzeba zrobic zaznaczanie tylko tych ktore dalej trwaja
+			public void actionPerformed(ActionEvent e) {
+				panelDBContent.removeAll();
+				listOfDBContent = new ArrayList<JButton>();
+
+				for (int i = arrayListOrders.size() - 1; i >= 0; i--) {
+					OrderHistory o = arrayListOrders.get(i);
+					JButton temp_button = new JButton("Zamownienie numer: " + o.getOrderNumber());
+					temp_button.setPreferredSize(new Dimension(500, 30));
+
+					gridBagConstraintsWorkerActions.gridx = 1;
+					gridBagConstraintsWorkerActions.gridy = i + 1;
+
+					listOfDBContent.add(temp_button);
+					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+				}
+
+				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
+				// a nie mam lepszego pomyslu jak to naprawic
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(true);
+			}
+		});
+
+		buttonManageModels.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelDBContent.removeAll();
+				listOfDBContent = new ArrayList<JButton>();
+
+				for (int i = 0; i < arrayListModels.size(); i++) {
+					Model m = arrayListModels.get(i);
+					JButton temp_button = new JButton(
+							"ID modelu: " + m.getModelID() + " Nazwa modelu: " + m.getModelName());
+					temp_button.setPreferredSize(new Dimension(500, 30));
+
+					gridBagConstraintsWorkerActions.gridx = 1;
+					gridBagConstraintsWorkerActions.gridy = i + 1;
+
+					listOfDBContent.add(temp_button);
+					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+				}
+
+				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
+				// a nie mam lepszego pomyslu jak to naprawic
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(true);
+			}
+		});
+
+		buttonManageEqupiment.addActionListener(new ActionListener() {
+			// trzeba zrobic jakeis podswietlanie modeli uszkodzonych
+			// albo cos takiego
+			public void actionPerformed(ActionEvent e) {
+				panelDBContent.removeAll();
+				listOfDBContent = new ArrayList<JButton>();
+
+				for (int i = 0; i < arrayListAssortment.size(); i++) {
+					Assortment a = arrayListAssortment.get(i);
+					JButton temp_button = new JButton("ID sprzetu: " + a.getItemID() + " ,liczba wypozyczen: "
+							+ a.getLoansNumber() + " ,stan: " + a.getCondition());
+					temp_button.setPreferredSize(new Dimension(500, 30));
+
+					gridBagConstraintsWorkerActions.gridx = 1;
+					gridBagConstraintsWorkerActions.gridy = i + 1;
+
+					listOfDBContent.add(temp_button);
+					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+				}
+
+				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
+				// a nie mam lepszego pomyslu jak to naprawic
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(true);
+			}
+		});
+
+		buttonManageMaintenances.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelDBContent.removeAll();
+				listOfDBContent = new ArrayList<JButton>();
+
+				for (int i = 0; i < arrayListMaintenances.size(); i++) {
+					MaintenanceHistory m = arrayListMaintenances.get(i);
+					JButton temp_button = new JButton("Numer konserwacji" + m.getMaintenanceNumber()
+							+ " ,data konserwacji: " + m.getMaintenanceDate());
+					temp_button.setPreferredSize(new Dimension(500, 30));
+
+					gridBagConstraintsWorkerActions.gridx = 1;
+					gridBagConstraintsWorkerActions.gridy = i + 1;
+
+					listOfDBContent.add(temp_button);
+					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+				}
+
+				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
+				// a nie mam lepszego pomyslu jak to naprawic
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(true);
+			}
+		});
+		
+		buttonManageRepairs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelDBContent.removeAll();
+				listOfDBContent = new ArrayList<JButton>();
+
+				for (int i = 0; i < arrayListRepairs.size(); i++) {
+					RepairHistory r = arrayListRepairs.get(i);
+					JButton temp_button = new JButton("Numer konserwacji" + r.getRepairNumber()
+							+ " ,data konserwacji: " + r.getRepairDate());
+					temp_button.setPreferredSize(new Dimension(500, 30));
+
+					gridBagConstraintsWorkerActions.gridx = 1;
+					gridBagConstraintsWorkerActions.gridy = i + 1;
+
+					listOfDBContent.add(temp_button);
+					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+				}
+
+				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
+				// a nie mam lepszego pomyslu jak to naprawic
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(true);
 			}
 		});
 	}
