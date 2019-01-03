@@ -1,4 +1,4 @@
-package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app4;
+package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app;
 
 /**
  * Hello world!

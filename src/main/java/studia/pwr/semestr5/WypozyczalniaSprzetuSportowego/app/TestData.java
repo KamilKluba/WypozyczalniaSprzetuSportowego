@@ -1,4 +1,4 @@
-package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app4;
+package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
