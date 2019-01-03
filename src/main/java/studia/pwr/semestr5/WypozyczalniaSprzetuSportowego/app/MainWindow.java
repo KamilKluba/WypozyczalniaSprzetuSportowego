@@ -124,7 +124,7 @@ public class MainWindow {
 	JButton buttonBrowseOrders;
 	JButton buttonManageAccounts;
 	JButton buttonManageModels;
-	JButton buttonAddEquipment;
+	JButton buttonAdd;
 	JButton buttonManageEqupiment;
 	JButton buttonManageMaintenances;
 	JButton buttonManageRepairs;
@@ -135,7 +135,15 @@ public class MainWindow {
 	List<JButton> listOfDBContent;
 	
 	
+	// elementy ekranu dodaj/modyfikuj model/sprzet
+	private List<Component> addModifyProductScreenComponents;
 	
+	JButton buttonAddEquipment;
+	JButton buttonAddModel;
+	JButton buttonModifyModel;
+	JButton buttonModifyEquipment;
+	JButton buttonRemoveModel;
+	JButton buttonRemoveEquipment;
 
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
@@ -155,6 +163,8 @@ public class MainWindow {
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(false);
 		for (Component c : workerActionsComponents)
+			c.setVisible(false);
+		for (Component c : addModifyProductScreenComponents)
 			c.setVisible(false);
 
 		mainFrame.setVisible(true);
@@ -179,6 +189,7 @@ public class MainWindow {
 		itemBrowseScreenComponents = new ArrayList<Component>();
 		itemInfoScreenComponents = new ArrayList<Component>();
 		workerActionsComponents = new ArrayList<Component>();
+		addModifyProductScreenComponents = new ArrayList<Component>();
 	}
 
 	private void initComponents() {
@@ -336,8 +347,8 @@ public class MainWindow {
 		mainFrame.add(labelCorrectData);
 		loginScreenComponents.add(labelCorrectData);
 
-		// ELEMENTY EKRANU PRZEGLADANIA
-		// SPRZETU------------------------------------------------------------------------------------
+		// ELEMENTY EKRANU PRZEGLADANIA SPRZETU
+		// ------------------------------------------------------------------------------------
 		labelLogo1 = new JLabel();
 		labelLogo1.setBounds(500, 20, 400, 150);
 		labelLogo1.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
@@ -498,10 +509,10 @@ public class MainWindow {
 		mainFrame.add(buttonManageRepairs);
 		workerActionsComponents.add(buttonManageRepairs);
 		
-		buttonAddEquipment = new JButton("Dodaj sprzet");
-		buttonAddEquipment.setBounds(1040, 20, 200, 30);
-		mainFrame.add(buttonAddEquipment);
-		workerActionsComponents.add(buttonAddEquipment);
+		buttonAdd = new JButton("Dodaj");
+		buttonAdd.setBounds(1040, 20, 200, 30);
+		mainFrame.add(buttonAdd);
+		workerActionsComponents.add(buttonAdd);
 
 		buttonLogOut = new JButton("Wyloguj");
 		buttonLogOut.setBounds(1040, 70, 200, 30);
@@ -521,6 +532,39 @@ public class MainWindow {
 		scrollPaneDBContent.setBounds(100, 130, 1080, 500);
 		mainFrame.add(scrollPaneDBContent);
 		workerActionsComponents.add(scrollPaneDBContent);
+		
+		
+		// ELEMENTY EKRANU DODAJ MODEL/EQUIPMENT
+	
+		buttonAddEquipment = new JButton("Dodaj sprzet"); 
+		buttonAddEquipment.setBounds(250, 200, 200, 40); 
+		mainFrame.add(buttonAddEquipment);
+		addModifyProductScreenComponents.add(buttonAddEquipment);
+		
+		buttonAddModel = new JButton("Dodaj model"); 
+		buttonAddModel.setBounds(250, 100, 200, 40); 
+		mainFrame.add(buttonAddModel);
+		addModifyProductScreenComponents.add(buttonAddModel);
+		
+		buttonModifyModel = new JButton("Modyfikuj model");
+		buttonModifyModel.setBounds(750, 100, 200, 40);
+		mainFrame.add(buttonModifyModel);
+		addModifyProductScreenComponents.add(buttonModifyModel);
+		
+		buttonModifyEquipment = new JButton("Modyfikuj sprzet");
+		buttonModifyEquipment.setBounds(750, 200, 200, 40);
+		mainFrame.add(buttonModifyEquipment);
+		addModifyProductScreenComponents.add(buttonModifyEquipment);
+		
+		buttonRemoveModel = new JButton("Usun model");
+		buttonRemoveModel.setBounds(500, 100, 200, 40);
+		mainFrame.add(buttonRemoveModel);
+		addModifyProductScreenComponents.add(buttonRemoveModel);
+		
+		buttonRemoveEquipment = new JButton("Usun sprzet");
+		buttonRemoveEquipment.setBounds(500, 200, 200, 40);
+		mainFrame.add(buttonRemoveEquipment);
+		addModifyProductScreenComponents.add(buttonRemoveEquipment);
 		
 
 		// ELEMENTY WIDZIANE/NIEWIDZIANE NIEZALEZNIE OD EKRANU
@@ -717,6 +761,8 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				for (Component c : mainScreenComponents)
 					c.setVisible(false);
+				for (Component c : addModifyProductScreenComponents)
+					c.setVisible(false);
 				for (Component c : loginScreenComponents)
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
@@ -733,6 +779,8 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				for (Component c : mainScreenComponents)
 					c.setVisible(true);
+				for (Component c : addModifyProductScreenComponents)
+					c.setVisible(false);
 				for (Component c : loginScreenComponents)
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
@@ -749,6 +797,8 @@ public class MainWindow {
 			// ze nie wyrzuca do ekranu logowania tylko do glownego
 			public void actionPerformed(ActionEvent e) {
 				for (Component c : mainScreenComponents)
+					c.setVisible(false);
+				for (Component c : addModifyProductScreenComponents)
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
 					c.setVisible(false);
@@ -934,12 +984,22 @@ public class MainWindow {
 			}
 		});
 		
-		buttonAddEquipment.addActionListener(new ActionListener() {
+		buttonAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createAssortment();
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : addModifyProductScreenComponents)
+					c.setVisible(true);
 				
 			}
 		});
+		
+		buttonAddEquipment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createAssortment();
+			}
+		});
+		
 		
 
 	}
@@ -965,6 +1025,8 @@ public class MainWindow {
 			for (Component c : itemInfoScreenComponents)
 				c.setVisible(false);
 			for (Component c : workerActionsComponents)
+				c.setVisible(false);
+			for (Component c : addModifyProductScreenComponents)
 				c.setVisible(false);
 			for (Component c : loginScreenComponents)
 				c.setVisible(true);

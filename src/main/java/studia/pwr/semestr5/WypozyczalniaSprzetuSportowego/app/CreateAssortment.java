@@ -69,91 +69,91 @@ public class CreateAssortment {
 	private void initComponents() {
 		dialogCreateAssortment = new JDialog();
 		dialogCreateAssortment.setTitle("Dodanie sprzętu");
-		dialogCreateAssortment.setSize(new Dimension(700, 400));
+		dialogCreateAssortment.setSize(new Dimension(800, 400));
 		dialogCreateAssortment.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialogCreateAssortment.setResizable(false);
 		dialogCreateAssortment.setModal(true);
 		dialogCreateAssortment.setLayout(null);
 		
 		labelAssortmentID = new JLabel("ID sprzetu:");
-		labelAssortmentID.setBounds(30, 30, 150, 30);
+		labelAssortmentID.setBounds(20, 30, 180, 30);
 		dialogCreateAssortment.add(labelAssortmentID);
 		textFieldAssortmentID = new JTextField();
-		textFieldAssortmentID.setBounds(180, 30, 150, 30);
+		textFieldAssortmentID.setBounds(200, 30, 150, 30);
 		dialogCreateAssortment.add(textFieldAssortmentID);
 		
 		labelModelID = new JLabel("ID modelu:");
-		labelModelID.setBounds(30, 70, 150, 30);
+		labelModelID.setBounds(20, 70, 180, 30);
 		dialogCreateAssortment.add(labelModelID);
 		textFieldModelID = new JTextField();
-		textFieldModelID.setBounds(180, 70, 150, 30);
+		textFieldModelID.setBounds(200, 70, 150, 30);
 		dialogCreateAssortment.add(textFieldModelID);
 		
 		labelBuyDate = new JLabel("Data zakupu:");
-		labelBuyDate.setBounds(30, 110, 150, 30);
+		labelBuyDate.setBounds(20, 110, 180, 30);
 		dialogCreateAssortment.add(labelBuyDate);
 		textFieldBuyDate = new JTextField();
-		textFieldBuyDate.setBounds(180, 110, 150, 30);
+		textFieldBuyDate.setBounds(200, 110, 150, 30);
 		dialogCreateAssortment.add(textFieldBuyDate);
 		
 		labelRentNumber = new JLabel("Liczba wypozyczen:");
-		labelRentNumber.setBounds(30, 150, 150, 30);
+		labelRentNumber.setBounds(20, 150, 180, 30);
 		dialogCreateAssortment.add(labelRentNumber);
 		textFieldRentNumber = new JTextField();
-		textFieldRentNumber.setBounds(180, 150, 150, 30);
+		textFieldRentNumber.setBounds(200, 150, 150, 30);
 		dialogCreateAssortment.add(textFieldRentNumber);
 		
 		labelLastRentDate = new JLabel("Data ostatniego wypozyczenia:");
-		labelLastRentDate.setBounds(30, 190, 150, 30);
+		labelLastRentDate.setBounds(20, 190, 180, 30);
 		dialogCreateAssortment.add(labelLastRentDate);
 		textFieldLastRentDate = new JTextField();
-		textFieldLastRentDate.setBounds(180, 190, 150, 30);
+		textFieldLastRentDate.setBounds(200, 190, 150, 30);
 		dialogCreateAssortment.add(textFieldLastRentDate);
 		
 		LabelAvailability = new JLabel("Dostepnosc:");
-		LabelAvailability.setBounds(30, 230, 150, 30);
+		LabelAvailability.setBounds(20, 230, 180, 30);
 		dialogCreateAssortment.add(LabelAvailability);
 		textFieldAvailability = new JTextField();
-		textFieldAvailability.setBounds(180, 230, 150, 30);
+		textFieldAvailability.setBounds(200, 230, 150, 30);
 		dialogCreateAssortment.add(textFieldAvailability);
 		
 		labelNumberOfMaintenance = new JLabel("Liczba konserwacji:");
-		labelNumberOfMaintenance.setBounds(30, 270, 150, 30);
+		labelNumberOfMaintenance.setBounds(20, 270, 180, 30);
 		dialogCreateAssortment.add(labelNumberOfMaintenance);
 		textFieldNumberOfMaintenance = new JTextField();
-		textFieldNumberOfMaintenance.setBounds(180, 270, 150, 30);
+		textFieldNumberOfMaintenance.setBounds(200, 270, 150, 30);
 		dialogCreateAssortment.add(textFieldNumberOfMaintenance);
 		
 		labelDateNextMaintenance = new JLabel("Data nastepnej konserwacji:");
-		labelDateNextMaintenance.setBounds(30, 310, 150, 30);
+		labelDateNextMaintenance.setBounds(20, 310, 180, 30);
 		dialogCreateAssortment.add(labelDateNextMaintenance);
 		textFieldDateNextMaintenance = new JTextField();
-		textFieldDateNextMaintenance.setBounds(180, 310, 150, 30);
+		textFieldDateNextMaintenance.setBounds(200, 310, 150, 30);
 		dialogCreateAssortment.add(textFieldDateNextMaintenance);
 		
 		labelCondition = new JLabel("Stan:");
-		labelCondition.setBounds(350, 30, 150, 30);
+		labelCondition.setBounds(370, 30, 150, 30);
 		dialogCreateAssortment.add(labelCondition);
 		textFieldCondition = new JTextField();
 		textFieldCondition.setBounds(500, 30, 150, 30);
 		dialogCreateAssortment.add(textFieldCondition);
 		
 		labelInCirculation = new JLabel("W obiegu:");
-		labelInCirculation.setBounds(350, 70, 150, 30);
+		labelInCirculation.setBounds(370, 70, 150, 30);
 		dialogCreateAssortment.add(labelInCirculation);
 		textFieldInCirculation = new JTextField();
 		textFieldInCirculation.setBounds(500, 70, 150, 30);
 		dialogCreateAssortment.add(textFieldInCirculation);
 		
 		labelMaintenanceNumber = new JLabel("Numer konserwacji:");
-		labelMaintenanceNumber.setBounds(350, 110, 150, 30);
+		labelMaintenanceNumber.setBounds(370, 110, 150, 30);
 		dialogCreateAssortment.add(labelMaintenanceNumber);
 		textFieldMaintenanceNumber = new JTextField();
 		textFieldMaintenanceNumber.setBounds(500, 110, 150, 30);
 		dialogCreateAssortment.add(textFieldMaintenanceNumber);
 		
 		labelRepairNumber = new JLabel("Numer naprawy:");
-		labelRepairNumber.setBounds(350, 150, 150, 30);
+		labelRepairNumber.setBounds(370, 150, 150, 30);
 		dialogCreateAssortment.add(labelRepairNumber);
 		textFieldRepairNumber = new JTextField();
 		textFieldRepairNumber.setBounds(500, 150, 150, 30);
