@@ -1000,12 +1000,21 @@ public class MainWindow {
 			}
 		});
 		
+		buttonAddModel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createModel();
+			}
+		});
+		
 		
 
 	}
 
 	private void createAccount() {
 		new CreateAccount(this);
+	}
+	private void createModel() {
+		new CreateModel(this);
 	}
 	
 	private void createAssortment() {
