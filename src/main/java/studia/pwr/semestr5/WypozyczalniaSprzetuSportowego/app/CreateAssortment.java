@@ -182,8 +182,7 @@ private void initListeners(){
 		buttonCreateAssortment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String assortmentID = textFieldAssortmentID.getText();
-				
+				String assortmentID = textFieldAssortmentID.getText();			
 				String modelID = textFieldModelID.getText();
 				java.util.Date buyDate = null;
 				try {
@@ -225,25 +224,22 @@ private void initListeners(){
 				else if (buyDate == null)
 					JOptionPane.showMessageDialog(dialogCreateAssortment, "Wprowadz date zakupu");
 			 	
-			//	else {
-			//		for(Assortment a : mainWindow.getArrayListAssortment())
-			//			if(a.getItemID().equals(assortmentID)){
-			//				JOptionPane.showMessageDialog(dialogCreateAssortment, "Sprzet o podanym ID znajduje sie juz w bazie");
-			//				return;
-			//			}
-			//	}
+				else {
+					for(Assortment a : mainWindow.getArrayListAssortment())
+						if(Integer.toString(a.getItemID()).equals(assortmentID)){
+							JOptionPane.showMessageDialog(dialogCreateAssortment, "Sprzet o podanym ID znajduje sie juz w bazie");
+							return;
+						}
+				}
 				int modelID2 =Integer.parseInt(textFieldModelID.getText());
 				int rentNumber2 =Integer.parseInt(textFieldRentNumber.getText());
+				int assortmentID2 =Integer.parseInt(textFieldAssortmentID.getText());
 				
-				mainWindow.getArrayListAssortment().add(new Assortment(mainWindow.getArrayListAssortment().size() + 1,
+				mainWindow.getArrayListAssortment().add(new Assortment(assortmentID2,
 						 buyDate, rentNumber2, lastRentDate,true, dateNextMaintenance, condition,modelID2 ));
 				JOptionPane.showMessageDialog(dialogCreateAssortment, "Dodano sprzet");
 				dialogCreateAssortment.dispose();
-				
-				
-				
-			
-				
+							
 			}
 		});
 	}
