@@ -25,6 +25,7 @@ public class ManageAccount {
 	private Person person;
 	private String[] dividedPerson;
 	private String[] dividedAddress;
+	private Address address;
 
 	JDialog dialogCreateAccount;
 	JLabel labelLogin;
@@ -99,18 +100,12 @@ public class ManageAccount {
 		
 		for(Address a : mainWindow.getArrayListAddresses()){
 			if (a.getAdressID() == Integer.parseInt(dividedPerson[4])){
-				dividedAddress = a.toString().split(Pattern.quote(" !&#*&% "));
+				address = a;
 				break;
 			}
 		}
 		
-		//zapobieganie wyswietlania nulli
-		int counter = 0;
-		for(String s : dividedAddress){
-			if(s.equals("null"))
-				dividedAddress[counter] = "";
-			counter++;
-		}
+		dividedAddress = address.toString().split(Pattern.quote(" !&#*&% "));
 	}
 	
 	private void initComponents() {
@@ -129,6 +124,7 @@ public class ManageAccount {
 		textFieldLogin = new JTextField();
 		textFieldLogin.setBounds(180, 30, 150, 30);
 		if(!create) textFieldLogin.setText(dividedPerson[5]);
+		textFieldLogin.setEnabled(false);
 		dialogCreateAccount.add(textFieldLogin);
 
 		labelPassword = new JLabel("Hasło:*");
@@ -358,9 +354,7 @@ public class ManageAccount {
 		String house_number = textFieldHouseNumber.getText();
 		String flat_number = textFieldFlatNumber.getText();
 
-		if (login.equals(""))
-			JOptionPane.showMessageDialog(dialogCreateAccount, "Login nie moze byc pusty");
-		else if (password.equals(""))
+		if (password.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Haslo nie moze byc puste");
 		else if (!repeated_password.equals(password))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Hasla nie są takie same");
@@ -375,19 +369,20 @@ public class ManageAccount {
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Nazwisko nie moze byc puste");
 		else if (birth_date == null)
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Data urodzenia nie moze byc pusta");
-		else {
-			for(Person p : mainWindow.getArrayListPeople())
-				if(p.getLogin().equals(login)){
-					JOptionPane.showMessageDialog(dialogCreateAccount, "Użytkownik o podanym nicku już istnieje!");
-					return;
-				}
+		else {			
+			person.setFirstName(name);
+			person.setLastName(last_name);
+			person.setLogin(login);
+			person.setPassword(password);
+			person.setSecurityQuestion(security_question);
+			person.setSecurityAnswer(security_answer);
 			
-			mainWindow.getArrayListAddresses().add(new Address(mainWindow.getArrayListAddresses().size() + 1,
-					city, postal_code, street, house_number, flat_number));
-			mainWindow.getArrayListPeople()
-					.add(new Person(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
-							mainWindow.getArrayListAddresses().size(), login, password, security_question,
-							security_answer));
+			address.setCityName(city);
+			address.setPostalCode(postal_code);
+			address.setStreet(street);
+			address.setHouseNumber(house_number);
+			address.setFlatNumber(flat_number);
+			
 			dialogCreateAccount.dispose();
 		}
 		// Poza tym co tu jest trzeba dodać w bazie danych
