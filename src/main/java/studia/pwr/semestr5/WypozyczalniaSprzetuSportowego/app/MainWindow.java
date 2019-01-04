@@ -941,12 +941,18 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				panelDBContent.removeAll();
 				listOfDBContent = new ArrayList<JButton>();
-
+				
+				
 				for (int i = 0; i < arrayListAssortment.size(); i++) {
-					Assortment a = arrayListAssortment.get(i);
+					final Assortment a = arrayListAssortment.get(i);
 					JButton temp_button = new JButton("ID sprzetu: " + a.getItemID() + " ,liczba wypozyczen: "
 							+ a.getLoansNumber() + " ,stan: " + a.getCondition());
 					temp_button.setPreferredSize(new Dimension(500, 30));
+					temp_button.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							editAssortment(a);
+						}
+					});
 
 					gridBagConstraintsWorkerActions.gridx = 1;
 					gridBagConstraintsWorkerActions.gridy = i + 1;
@@ -954,7 +960,20 @@ public class MainWindow {
 					listOfDBContent.add(temp_button);
 					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
 				}
-
+				
+				JButton temp_button = new JButton("Dodaj nowy model");
+				temp_button.setPreferredSize(new Dimension(500, 30));
+				temp_button.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						createAssortment();
+					}
+				});
+				temp_button.setBackground(new Color(220, 255, 220));
+				gridBagConstraintsWorkerActions.gridx = 1;
+				gridBagConstraintsWorkerActions.gridy = 1;
+				listOfDBContent.add(temp_button);
+				panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+				
 				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
 				// a nie mam lepszego pomyslu jak to naprawic
 				for (Component c : workerActionsComponents)
@@ -1061,7 +1080,11 @@ public class MainWindow {
 	}
 	
 	private void createAssortment() {
-		new CreateAssortment(this);
+		new ManageAssortment(arrayListAssortment, true);
+	}
+	
+	private void editAssortment(Assortment a){
+		new ManageAssortment(arrayListAssortment, false, a, panelDBContent);
 	}
 
 	private void remindPassword() {
