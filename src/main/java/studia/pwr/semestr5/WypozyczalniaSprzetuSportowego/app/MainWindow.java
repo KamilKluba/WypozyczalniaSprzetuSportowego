@@ -827,16 +827,33 @@ public class MainWindow {
 				listOfDBContent = new ArrayList<JButton>();
 
 				for (int i = 0; i < arrayListPeople.size(); i++) {
-					Person p = arrayListPeople.get(i);
+					final Person p = arrayListPeople.get(i);
 					JButton temp_button = new JButton(p.getLogin());
 					temp_button.setPreferredSize(new Dimension(500, 30));
+					temp_button.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							editAccount(p);
+						}
+					});
 
 					gridBagConstraintsWorkerActions.gridx = 1;
-					gridBagConstraintsWorkerActions.gridy = i + 1;
+					gridBagConstraintsWorkerActions.gridy = i + 2;
 
 					listOfDBContent.add(temp_button);
 					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
 				}
+				JButton temp_button = new JButton("Dodaj nowe konto");
+				temp_button.setPreferredSize(new Dimension(500, 30));
+				temp_button.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						createAccount();
+					}
+				});
+				temp_button.setBackground(new Color(220, 255, 220));
+				gridBagConstraintsWorkerActions.gridx = 1;
+				gridBagConstraintsWorkerActions.gridy = 1;
+				listOfDBContent.add(temp_button);
+				panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
 
 				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
 				// a nie mam lepszego pomyslu jak to naprawic
@@ -1011,8 +1028,13 @@ public class MainWindow {
 	}
 
 	private void createAccount() {
-		new CreateAccount(this);
+		new ManageAccount(this, true);
 	}
+	
+	private void editAccount(Person p){
+		new ManageAccount(this, false, p);
+	}
+	
 	private void createModel() {
 		new CreateModel(this);
 	}
