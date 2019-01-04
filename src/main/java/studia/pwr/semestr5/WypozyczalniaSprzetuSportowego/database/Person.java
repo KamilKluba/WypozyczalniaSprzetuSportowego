@@ -105,10 +105,9 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person [personID=" + personID + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate="
-				+ birthDate + ", addressID=" + addressID + ", login=" + login + ", password=" + password
-				+ ", securityQuestion=" + securityQuestion + ", securityAnswer=" + securityAnswer + ", getClass()="
-				+ getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+		return personID + " !&#*&% " + firstName + " !&#*&% " + lastName + " !&#*&% "
+				+ birthDate + " !&#*&% " + addressID + " !&#*&% " + login + " !&#*&% " + password
+				+ " !&#*&% " + securityQuestion + " !&#*&% " + securityAnswer;
 	}
 
 }
