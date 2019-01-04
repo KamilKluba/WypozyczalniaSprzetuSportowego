@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 // aby utowrzyc polaczenie z baza danych nalezy:
 // 1. pobrac oracle jdbc ze strony https://www.oracle.com/technetwork/database/application-development/jdbc/downloads/index.html
 // 2. dodac jdbc do projektu: W tym celu klikamy PPM na nazw� naszego projektu ->Build Path->Configure Build Path,
-// przechodzimy do zak�adki Libraries->Add External JARs i wybieramy bibliotek� ojbc8.jar z katalogu do kt�rego j� zapisali�my.
+// przechodzimy do zakladki Libraries->Add External JARs i wybieramy biblioteke ojbc8.jar z katalogu do ktorego ja zapisalismy.
 // 3. sprawdzamy dane dotyczace naszej bazy danych: musimy znalezc plik o nazwie tnsnames.ora jest on w katalogu bazy oracle w folderze \NETWORK\ADMIN\tnsnames.ora
 // 4. tworzymy baze w oracle sql developer
 // connection_name: dowolone,
@@ -25,16 +25,15 @@ public class Connect {
 	static public void db_connection() {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println("Sterowniki za�adowane");
-
+			System.out.println("Sterowniki zaladowane");
+			Connection connection = null;
 			// jdbc:oracle:thin:username/password@localhost:port:SID
-			Connection polaczenie = DriverManager
-					.getConnection("jdbc:oracle:thin:system/Bazydanych2@localhost:1522:ORCLE");
+			connection = DriverManager.getConnection("jdbc:oracle:thin:system/Bazydanych2@localhost:1522:ORCLE");
 
-			System.out.println("Po��czenie nawi�zane");
+			System.out.println("Polaczenie nawiazane");
 			// odczytanie danych z bazy dla sprawdzenia poprawnosci polaczenia,
 			// sql developer musi byc wylaczony
-			Statement a = polaczenie.createStatement();
+			Statement a = connection.createStatement();
 			ResultSet res = a.executeQuery("select * from PRACOWNIK");
 
 			System.out.println("Wyniki zapytania: ");
@@ -44,9 +43,12 @@ public class Connect {
 				System.out.print(res.getString(2));
 				System.out.println(res.getString(3));
 			}
+			connection.close();
 		} catch (Exception wyjatek) {
-			System.out.println("B��d");
+			System.out.println("Blad");
 		}
+		
+		
 
 	}
 
