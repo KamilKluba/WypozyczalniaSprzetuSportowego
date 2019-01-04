@@ -47,7 +47,7 @@ public class Model {
 	public void setEquipmentType(String equipmentType) {
 		this.equipmentType = equipmentType;
 	}
-	public boolean isSeason() {
+	public boolean getSeason() {
 		return season;
 	}
 	public void setSeason(boolean season) {
@@ -68,10 +68,9 @@ public class Model {
 	
 	@Override
 	public String toString() {
-		return "Model [modelID=" + modelID + ", modelName=" + modelName + ", producer=" + producer + ", equipmentType="
-				+ equipmentType + ", season=" + season + ", costPerDay=" + costPerDay + ", damageDeposit="
-				+ damageDeposit + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+		return modelID + " !&#*&% " + modelName + " !&#*&% " + producer + " !&#*&% "
+				+ equipmentType + " !&#*&% " + season + " !&#*&% " + costPerDay + " !&#*&% "
+				+ damageDeposit;
 	}
 	
 }
