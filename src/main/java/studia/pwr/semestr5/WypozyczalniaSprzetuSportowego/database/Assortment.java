@@ -133,12 +133,8 @@ public class Assortment {
 
 	@Override
 	public String toString() {
-		return "Asortment [itemID=" + itemID + ", pucharseDate=" + pucharseDate + ", loansNumber=" + loansNumber
-				+ ", lastLoanDate=" + lastLoanDate + ", availability=" + availability + ", nextMaintenanceDate="
-				+ nextMaintenanceDate + ", condition=" + condition + ", modelID=" + modelID + ", listOrdersNumber="
-				+ listOrdersNumber + ", listRepairsNumber=" + listRepairsNumber + ", listMaintenancesNumber="
-				+ listMaintenancesNumber + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+		return itemID + " !&#*&% " + pucharseDate + " !&#*&% " + loansNumber
+				+ " !&#*&% " + lastLoanDate + " !&#*&% " + availability + " !&#*&% "
+				+ nextMaintenanceDate + " !&#*&% " + condition + " !&#*&% " + modelID + " !&#*&% ";
 	}
-
 }
