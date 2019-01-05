@@ -955,7 +955,7 @@ public class MainWindow {
 					});
 
 					gridBagConstraintsWorkerActions.gridx = 1;
-					gridBagConstraintsWorkerActions.gridy = i + 1;
+					gridBagConstraintsWorkerActions.gridy = i + 2;
 
 					listOfDBContent.add(temp_button);
 					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
