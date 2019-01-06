@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 
 public class HighlightTest {
 
-    private static class HighlightEvaluator implements IDateEvaluator {
+    public static class HighlightEvaluator implements IDateEvaluator {
 
         private final List<Date> list = new ArrayList<>();
 
@@ -59,11 +59,15 @@ public class HighlightTest {
         public String getInvalidTooltip() {
             return null;
         }
+
+		public void setBounds(int i, int j, int k, int l) {
+			// TODO Auto-generated method stub
+			
+		}
     }
     // a - od, b - do, m - miesiac
-    static void display(int a, int b, int m) {
-        JFrame f = new JFrame("Calendar");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     
+    public static void displayCalendar(int a, int b, int m) {
+        JFrame f = new JFrame("Calendar");  
         int i;
         HighlightEvaluator evaluator = new HighlightEvaluator();
         for( i=a; i<=b; i++)

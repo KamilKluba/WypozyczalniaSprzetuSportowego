@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -36,6 +37,7 @@ import javax.swing.text.DefaultHighlighter;
 
 import com.toedter.calendar.JCalendar;
 
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app.HighlightTest.HighlightEvaluator;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Account;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Address;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Assortment;
@@ -118,12 +120,15 @@ public class MainWindow {
 	JButton buttonLogin2;
 	JButton buttonCreateAccount3;
 	JButton buttonToCart2;
+	JButton buttonOK;
 	JLabel labelItemPhoto;
 	JLabel labelItemName;
 	JButton buttonAddToCart;
 	JTextPane textPaneItemDescription;
 	JLabel labelDaysNumber;
+	JLabel labelDaysNumber2;
 	JTextField textFieldDaysNumber;
+	JTextField textFieldDaysNumber2;
 	JCalendar calendar;
 
 	// elementy ekranu akcji pracownika
@@ -472,22 +477,37 @@ public class MainWindow {
 		mainFrame.add(textPaneItemDescription);
 		itemInfoScreenComponents.add(textPaneItemDescription);
 		
-		labelDaysNumber = new JLabel("Dlugosc wypozyczenia:");
-		labelDaysNumber.setBounds(900, 335, 150, 30);
+		labelDaysNumber = new JLabel("Dlugosc wypozyczenia od:");
+		labelDaysNumber.setBounds(650, 335, 150, 30);
 		mainFrame.add(labelDaysNumber);
 		itemInfoScreenComponents.add(labelDaysNumber);
 		
 		textFieldDaysNumber = new JTextField();
-		textFieldDaysNumber.setBounds(1050, 335, 60, 30);
+		textFieldDaysNumber.setBounds(800, 335, 60, 30);
 		mainFrame.add(textFieldDaysNumber);
 		itemInfoScreenComponents.add(textFieldDaysNumber);
+		
+		labelDaysNumber2 = new JLabel("Dlugosc wypozyczenia do:");
+		labelDaysNumber2.setBounds(900, 335, 150, 30);
+		mainFrame.add(labelDaysNumber2);
+		itemInfoScreenComponents.add(labelDaysNumber2);
+		
+		textFieldDaysNumber2 = new JTextField();
+		textFieldDaysNumber2.setBounds(1050, 335, 60, 30);
+		mainFrame.add(textFieldDaysNumber2);
+		itemInfoScreenComponents.add(textFieldDaysNumber2);
+		
+		buttonOK = new JButton("OK");
+		buttonOK.setBounds(1150, 335, 60, 30);
+		mainFrame.add(buttonOK);
+		itemInfoScreenComponents.add(buttonOK);
 		
 		calendar = new JCalendar();
 		calendar.setBounds(900, 200, 300, 150);
 		calendar.setMinSelectableDate(Calendar.getInstance().getTime());
 		mainFrame.add(calendar);
 		itemInfoScreenComponents.add(calendar);
-
+		
 		// ELEMENTY EKRANU Z AKCJAMI PRACOWNIKA
 		buttonReturnToMainScreen3 = new JButton("Powrot do ekranu gl.");
 		buttonReturnToMainScreen3.setBounds(290, 20, 200, 30);
@@ -726,7 +746,8 @@ public class MainWindow {
 
 		buttonFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filterAssortment();
+				//filterAssortment();
+				setupItemInfoScreen(null);
 											
 			}
 		});
@@ -756,6 +777,14 @@ public class MainWindow {
 		buttonToCart2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				toCart();
+			}
+		});
+		
+		buttonOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int dateFrom = Integer.parseInt(textFieldDaysNumber.getText());
+				int dateTo = Integer.parseInt(textFieldDaysNumber2.getText());
+				displayCalendar(dateFrom,dateTo,1);
 			}
 		});
 
@@ -1155,6 +1184,8 @@ public class MainWindow {
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(true);
 		
+	
+		
 	//	for(Assortment assortment : arrayListAssortment) {
 	//		if(Integer.toString(assortment.getModelID()).equals(Integer.toString(model.getModelID())))
 	//		{
@@ -1174,9 +1205,12 @@ public class MainWindow {
 	//	}
 	//	if (jakaszmienna != counter)
 	//	{	// dzien od, do, i miesiac 
-			HighlightTest.display(2,10,1);
+			
 	//	}
-
+		
+	//	int dateFrom = Integer.parseInt(textFieldDaysNumber.getText());
+	//	int dateTo = Integer.parseInt(textFieldDaysNumber.getText());
+	//	HighlightTest.display(dateFrom,dateTo,1);
 		
 		labelItemName.setText(model.getModelName());
 		textPaneItemDescription.setText(
@@ -1186,6 +1220,34 @@ public class MainWindow {
 						+ "Kaucja za zniszczenie wynosi: " + model.getDamageDeposit() / 100 + " złotych.");
 	}
 	
+	
+	public void displayCalendar(int a, int b, int m) 
+	{
+		
+		HighlightEvaluator evaluator = new HighlightEvaluator();	 
+        int i;
+        for( i=a; i<=b; i++)
+        {
+        evaluator.add(createDate(i, m));
+        }
+        calendar.getDayChooser().addDateEvaluator(evaluator);
+        calendar.setCalendar(calendar.getCalendar());
+        calendar.setVisible(true);
+        mainFrame.repaint();
+        
+       
+    }
+
+    private static Date createDate(int d, int m) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MONTH, m-1);
+        c.set(Calendar.DAY_OF_MONTH, d);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return (c.getTime());
+    }
 
 
 	public ArrayList<Client> getArrayListClients() {
