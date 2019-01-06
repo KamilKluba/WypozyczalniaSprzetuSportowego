@@ -120,6 +120,8 @@ public class MainWindow {
 	JLabel labelItemName;
 	JButton buttonAddToCart;
 	JTextPane textPaneItemDescription;
+	JLabel labelDaysNumber;
+	JTextField textFieldDaysNumber;
 	JCalendar calendar;
 
 	// elementy ekranu akcji pracownika
@@ -467,7 +469,17 @@ public class MainWindow {
 		textPaneItemDescription.setEnabled(false);
 		mainFrame.add(textPaneItemDescription);
 		itemInfoScreenComponents.add(textPaneItemDescription);
-
+		
+		labelDaysNumber = new JLabel("Dlugosc wypozyczenia:");
+		labelDaysNumber.setBounds(900, 335, 150, 30);
+		mainFrame.add(labelDaysNumber);
+		itemInfoScreenComponents.add(labelDaysNumber);
+		
+		textFieldDaysNumber = new JTextField();
+		textFieldDaysNumber.setBounds(1050, 335, 60, 30);
+		mainFrame.add(textFieldDaysNumber);
+		itemInfoScreenComponents.add(textFieldDaysNumber);
+		
 		calendar = new JCalendar();
 		calendar.setBounds(900, 200, 300, 150);
 		calendar.setMinSelectableDate(Calendar.getInstance().getTime());
@@ -926,7 +938,7 @@ public class MainWindow {
 					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
 				}
 
-				JButton temp_button = new JButton("Dodaj nowy model");
+				JButton temp_button = new JButton("Dodaj nowy przedmiot");
 				temp_button.setPreferredSize(new Dimension(500, 30));
 				temp_button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
