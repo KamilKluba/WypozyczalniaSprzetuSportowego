@@ -1,6 +1,7 @@
 package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app;
 
 import java.awt.Color;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -726,6 +727,7 @@ public class MainWindow {
 		buttonFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filterAssortment();
+											
 			}
 		});
 
@@ -1153,27 +1155,27 @@ public class MainWindow {
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(true);
 		
-		for(Assortment assortment : arrayListAssortment) {
-			if(Integer.toString(assortment.getModelID()).equals(Integer.toString(model.getModelID())))
-			{
-				arrayListFreeAssortment.add(assortment);				
-			}
-		}
-		int jakaszmienna=0;
-		int counter = arrayListFreeAssortment.size();;
-		for(Assortment freeAssortment : arrayListFreeAssortment)
-		{
+	//	for(Assortment assortment : arrayListAssortment) {
+	//		if(Integer.toString(assortment.getModelID()).equals(Integer.toString(model.getModelID())))
+	//		{
+	//			arrayListFreeAssortment.add(assortment);				
+	//		}
+	//	}
+	//	int jakaszmienna=0;
+	//	int counter = arrayListFreeAssortment.size();;
+	//	for(Assortment freeAssortment : arrayListFreeAssortment)
+	//	{
 		//	if (JAKIS dzien w kalendarzu == wolny)
-				jakaszmienna++;
+	//			jakaszmienna++;
 				
 		//tutaj bedzie trzeba skorzystac z tych arraylist ktore utworzylem
 		//w klasie Assortyment, jedna do dat, dluga do dlugosci zamowienia
 				
-		}
-		if (jakaszmienna != counter)
-		{
-			
-		}
+	//	}
+	//	if (jakaszmienna != counter)
+	//	{	// dzien od, do, i miesiac 
+			HighlightTest.display(2,10,1);
+	//	}
 
 		
 		labelItemName.setText(model.getModelName());

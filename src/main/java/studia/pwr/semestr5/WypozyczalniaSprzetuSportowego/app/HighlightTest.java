@@ -60,15 +60,15 @@ public class HighlightTest {
             return null;
         }
     }
-
-    private void display(int a, int b) {
+    // a - od, b - do, m - miesiac
+    static void display(int a, int b, int m) {
         JFrame f = new JFrame("Calendar");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     
         int i;
         HighlightEvaluator evaluator = new HighlightEvaluator();
         for( i=a; i<=b; i++)
         {
-        evaluator.add(createDate(i));
+        evaluator.add(createDate(i, m));
         }
         JCalendar jc = new JCalendar();
         jc.getDayChooser().addDateEvaluator(evaluator);
@@ -79,8 +79,9 @@ public class HighlightTest {
         f.setVisible(true);
     }
 
-    private Date createDate(int d) {
+    private static Date createDate(int d, int m) {
         Calendar c = Calendar.getInstance();
+        c.set(Calendar.MONTH, m-1);
         c.set(Calendar.DAY_OF_MONTH, d);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
