@@ -16,6 +16,9 @@ public class Assortment {
 	private List<Integer> listOrdersNumber;
 	private List<Integer> listRepairsNumber;
 	private List<Integer> listMaintenancesNumber;
+	
+	private List<Date> listDateOfOrder;
+	private List<Integer> listLengthOfOrder;
 
 	public Assortment() {
 		super();
@@ -33,9 +36,12 @@ public class Assortment {
 		this.nextMaintenanceDate = nextMaintenanceDate;
 		this.condition = condition;
 		this.modelID = modelID;
-		this.listOrdersNumber = new ArrayList<Integer>();
-		this.listRepairsNumber =  new ArrayList<Integer>();
-		this.listMaintenancesNumber =  new ArrayList<Integer>();
+		
+		listOrdersNumber = new ArrayList<Integer>();
+		listRepairsNumber =  new ArrayList<Integer>();
+		listMaintenancesNumber =  new ArrayList<Integer>();
+		listDateOfOrder = new ArrayList<Date>();
+		listLengthOfOrder = new ArrayList<Integer>();
 	}
 
 
@@ -128,6 +134,25 @@ public class Assortment {
 
 	public void setListMaintenancesNumber(List<Integer> listMaintenancesNumber) {
 		this.listMaintenancesNumber = listMaintenancesNumber;
+	}
+
+	
+	public List<Date> getListDateOfOrder() {
+		return listDateOfOrder;
+	}
+
+	public void setListDateOfOrder(List<Date> listDateOfOrder) {
+		this.listDateOfOrder = listDateOfOrder;
+	}
+
+
+	public List<Integer> getListLengthOfOrder() {
+		return listLengthOfOrder;
+	}
+
+
+	public void setListLengthOfOrder(List<Integer> listLengthOfOrder) {
+		this.listLengthOfOrder = listLengthOfOrder;
 	}
 
 
