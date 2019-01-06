@@ -197,7 +197,7 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelCity);
 		textFieldCity = new JTextField();
 		textFieldCity.setBounds(500, 70, 150, 30);
-		textFieldCity.setText(dividedAddress[1]);
+		if(!create) textFieldCity.setText(dividedAddress[1]);
 		dialogCreateAccount.add(textFieldCity);
 
 		labelPostalCode = new JLabel("Kod pocztowy:");
@@ -205,7 +205,7 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelPostalCode);
 		textFieldPostalCode = new JTextField();
 		textFieldPostalCode.setBounds(500, 110, 150, 30);
-		textFieldPostalCode.setText(dividedAddress[2]);
+		if(!create) textFieldPostalCode.setText(dividedAddress[2]);
 		dialogCreateAccount.add(textFieldPostalCode);
 
 		labelStreet = new JLabel("Ulica:");
@@ -213,7 +213,7 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelStreet);
 		textFieldStreet = new JTextField();
 		textFieldStreet.setBounds(500, 150, 150, 30);
-		textFieldStreet.setText(dividedAddress[3]);
+		if(!create) textFieldStreet.setText(dividedAddress[3]);
 		dialogCreateAccount.add(textFieldStreet);
 
 		labelHouseNumber = new JLabel("Numer domu:");
@@ -221,7 +221,7 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelHouseNumber);
 		textFieldHouseNumber = new JTextField();
 		textFieldHouseNumber.setBounds(500, 190, 150, 30);
-		textFieldHouseNumber.setText(dividedAddress[4]);
+		if(!create) textFieldHouseNumber.setText(dividedAddress[4]);
 		dialogCreateAccount.add(textFieldHouseNumber);
 
 		labelFlatNumber = new JLabel("Numer mieszkania:");
@@ -229,7 +229,7 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelFlatNumber);
 		textFieldFlatNumber = new JTextField();
 		textFieldFlatNumber.setBounds(500, 230, 150, 30);
-		textFieldFlatNumber.setText(dividedAddress[5]);
+		if(!create) textFieldFlatNumber.setText(dividedAddress[5]);
 		dialogCreateAccount.add(textFieldFlatNumber);
 
 		labelRequiredFields = new JLabel("* - wymagane pola       ** - format dd/mm/yyyy");
