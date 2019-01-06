@@ -63,17 +63,18 @@ public class ManageAccount {
 	public ManageAccount() {
 	}
 
-	//jeśli create jest true, tworzy nowe konto, jeśli false to edytuje istniejące
+	// jeśli create jest true, tworzy nowe konto, jeśli false to edytuje
+	// istniejące
 	public ManageAccount(MainWindow mainWindow, boolean create) {
 		this.mainWindow = mainWindow;
 		this.create = create;
 
 		initComponents();
 		initListeners();
-		
+
 		dialogCreateAccount.setVisible(true);
 	}
-	
+
 	public ManageAccount(MainWindow mainWindow, boolean create, Person person) {
 		this.mainWindow = mainWindow;
 		this.create = create;
@@ -82,36 +83,38 @@ public class ManageAccount {
 		dividePerson();
 		initComponents();
 		initListeners();
-		
+
 		dialogCreateAccount.setVisible(true);
 	}
 
-	private void dividePerson(){
-		//dla klasy Person
-		//id[0], imie[1], nazwisko[2], data ur.[3], adresid[4], login[5], haslo[6]
-		//pyt. pom.[7], odp.[8]
-		
-		//dla klasy Address
-		//adresid[0], city[1], postal[2], street[3], housenum[4], flatnum[5]
-		
-		//!&#*&% takie cos jest w metodzie toString klasy Person i Address
-		//zeby bylo prawie pewne ze sie podzieli (200IQ)
+	private void dividePerson() {
+		// dla klasy Person
+		// id[0], imie[1], nazwisko[2], data ur.[3], adresid[4], login[5],
+		// haslo[6]
+		// pyt. pom.[7], odp.[8]
+
+		// dla klasy Address
+		// adresid[0], city[1], postal[2], street[3], housenum[4], flatnum[5]
+
+		// !&#*&% takie cos jest w metodzie toString klasy Person i Address
+		// zeby bylo prawie pewne ze sie podzieli (200IQ)
 		dividedPerson = person.toString().split(Pattern.quote(" !&#*&% "));
-		
-		for(Address a : mainWindow.getArrayListAddresses()){
-			if (a.getAdressID() == Integer.parseInt(dividedPerson[4])){
+
+		for (Address a : mainWindow.getArrayListAddresses()) {
+			if (a.getAdressID() == Integer.parseInt(dividedPerson[4])) {
 				address = a;
 				break;
 			}
 		}
-		
+
 		dividedAddress = address.toString().split(Pattern.quote(" !&#*&% "));
 	}
-	
+
 	private void initComponents() {
 		dialogCreateAccount = new JDialog();
 		dialogCreateAccount.setTitle("Tworzenie konta");
-		if(!create) dialogCreateAccount.setTitle("Edycja konta");
+		if (!create)
+			dialogCreateAccount.setTitle("Edycja konta");
 		dialogCreateAccount.setSize(new Dimension(700, 400));
 		dialogCreateAccount.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialogCreateAccount.setResizable(false);
@@ -123,8 +126,10 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelLogin);
 		textFieldLogin = new JTextField();
 		textFieldLogin.setBounds(180, 30, 150, 30);
-		if(!create) textFieldLogin.setText(dividedPerson[5]);
-		textFieldLogin.setEnabled(false);
+		if (!create) {
+			textFieldLogin.setText(dividedPerson[5]);
+			textFieldLogin.setEnabled(false);
+		}
 		dialogCreateAccount.add(textFieldLogin);
 
 		labelPassword = new JLabel("Hasło:*");
@@ -133,7 +138,8 @@ public class ManageAccount {
 		passwordFieldPassword = new JPasswordField();
 		passwordFieldPassword.setBounds(180, 70, 150, 30);
 		passwordFieldPassword.setEchoChar('*');
-		if(!create) passwordFieldPassword.setText(dividedPerson[6]);
+		if (!create)
+			passwordFieldPassword.setText(dividedPerson[6]);
 		dialogCreateAccount.add(passwordFieldPassword);
 
 		labelRepeatPassword = new JLabel("Powtórz hasło:*");
@@ -142,7 +148,8 @@ public class ManageAccount {
 		passwordFieldRepeatPassword = new JPasswordField();
 		passwordFieldRepeatPassword.setBounds(180, 110, 150, 30);
 		passwordFieldRepeatPassword.setEchoChar('*');
-		if(!create) passwordFieldRepeatPassword.setText(dividedPerson[6]);
+		if (!create)
+			passwordFieldRepeatPassword.setText(dividedPerson[6]);
 		dialogCreateAccount.add(passwordFieldRepeatPassword);
 
 		labelShowPassword = new JLabel("Pokaz haslo:");
@@ -157,7 +164,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelSecurityQuestion);
 		textFieldSecurityQuestion = new JTextField();
 		textFieldSecurityQuestion.setBounds(180, 170, 150, 30);
-		if(!create) textFieldSecurityQuestion.setText(dividedPerson[7]);
+		if (!create)
+			textFieldSecurityQuestion.setText(dividedPerson[7]);
 		dialogCreateAccount.add(textFieldSecurityQuestion);
 
 		labelSecurityAnswer = new JLabel("Odpowiedz:*");
@@ -165,7 +173,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelSecurityAnswer);
 		textFieldSecurityAnswer = new JTextField();
 		textFieldSecurityAnswer.setBounds(180, 210, 150, 30);
-		if(!create) textFieldSecurityAnswer.setText(dividedPerson[8]);
+		if (!create)
+			textFieldSecurityAnswer.setText(dividedPerson[8]);
 		dialogCreateAccount.add(textFieldSecurityAnswer);
 
 		labelName = new JLabel("Imie:*");
@@ -173,7 +182,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelName);
 		textFieldName = new JTextField();
 		textFieldName.setBounds(180, 250, 150, 30);
-		if(!create) textFieldName.setText(dividedPerson[1]);
+		if (!create)
+			textFieldName.setText(dividedPerson[1]);
 		dialogCreateAccount.add(textFieldName);
 
 		labelLastName = new JLabel("Nazwisko:*");
@@ -181,7 +191,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelLastName);
 		textFieldLastName = new JTextField();
 		textFieldLastName.setBounds(180, 290, 150, 30);
-		if(!create) textFieldLastName.setText(dividedPerson[2]);
+		if (!create)
+			textFieldLastName.setText(dividedPerson[2]);
 		dialogCreateAccount.add(textFieldLastName);
 
 		labelBirthDate = new JLabel("Data urodzenia:* **");
@@ -189,7 +200,36 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelBirthDate);
 		textFieldBirthDate = new JTextField();
 		textFieldBirthDate.setBounds(500, 30, 150, 30);
-		if(!create) textFieldBirthDate.setText(dividedPerson[3]);
+		if (!create){
+			String[] parts = dividedPerson[3].split(" ");
+
+			if (parts[1].equals("Jan"))
+				parts[1] = "01";
+			else if (parts[1].equals("Feb"))
+				parts[1] = "02";
+			else if (parts[1].equals("Mar"))
+				parts[1] = "03";
+			else if (parts[1].equals("Apr"))
+				parts[1] = "04";
+			else if (parts[1].equals("May"))
+				parts[1] = "05";
+			else if (parts[1].equals("Jun"))
+				parts[1] = "06";
+			else if (parts[1].equals("Jul"))
+				parts[1] = "07";
+			else if (parts[1].equals("Aug"))
+				parts[1] = "08";
+			else if (parts[1].equals("Oct"))
+				parts[1] = "09";
+			else if (parts[1].equals("Sep"))
+				parts[1] = "10";
+			else if (parts[1].equals("Nov"))
+				parts[1] = "11";
+			else if (parts[1].equals("Dec"))
+				parts[1] = "12";
+
+			textFieldBirthDate.setText(parts[2] + "/" + parts[1] + "/" + parts[5]);
+		}
 		dialogCreateAccount.add(textFieldBirthDate);
 
 		labelCity = new JLabel("Miasto:");
@@ -197,7 +237,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelCity);
 		textFieldCity = new JTextField();
 		textFieldCity.setBounds(500, 70, 150, 30);
-		if(!create) textFieldCity.setText(dividedAddress[1]);
+		if (!create)
+			textFieldCity.setText(dividedAddress[1]);
 		dialogCreateAccount.add(textFieldCity);
 
 		labelPostalCode = new JLabel("Kod pocztowy:");
@@ -205,7 +246,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelPostalCode);
 		textFieldPostalCode = new JTextField();
 		textFieldPostalCode.setBounds(500, 110, 150, 30);
-		if(!create) textFieldPostalCode.setText(dividedAddress[2]);
+		if (!create)
+			textFieldPostalCode.setText(dividedAddress[2]);
 		dialogCreateAccount.add(textFieldPostalCode);
 
 		labelStreet = new JLabel("Ulica:");
@@ -213,7 +255,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelStreet);
 		textFieldStreet = new JTextField();
 		textFieldStreet.setBounds(500, 150, 150, 30);
-		if(!create) textFieldStreet.setText(dividedAddress[3]);
+		if (!create)
+			textFieldStreet.setText(dividedAddress[3]);
 		dialogCreateAccount.add(textFieldStreet);
 
 		labelHouseNumber = new JLabel("Numer domu:");
@@ -221,7 +264,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelHouseNumber);
 		textFieldHouseNumber = new JTextField();
 		textFieldHouseNumber.setBounds(500, 190, 150, 30);
-		if(!create) textFieldHouseNumber.setText(dividedAddress[4]);
+		if (!create)
+			textFieldHouseNumber.setText(dividedAddress[4]);
 		dialogCreateAccount.add(textFieldHouseNumber);
 
 		labelFlatNumber = new JLabel("Numer mieszkania:");
@@ -229,7 +273,8 @@ public class ManageAccount {
 		dialogCreateAccount.add(labelFlatNumber);
 		textFieldFlatNumber = new JTextField();
 		textFieldFlatNumber.setBounds(500, 230, 150, 30);
-		if(!create) textFieldFlatNumber.setText(dividedAddress[5]);
+		if (!create)
+			textFieldFlatNumber.setText(dividedAddress[5]);
 		dialogCreateAccount.add(textFieldFlatNumber);
 
 		labelRequiredFields = new JLabel("* - wymagane pola       ** - format dd/mm/yyyy");
@@ -241,12 +286,13 @@ public class ManageAccount {
 		dialogCreateAccount.add(buttonCancel);
 
 		buttonCreateAccount = new JButton("Utworz");
-		if(!create) buttonCreateAccount.setText("Zapisz");
+		if (!create)
+			buttonCreateAccount.setText("Zapisz");
 		buttonCreateAccount.setBounds(410, 310, 80, 30);
 		dialogCreateAccount.add(buttonCreateAccount);
 	}
-	
-	private void initListeners(){
+
+	private void initListeners() {
 		checkBoxShowPassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (checkBoxShowPassword.isSelected()) {
@@ -258,24 +304,24 @@ public class ManageAccount {
 				}
 			}
 		});
-		
+
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dialogCreateAccount.dispose();
 			}
 		});
-		
+
 		buttonCreateAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(create)
+				if (create)
 					createAccount();
 				else
 					editAccount();
 			}
 		});
 	}
-	
-	private void createAccount(){
+
+	private void createAccount() {
 		String login = textFieldLogin.getText();
 		String password = String.valueOf(passwordFieldPassword.getPassword());
 		String repeated_password = String.valueOf(passwordFieldRepeatPassword.getPassword());
@@ -304,8 +350,7 @@ public class ManageAccount {
 		else if (security_question.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Pytanie pomocnicze nie moze byc puste");
 		else if (security_answer.equals(""))
-			JOptionPane.showMessageDialog(dialogCreateAccount,
-					"Odpowiedz na pytanie pomocnicze nie moze byc pusta");
+			JOptionPane.showMessageDialog(dialogCreateAccount, "Odpowiedz na pytanie pomocnicze nie moze byc pusta");
 		else if (name.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Imie nie moze byc puste");
 		else if (last_name.equals(""))
@@ -313,28 +358,28 @@ public class ManageAccount {
 		else if (birth_date == null)
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Data urodzenia nie moze byc pusta");
 		else {
-			for(Person p : mainWindow.getArrayListPeople())
-				if(p.getLogin().equals(login)){
+			for (Person p : mainWindow.getArrayListPeople())
+				if (p.getLogin().equals(login)) {
 					JOptionPane.showMessageDialog(dialogCreateAccount, "Użytkownik o podanym nicku już istnieje!");
 					return;
 				}
-			
-			mainWindow.getArrayListAddresses().add(new Address(mainWindow.getArrayListAddresses().size() + 1,
-					city, postal_code, street, house_number, flat_number));
+
+			mainWindow.getArrayListAddresses().add(new Address(mainWindow.getArrayListAddresses().size() + 1, city,
+					postal_code, street, house_number, flat_number));
 			mainWindow.getArrayListPeople()
 					.add(new Person(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
 							mainWindow.getArrayListAddresses().size(), login, password, security_question,
 							security_answer));
-			mainWindow.getArrayListClients().add(new Client(mainWindow.getArrayListClients().size() + 1,
-					new Date(), 0, null, false, mainWindow.getArrayListPeople().size()));
+			mainWindow.getArrayListClients().add(new Client(mainWindow.getArrayListClients().size() + 1, new Date(), 0,
+					null, false, mainWindow.getArrayListPeople().size()));
 			dialogCreateAccount.dispose();
 		}
 		// Poza tym co tu jest trzeba dodać w bazie danych
 		// pytanie pomocnicze oraz odpowiedz na nie
 		// haslo i login maja byc w tabelu Dane_kont
 	}
-	
-	private void editAccount(){
+
+	private void editAccount() {
 		String login = textFieldLogin.getText();
 		String password = String.valueOf(passwordFieldPassword.getPassword());
 		String repeated_password = String.valueOf(passwordFieldRepeatPassword.getPassword());
@@ -361,28 +406,27 @@ public class ManageAccount {
 		else if (security_question.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Pytanie pomocnicze nie moze byc puste");
 		else if (security_answer.equals(""))
-			JOptionPane.showMessageDialog(dialogCreateAccount,
-					"Odpowiedz na pytanie pomocnicze nie moze byc pusta");
+			JOptionPane.showMessageDialog(dialogCreateAccount, "Odpowiedz na pytanie pomocnicze nie moze byc pusta");
 		else if (name.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Imie nie moze byc puste");
 		else if (last_name.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Nazwisko nie moze byc puste");
 		else if (birth_date == null)
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Data urodzenia nie moze byc pusta");
-		else {			
+		else {
 			person.setFirstName(name);
 			person.setLastName(last_name);
 			person.setLogin(login);
 			person.setPassword(password);
 			person.setSecurityQuestion(security_question);
 			person.setSecurityAnswer(security_answer);
-			
+
 			address.setCityName(city);
 			address.setPostalCode(postal_code);
 			address.setStreet(street);
 			address.setHouseNumber(house_number);
 			address.setFlatNumber(flat_number);
-			
+
 			dialogCreateAccount.dispose();
 		}
 		// Poza tym co tu jest trzeba dodać w bazie danych
