@@ -56,6 +56,7 @@ public class MainWindow {
 	ArrayList<Account> arrayListAccounts;
 	ArrayList<Address> arrayListAddresses;
 	ArrayList<Assortment> arrayListAssortment;
+	ArrayList<Assortment> arrayListFreeAssortment;
 	ArrayList<Model> arrayListModels;
 	ArrayList<OrderHistory> arrayListOrders;
 	ArrayList<MaintenanceHistory> arrayListMaintenances;
@@ -1145,12 +1146,36 @@ public class MainWindow {
 		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
 	}
 
-	private void setupItemInfoScreen(Model model) {
+	private void setupItemInfoScreen(Model model)
+	{
 		for (Component c : itemBrowseScreenComponents)
 			c.setVisible(false);
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(true);
+		
+		for(Assortment assortment : arrayListAssortment) {
+			if(Integer.toString(assortment.getModelID()).equals(Integer.toString(model.getModelID())))
+			{
+				arrayListFreeAssortment.add(assortment);				
+			}
+		}
+		int jakaszmienna=0;
+		int counter = arrayListFreeAssortment.size();;
+		for(Assortment freeAssortment : arrayListFreeAssortment)
+		{
+		//	if (JAKIS dzien w kalendarzu == wolny)
+				jakaszmienna++;
+				
+		//tutaj bedzie trzeba skorzystac z tych arraylist ktore utworzylem
+		//w klasie Assortyment, jedna do dat, dluga do dlugosci zamowienia
+				
+		}
+		if (jakaszmienna != counter)
+		{
+			
+		}
 
+		
 		labelItemName.setText(model.getModelName());
 		textPaneItemDescription.setText(
 				model.getModelName() + " jest to suuuuuuuuper przedmiot (prawie tak super ta aplikacja) producena "
@@ -1158,6 +1183,8 @@ public class MainWindow {
 						+ model.getCostPerDay() / 100 + " złotych dziennie. \n" 
 						+ "Kaucja za zniszczenie wynosi: " + model.getDamageDeposit() / 100 + " złotych.");
 	}
+	
+
 
 	public ArrayList<Client> getArrayListClients() {
 		return arrayListClients;
