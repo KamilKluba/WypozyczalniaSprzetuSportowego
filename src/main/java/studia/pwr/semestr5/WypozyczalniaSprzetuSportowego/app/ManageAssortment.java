@@ -125,8 +125,36 @@ public class ManageAssortment {
 		dialogManageAssortment.add(labelBuyDate);
 		textFieldBuyDate = new JTextField();
 		textFieldBuyDate.setBounds(200, 110, 150, 30);
-		if (!create)
-			textFieldBuyDate.setText(dividedModel[1]);
+		if (!create) {
+			String[] parts = dividedModel[1].split(" ");
+
+			if (parts[1].equals("Jan"))
+				parts[1] = "01";
+			else if (parts[1].equals("Feb"))
+				parts[1] = "02";
+			else if (parts[1].equals("Mar"))
+				parts[1] = "03";
+			else if (parts[1].equals("Apr"))
+				parts[1] = "04";
+			else if (parts[1].equals("May"))
+				parts[1] = "05";
+			else if (parts[1].equals("Jun"))
+				parts[1] = "06";
+			else if (parts[1].equals("Jul"))
+				parts[1] = "07";
+			else if (parts[1].equals("Aug"))
+				parts[1] = "08";
+			else if (parts[1].equals("Oct"))
+				parts[1] = "09";
+			else if (parts[1].equals("Sep"))
+				parts[1] = "10";
+			else if (parts[1].equals("Nov"))
+				parts[1] = "11";
+			else if (parts[1].equals("Dec"))
+				parts[1] = "12";
+
+			textFieldBuyDate.setText(parts[2] + "/" + parts[1] + "/" + parts[5]);
+		}
 		dialogManageAssortment.add(textFieldBuyDate);
 
 		labelRentNumber = new JLabel("Liczba wypozyczen:");
@@ -146,8 +174,39 @@ public class ManageAssortment {
 		textFieldLastRentDate = new JTextField();
 		textFieldLastRentDate.setBounds(200, 190, 150, 30);
 		if (!create) {
-			textFieldLastRentDate.setText(dividedModel[3]);
 			textFieldLastRentDate.setEnabled(false);
+
+			try {
+				String[] parts = dividedModel[3].split(" ");
+
+				if (parts[1].equals("Jan"))
+					parts[1] = "01";
+				else if (parts[1].equals("Feb"))
+					parts[1] = "02";
+				else if (parts[1].equals("Mar"))
+					parts[1] = "03";
+				else if (parts[1].equals("Apr"))
+					parts[1] = "04";
+				else if (parts[1].equals("May"))
+					parts[1] = "05";
+				else if (parts[1].equals("Jun"))
+					parts[1] = "06";
+				else if (parts[1].equals("Jul"))
+					parts[1] = "07";
+				else if (parts[1].equals("Aug"))
+					parts[1] = "08";
+				else if (parts[1].equals("Oct"))
+					parts[1] = "09";
+				else if (parts[1].equals("Sep"))
+					parts[1] = "10";
+				else if (parts[1].equals("Nov"))
+					parts[1] = "11";
+				else if (parts[1].equals("Dec"))
+					parts[1] = "12";
+
+				textFieldLastRentDate.setText(parts[2] + "/" + parts[1] + "/" + parts[5]);
+			} catch (Exception e) {
+			}
 		}
 		dialogManageAssortment.add(textFieldLastRentDate);
 
@@ -165,8 +224,39 @@ public class ManageAssortment {
 		dialogManageAssortment.add(labelDateNextMaintenance);
 		textFieldDateNextMaintenance = new JTextField();
 		textFieldDateNextMaintenance.setBounds(200, 310, 150, 30);
-		if (!create)
-			textFieldDateNextMaintenance.setText(dividedModel[5]);
+		if (!create) {
+			try {
+				String[] parts = dividedModel[5].split(" ");
+
+				if (parts[1].equals("Jan"))
+					parts[1] = "01";
+				else if (parts[1].equals("Feb"))
+					parts[1] = "02";
+				else if (parts[1].equals("Mar"))
+					parts[1] = "03";
+				else if (parts[1].equals("Apr"))
+					parts[1] = "04";
+				else if (parts[1].equals("May"))
+					parts[1] = "05";
+				else if (parts[1].equals("Jun"))
+					parts[1] = "06";
+				else if (parts[1].equals("Jul"))
+					parts[1] = "07";
+				else if (parts[1].equals("Aug"))
+					parts[1] = "08";
+				else if (parts[1].equals("Oct"))
+					parts[1] = "09";
+				else if (parts[1].equals("Sep"))
+					parts[1] = "10";
+				else if (parts[1].equals("Nov"))
+					parts[1] = "11";
+				else if (parts[1].equals("Dec"))
+					parts[1] = "12";
+
+				textFieldDateNextMaintenance.setText(parts[2] + "/" + parts[1] + "/" + parts[5]);
+			} catch (Exception e) {
+			}
+		}
 		dialogManageAssortment.add(textFieldDateNextMaintenance);
 
 		labelCondition = new JLabel("Stan:");
@@ -308,6 +398,7 @@ public class ManageAssortment {
 			lastRentDate = new SimpleDateFormat("dd/MM/yyyy").parse(textFieldLastRentDate.getText());
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			System.out.println("MA WYRZUCAC BLAD BO DATA OSTATNIEGO WYPOZYCZENIA JEST NULL CZYLI OKE XD");
 		}
 		java.util.Date buyDate = null;
 		try {
