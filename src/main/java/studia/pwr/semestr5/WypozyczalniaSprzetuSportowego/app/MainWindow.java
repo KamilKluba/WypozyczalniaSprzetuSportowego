@@ -27,10 +27,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 
 import com.toedter.calendar.JCalendar;
 
@@ -59,6 +60,8 @@ public class MainWindow {
 	ArrayList<OrderHistory> arrayListOrders;
 	ArrayList<MaintenanceHistory> arrayListMaintenances;
 	ArrayList<RepairHistory> arrayListRepairs;
+	
+	ArrayList<Assortment> arrayListCart;
 
 	// elementy ekranu startowego aplikacji
 	private List<Component> mainScreenComponents;
@@ -114,8 +117,9 @@ public class MainWindow {
 	JButton buttonCreateAccount3;
 	JButton buttonToCart2;
 	JLabel labelItemPhoto;
+	JLabel labelItemName;
 	JButton buttonAddToCart;
-	JTextArea textAreaItemDescription;
+	JTextPane textPaneItemDescription;
 	JCalendar calendar;
 
 	// elementy ekranu akcji pracownika
@@ -124,7 +128,6 @@ public class MainWindow {
 	JButton buttonBrowseOrders;
 	JButton buttonManageAccounts;
 	JButton buttonManageModels;
-	JButton buttonAdd;
 	JButton buttonManageEqupiment;
 	JButton buttonManageMaintenances;
 	JButton buttonManageRepairs;
@@ -133,17 +136,6 @@ public class MainWindow {
 	JScrollPane scrollPaneDBContent;
 	GridBagConstraints gridBagConstraintsWorkerActions;
 	List<JButton> listOfDBContent;
-	
-	
-	// elementy ekranu dodaj/modyfikuj model/sprzet
-	private List<Component> addModifyProductScreenComponents;
-	
-	JButton buttonAddEquipment;
-	JButton buttonAddModel;
-	JButton buttonModifyModel;
-	JButton buttonModifyEquipment;
-	JButton buttonRemoveModel;
-	JButton buttonRemoveEquipment;
 
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
@@ -164,8 +156,6 @@ public class MainWindow {
 			c.setVisible(false);
 		for (Component c : workerActionsComponents)
 			c.setVisible(false);
-		for (Component c : addModifyProductScreenComponents)
-			c.setVisible(false);
 
 		mainFrame.setVisible(true);
 	}
@@ -183,13 +173,14 @@ public class MainWindow {
 		arrayListOrders = new ArrayList<OrderHistory>();
 		arrayListMaintenances = new ArrayList<MaintenanceHistory>();
 		arrayListRepairs = new ArrayList<RepairHistory>();
+		
+		arrayListCart = new ArrayList<Assortment>();
 
 		mainScreenComponents = new ArrayList<Component>();
 		loginScreenComponents = new ArrayList<Component>();
 		itemBrowseScreenComponents = new ArrayList<Component>();
 		itemInfoScreenComponents = new ArrayList<Component>();
 		workerActionsComponents = new ArrayList<Component>();
-		addModifyProductScreenComponents = new ArrayList<Component>();
 	}
 
 	private void initComponents() {
@@ -403,13 +394,17 @@ public class MainWindow {
 		listOfAllItemsNames = new ArrayList<JLabel>();
 		listOfAllButtonPhotos = new ArrayList<JButton>();
 		for (int i = 0; i < arrayListModels.size(); i++) {
-			Model model = arrayListModels.get(i);
+			final Model model = arrayListModels.get(i);
 
 			JButton button_model = new JButton();
 			button_model.setPreferredSize(new Dimension(170, 100));
 			button_model.setIcon(new ImageIcon(getClass().getResource("/Resources/przedmiot.png")));
-			button_model.setBorderPainted(false);
 			button_model.setContentAreaFilled(false);
+			button_model.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setupItemInfoScreen(model);
+				}
+			});
 			gridBagConstraintsBrowse.gridx = i % 5;
 			gridBagConstraintsBrowse.gridy = i / 5 * 2;
 			panelItems.add(button_model, gridBagConstraintsBrowse);
@@ -456,16 +451,22 @@ public class MainWindow {
 		mainFrame.add(labelItemPhoto);
 		itemInfoScreenComponents.add(labelItemPhoto);
 
+		labelItemName = new JLabel();
+		labelItemName.setBounds(220, 250, 300, 30);
+		mainFrame.add(labelItemName);
+		itemInfoScreenComponents.add(labelItemName);
+
 		buttonAddToCart = new JButton("Dodaj do koszyka");
 		buttonAddToCart.setBounds(220, 320, 150, 30);
 		mainFrame.add(buttonAddToCart);
 		itemInfoScreenComponents.add(buttonAddToCart);
 
-		textAreaItemDescription = new JTextArea();
-		textAreaItemDescription.setBounds(50, 370, 1170, 450);
-		textAreaItemDescription.setEnabled(false);
-		mainFrame.add(textAreaItemDescription);
-		itemInfoScreenComponents.add(textAreaItemDescription);
+		textPaneItemDescription = new JTextPane();
+		textPaneItemDescription.setBounds(50, 370, 1170, 300);
+		textPaneItemDescription.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20)); 
+		textPaneItemDescription.setEnabled(false);
+		mainFrame.add(textPaneItemDescription);
+		itemInfoScreenComponents.add(textPaneItemDescription);
 
 		calendar = new JCalendar();
 		calendar.setBounds(900, 200, 300, 150);
@@ -493,7 +494,7 @@ public class MainWindow {
 		buttonManageModels.setBounds(40, 70, 200, 30);
 		mainFrame.add(buttonManageModels);
 		workerActionsComponents.add(buttonManageModels);
-		
+
 		buttonManageEqupiment = new JButton("Zarzadzaj sprzetem");
 		buttonManageEqupiment.setBounds(290, 70, 200, 30);
 		mainFrame.add(buttonManageEqupiment);
@@ -508,11 +509,6 @@ public class MainWindow {
 		buttonManageRepairs.setBounds(790, 70, 200, 30);
 		mainFrame.add(buttonManageRepairs);
 		workerActionsComponents.add(buttonManageRepairs);
-		
-		buttonAdd = new JButton("Dodaj");
-		buttonAdd.setBounds(1040, 20, 200, 30);
-		mainFrame.add(buttonAdd);
-		workerActionsComponents.add(buttonAdd);
 
 		buttonLogOut = new JButton("Wyloguj");
 		buttonLogOut.setBounds(1040, 70, 200, 30);
@@ -532,40 +528,6 @@ public class MainWindow {
 		scrollPaneDBContent.setBounds(100, 130, 1080, 500);
 		mainFrame.add(scrollPaneDBContent);
 		workerActionsComponents.add(scrollPaneDBContent);
-		
-		
-		// ELEMENTY EKRANU DODAJ MODEL/EQUIPMENT
-	
-		buttonAddEquipment = new JButton("Dodaj sprzet"); 
-		buttonAddEquipment.setBounds(250, 200, 200, 40); 
-		mainFrame.add(buttonAddEquipment);
-		addModifyProductScreenComponents.add(buttonAddEquipment);
-		
-		buttonAddModel = new JButton("Dodaj model"); 
-		buttonAddModel.setBounds(250, 100, 200, 40); 
-		mainFrame.add(buttonAddModel);
-		addModifyProductScreenComponents.add(buttonAddModel);
-		
-		buttonModifyModel = new JButton("Modyfikuj model");
-		buttonModifyModel.setBounds(750, 100, 200, 40);
-		mainFrame.add(buttonModifyModel);
-		addModifyProductScreenComponents.add(buttonModifyModel);
-		
-		buttonModifyEquipment = new JButton("Modyfikuj sprzet");
-		buttonModifyEquipment.setBounds(750, 200, 200, 40);
-		mainFrame.add(buttonModifyEquipment);
-		addModifyProductScreenComponents.add(buttonModifyEquipment);
-		
-		buttonRemoveModel = new JButton("Usun model");
-		buttonRemoveModel.setBounds(500, 100, 200, 40);
-		mainFrame.add(buttonRemoveModel);
-		addModifyProductScreenComponents.add(buttonRemoveModel);
-		
-		buttonRemoveEquipment = new JButton("Usun sprzet");
-		buttonRemoveEquipment.setBounds(500, 200, 200, 40);
-		mainFrame.add(buttonRemoveEquipment);
-		addModifyProductScreenComponents.add(buttonRemoveEquipment);
-		
 
 		// ELEMENTY WIDZIANE/NIEWIDZIANE NIEZALEZNIE OD EKRANU
 		buttonWorkerActions = new JButton("Opcje pracownika");
@@ -755,22 +717,30 @@ public class MainWindow {
 		});
 
 		// listenery ekranu informacji o sprzęcie-----------------------------
-
-		// listenery elementow widzianych/niewidzianych niezaleznie od ekranu
-		buttonWorkerActions.addActionListener(new ActionListener() {
+		buttonReturnToBrowse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Component c : mainScreenComponents)
-					c.setVisible(false);
-				for (Component c : addModifyProductScreenComponents)
-					c.setVisible(false);
-				for (Component c : loginScreenComponents)
-					c.setVisible(false);
-				for (Component c : itemBrowseScreenComponents)
-					c.setVisible(false);
 				for (Component c : itemInfoScreenComponents)
 					c.setVisible(false);
-				for (Component c : workerActionsComponents)
+				for (Component c : itemBrowseScreenComponents)
 					c.setVisible(true);
+			}
+		});
+
+		buttonLogin2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loginScreen();
+			}
+		});
+
+		buttonCreateAccount3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createAccount();
+			}
+		});
+
+		buttonToCart2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				toCart();
 			}
 		});
 
@@ -779,8 +749,6 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				for (Component c : mainScreenComponents)
 					c.setVisible(true);
-				for (Component c : addModifyProductScreenComponents)
-					c.setVisible(false);
 				for (Component c : loginScreenComponents)
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
@@ -797,8 +765,6 @@ public class MainWindow {
 			// ze nie wyrzuca do ekranu logowania tylko do glownego
 			public void actionPerformed(ActionEvent e) {
 				for (Component c : mainScreenComponents)
-					c.setVisible(false);
-				for (Component c : addModifyProductScreenComponents)
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
 					c.setVisible(false);
@@ -925,7 +891,7 @@ public class MainWindow {
 				gridBagConstraintsWorkerActions.gridy = 1;
 				listOfDBContent.add(temp_button);
 				panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
-				
+
 				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
 				// a nie mam lepszego pomyslu jak to naprawic
 				for (Component c : workerActionsComponents)
@@ -941,8 +907,7 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				panelDBContent.removeAll();
 				listOfDBContent = new ArrayList<JButton>();
-				
-				
+
 				for (int i = 0; i < arrayListAssortment.size(); i++) {
 					final Assortment a = arrayListAssortment.get(i);
 					JButton temp_button = new JButton("ID sprzetu: " + a.getItemID() + " ,liczba wypozyczen: "
@@ -960,7 +925,7 @@ public class MainWindow {
 					listOfDBContent.add(temp_button);
 					panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
 				}
-				
+
 				JButton temp_button = new JButton("Dodaj nowy model");
 				temp_button.setPreferredSize(new Dimension(500, 30));
 				temp_button.addActionListener(new ActionListener() {
@@ -973,7 +938,7 @@ public class MainWindow {
 				gridBagConstraintsWorkerActions.gridy = 1;
 				listOfDBContent.add(temp_button);
 				panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
-				
+
 				// dodalem to bo przyciski do kont nie chcialy sie pojawiac
 				// a nie mam lepszego pomyslu jak to naprawic
 				for (Component c : workerActionsComponents)
@@ -1009,7 +974,7 @@ public class MainWindow {
 					c.setVisible(true);
 			}
 		});
-		
+
 		buttonManageRepairs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panelDBContent.removeAll();
@@ -1017,8 +982,8 @@ public class MainWindow {
 
 				for (int i = 0; i < arrayListRepairs.size(); i++) {
 					RepairHistory r = arrayListRepairs.get(i);
-					JButton temp_button = new JButton("Numer konserwacji" + r.getRepairNumber()
-							+ " ,data konserwacji: " + r.getRepairDate());
+					JButton temp_button = new JButton(
+							"Numer konserwacji" + r.getRepairNumber() + " ,data konserwacji: " + r.getRepairDate());
 					temp_button.setPreferredSize(new Dimension(500, 30));
 
 					gridBagConstraintsWorkerActions.gridx = 1;
@@ -1036,61 +1001,53 @@ public class MainWindow {
 					c.setVisible(true);
 			}
 		});
-		
-		buttonAdd.addActionListener(new ActionListener() {
+
+		// listenery elementow widzianych/niewidzianych niezaleznie od ekranu
+		buttonWorkerActions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Component c : workerActionsComponents)
+				for (Component c : mainScreenComponents)
 					c.setVisible(false);
-				for (Component c : addModifyProductScreenComponents)
+				for (Component c : loginScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemBrowseScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemInfoScreenComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
 					c.setVisible(true);
-				
 			}
 		});
-		
-		buttonAddEquipment.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				createAssortment();
-			}
-		});
-		
-		buttonAddModel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				createModel();
-			}
-		});
-		
-		
 
 	}
 
 	private void createAccount() {
 		new ManageAccount(this, true);
 	}
-	
-	private void editAccount(Person p){
+
+	private void editAccount(Person p) {
 		new ManageAccount(this, false, p);
 	}
-	
+
 	private void createModel() {
 		new ManageModel(arrayListModels, true);
 	}
-	
-	private void editModel(Model m){
+
+	private void editModel(Model m) {
 		new ManageModel(arrayListModels, false, m, panelDBContent);
 	}
-	
+
 	private void createAssortment() {
 		new ManageAssortment(arrayListAssortment, true);
 	}
-	
-	private void editAssortment(Assortment a){
+
+	private void editAssortment(Assortment a) {
 		new ManageAssortment(arrayListAssortment, false, a, panelDBContent);
 	}
 
 	private void remindPassword() {
 		new RemindPassword(this);
 	}
-	
+
 	private void loginScreen() {
 		if (!loggedIn) {
 			for (Component c : mainScreenComponents)
@@ -1100,8 +1057,6 @@ public class MainWindow {
 			for (Component c : itemInfoScreenComponents)
 				c.setVisible(false);
 			for (Component c : workerActionsComponents)
-				c.setVisible(false);
-			for (Component c : addModifyProductScreenComponents)
 				c.setVisible(false);
 			for (Component c : loginScreenComponents)
 				c.setVisible(true);
@@ -1176,6 +1131,20 @@ public class MainWindow {
 
 	private void filterAssortment() {
 		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+	}
+
+	private void setupItemInfoScreen(Model model) {
+		for (Component c : itemBrowseScreenComponents)
+			c.setVisible(false);
+		for (Component c : itemInfoScreenComponents)
+			c.setVisible(true);
+
+		labelItemName.setText(model.getModelName());
+		textPaneItemDescription.setText(
+				model.getModelName() + " jest to suuuuuuuuper przedmiot (prawie tak super ta aplikacja) producena "
+						+ model.getProducer() + " który jest znanym dostawcą sprzętu sportowego i kosztuje jedyne "
+						+ model.getCostPerDay() / 100 + " złotych dziennie. \n" 
+						+ "Kaucja za zniszczenie wynosi: " + model.getDamageDeposit() / 100 + " złotych.");
 	}
 
 	public ArrayList<Client> getArrayListClients() {
