@@ -10,89 +10,93 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 
-
 public class HighlightTest {
 
-    public static class HighlightEvaluator implements IDateEvaluator {
+	public static class HighlightEvaluator implements IDateEvaluator {
 
-        private final List<Date> list = new ArrayList<>();
+		private final List<Date> list = new ArrayList<>();
+		private Color backgroundColor;
 
-        public void add(Date date) {
-            list.add(date);
-        }
+		public HighlightEvaluator(){
+			backgroundColor = Color.black;
+		}
+		
+		public void add(Date date) {
+			list.add(date);
+		}
 
-        public boolean isSpecial(Date date) {
-            return list.contains(date);
-        }
+		public void removeAllDates() {
+			while (list.size() > 0)
+				list.remove(0);
+		}
 
-      
-        public Color getSpecialForegroundColor() {
-            return Color.red.darker();
-        }
+		public boolean isSpecial(Date date) {
+			return list.contains(date);
+		}
 
-       
-        public Color getSpecialBackroundColor() {
-            return Color.blue;
-        }
+		public Color getSpecialForegroundColor() {
+			return Color.black;
+		}
 
-       
-        public String getSpecialTooltip() {
-            return "Highlighted event.";
-        }
+		public Color getSpecialBackroundColor() {
+			return backgroundColor;
+		}
 
-      
-        public boolean isInvalid(Date date) {
-            return false;
-        }
+		public String getSpecialTooltip() {
+			return "Highlighted event.";
+		}
 
-     
-        public Color getInvalidForegroundColor() {
-            return null;
-        }
+		public boolean isInvalid(Date date) {
+			return false;
+		}
 
-       
-        public Color getInvalidBackroundColor() {
-            return null;
-        }
+		public Color getInvalidForegroundColor() {
+			return null;
+		}
 
-     
-        public String getInvalidTooltip() {
-            return null;
-        }
+		public Color getInvalidBackroundColor() {
+			return null;
+		}
+
+		public String getInvalidTooltip() {
+			return null;
+		}
 
 		public void setBounds(int i, int j, int k, int l) {
 			// TODO Auto-generated method stub
-			
 		}
-    }
-    // a - od, b - do, m - miesiac
-    public static void displayCalendar(int a, int b, int m) {
-        JFrame f = new JFrame("Calendar");  
-        int i;
-        HighlightEvaluator evaluator = new HighlightEvaluator();
-        for( i=a; i<=b; i++)
-        {
-        evaluator.add(createDate(i, m));
-        }
-        JCalendar jc = new JCalendar();
-        jc.getDayChooser().addDateEvaluator(evaluator);
-        jc.setCalendar(jc.getCalendar());
-        f.add(jc);
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-    }
+		
+		public void setBackgroundColor(Color c){
+			backgroundColor = c;
+		}
+	}
 
-    private static Date createDate(int d, int m) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.MONTH, m-1);
-        c.set(Calendar.DAY_OF_MONTH, d);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        return (c.getTime());
-    }
+	// a - od, b - do, m - miesiac
+	public static void displayCalendar(int a, int b, int m) {
+		JFrame f = new JFrame("Calendar");
+		int i;
+		HighlightEvaluator evaluator = new HighlightEvaluator();
+		for (i = a; i <= b; i++) {
+			evaluator.add(createDate(i, m));
+		}
+		JCalendar jc = new JCalendar();
+		jc.getDayChooser().addDateEvaluator(evaluator);
+		jc.setCalendar(jc.getCalendar());
+		f.add(jc);
+		f.pack();
+		f.setLocationRelativeTo(null);
+		f.setVisible(true);
+	}
 
-   
+	private static Date createDate(int d, int m) {
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.MONTH, m - 1);
+		c.set(Calendar.DAY_OF_MONTH, d);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return (c.getTime());
+	}
+
 }
