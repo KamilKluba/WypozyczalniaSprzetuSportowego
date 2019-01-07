@@ -130,6 +130,7 @@ public class MainWindow {
 	JTextField textFieldDaysNumber;
 	JTextField textFieldDaysNumber2;
 	JCalendar calendar;
+	
 
 	// elementy ekranu akcji pracownika
 	private List<Component> workerActionsComponents;
@@ -145,7 +146,14 @@ public class MainWindow {
 	JScrollPane scrollPaneDBContent;
 	GridBagConstraints gridBagConstraintsWorkerActions;
 	List<JButton> listOfDBContent;
-
+	
+	// elementy ekranu koszyk
+	private List<Component> cartActionsComponents;
+	JButton buttonReturnToMainScreen4;
+	JPanel panelItems2; // tutaj zaczynają się elementy scrollowalnego panelu
+	GridBagConstraints gridBagConstraintsBrowse2;
+	JScrollPane scrollPaneItemPanel2;
+		
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
 
@@ -164,6 +172,8 @@ public class MainWindow {
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(false);
 		for (Component c : workerActionsComponents)
+			c.setVisible(false);
+		for (Component c : cartActionsComponents)
 			c.setVisible(false);
 
 		mainFrame.setVisible(true);
@@ -190,6 +200,7 @@ public class MainWindow {
 		itemBrowseScreenComponents = new ArrayList<Component>();
 		itemInfoScreenComponents = new ArrayList<Component>();
 		workerActionsComponents = new ArrayList<Component>();
+		cartActionsComponents = new ArrayList<Component>();
 	}
 
 	private void initComponents() {
@@ -400,6 +411,7 @@ public class MainWindow {
 		mainFrame.add(scrollPaneItemPanel);
 		itemBrowseScreenComponents.add(scrollPaneItemPanel);
 
+
 		listOfAllItemsNames = new ArrayList<JLabel>();
 		listOfAllButtonPhotos = new ArrayList<JButton>();
 		for (int i = 0; i < arrayListModels.size(); i++) {
@@ -508,6 +520,7 @@ public class MainWindow {
 		mainFrame.add(calendar);
 		itemInfoScreenComponents.add(calendar);
 		
+		
 		// ELEMENTY EKRANU Z AKCJAMI PRACOWNIKA
 		buttonReturnToMainScreen3 = new JButton("Powrot do ekranu gl.");
 		buttonReturnToMainScreen3.setBounds(290, 20, 200, 30);
@@ -548,6 +561,24 @@ public class MainWindow {
 		buttonLogOut.setBounds(1040, 70, 200, 30);
 		mainFrame.add(buttonLogOut);
 		workerActionsComponents.add(buttonLogOut);
+		
+		
+		// ELEMENTY EKRANU KOSZYK
+		buttonReturnToMainScreen4 = new JButton("Powrot do ekranu gl.");
+		buttonReturnToMainScreen4.setBounds(290, 20, 200, 30);
+		mainFrame.add(buttonReturnToMainScreen4);
+		cartActionsComponents.add(buttonReturnToMainScreen4);
+		panelItems2 = new JPanel();
+		panelItems2.setBackground(Color.LIGHT_GRAY);
+		panelItems2.setLayout(new GridBagLayout());
+		gridBagConstraintsBrowse2 = new GridBagConstraints();
+
+		scrollPaneItemPanel2 = new JScrollPane(panelItems2);
+		scrollPaneItemPanel2.setBounds(50, 200, 1170, 450);
+		mainFrame.add(scrollPaneItemPanel2);
+		cartActionsComponents.add(scrollPaneItemPanel2);
+		
+		
 
 		// panel tylko po to zeby byl kolor tla
 		panelDBContent = new JPanel();
@@ -562,6 +593,7 @@ public class MainWindow {
 		scrollPaneDBContent.setBounds(100, 130, 1080, 500);
 		mainFrame.add(scrollPaneDBContent);
 		workerActionsComponents.add(scrollPaneDBContent);
+		cartActionsComponents.add(scrollPaneDBContent);
 
 		// ELEMENTY WIDZIANE/NIEWIDZIANE NIEZALEZNIE OD EKRANU
 		buttonWorkerActions = new JButton("Opcje pracownika");
@@ -801,6 +833,25 @@ public class MainWindow {
 					c.setVisible(false);
 				for (Component c : workerActionsComponents)
 					c.setVisible(false);
+				for (Component c : cartActionsComponents)
+					c.setVisible(false);
+			}
+		});
+		
+		buttonReturnToMainScreen4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (Component c : mainScreenComponents)
+					c.setVisible(true);
+				for (Component c : loginScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemBrowseScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemInfoScreenComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : cartActionsComponents)
+					c.setVisible(false);
 			}
 		});
 
@@ -815,6 +866,8 @@ public class MainWindow {
 				for (Component c : itemInfoScreenComponents)
 					c.setVisible(false);
 				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : cartActionsComponents)
 					c.setVisible(false);
 				for (Component c : mainScreenComponents)
 					c.setVisible(true);
@@ -1055,6 +1108,8 @@ public class MainWindow {
 					c.setVisible(false);
 				for (Component c : itemBrowseScreenComponents)
 					c.setVisible(false);
+				for (Component c : cartActionsComponents)
+					c.setVisible(false);
 				for (Component c : itemInfoScreenComponents)
 					c.setVisible(false);
 				for (Component c : workerActionsComponents)
@@ -1099,6 +1154,8 @@ public class MainWindow {
 			for (Component c : itemBrowseScreenComponents)
 				c.setVisible(false);
 			for (Component c : itemInfoScreenComponents)
+				c.setVisible(false);
+			for (Component c : cartActionsComponents)
 				c.setVisible(false);
 			for (Component c : workerActionsComponents)
 				c.setVisible(false);
@@ -1165,8 +1222,39 @@ public class MainWindow {
 		}
 	}
 
-	private void toCart() {
-		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+	private void toCart()
+	{
+	
+		
+		for (Component c : mainScreenComponents)
+			c.setVisible(false);
+		for (Component c : itemBrowseScreenComponents)
+			c.setVisible(false);
+		for (Component c : itemInfoScreenComponents)
+			c.setVisible(false);
+		for (Component c : cartActionsComponents)
+			c.setVisible(true);
+		for (Component c : workerActionsComponents)
+			c.setVisible(false);
+		for (Component c : loginScreenComponents)
+			c.setVisible(false);
+		
+		panelDBContent.removeAll();
+		listOfDBContent = new ArrayList<JButton>();
+
+		for (int i = 0; i < arrayListMaintenances.size(); i++) {
+			MaintenanceHistory m = arrayListMaintenances.get(i);
+			JButton temp_button = new JButton("Numer konserwacji" + m.getMaintenanceNumber()
+					+ " ,data konserwacji: " + m.getMaintenanceDate());
+			temp_button.setPreferredSize(new Dimension(500, 30));
+
+			gridBagConstraintsWorkerActions.gridx = 1;
+			gridBagConstraintsWorkerActions.gridy = i + 1;
+
+			listOfDBContent.add(temp_button);
+			panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+		}
+		
 	}
 
 	private void searchInAssortment() {
