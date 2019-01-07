@@ -15,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,7 +66,7 @@ public class MainWindow {
 	ArrayList<OrderHistory> arrayListOrders;
 	ArrayList<MaintenanceHistory> arrayListMaintenances;
 	ArrayList<RepairHistory> arrayListRepairs;
-	
+
 	ArrayList<Assortment> arrayListCart;
 
 	// elementy ekranu startowego aplikacji
@@ -120,17 +122,14 @@ public class MainWindow {
 	JButton buttonLogin2;
 	JButton buttonCreateAccount3;
 	JButton buttonToCart2;
-	JButton buttonOK;
 	JLabel labelItemPhoto;
 	JLabel labelItemName;
 	JButton buttonAddToCart;
 	JTextPane textPaneItemDescription;
-	JLabel labelDaysNumber;
-	JLabel labelDaysNumber2;
-	JTextField textFieldDaysNumber;
-	JTextField textFieldDaysNumber2;
+	JLabel labelLength;
+	JTextField textFieldlength;
 	JCalendar calendar;
-	
+	HighlightEvaluator evaluator;
 
 	// elementy ekranu akcji pracownika
 	private List<Component> workerActionsComponents;
@@ -146,14 +145,14 @@ public class MainWindow {
 	JScrollPane scrollPaneDBContent;
 	GridBagConstraints gridBagConstraintsWorkerActions;
 	List<JButton> listOfDBContent;
-	
+
 	// elementy ekranu koszyk
 	private List<Component> cartActionsComponents;
 	JButton buttonReturnToMainScreen4;
 	JPanel panelItems2; // tutaj zaczynają się elementy scrollowalnego panelu
 	GridBagConstraints gridBagConstraintsBrowse2;
 	JScrollPane scrollPaneItemPanel2;
-		
+
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
 
@@ -175,7 +174,6 @@ public class MainWindow {
 			c.setVisible(false);
 		for (Component c : cartActionsComponents)
 			c.setVisible(false);
-
 		mainFrame.setVisible(true);
 	}
 
@@ -192,7 +190,7 @@ public class MainWindow {
 		arrayListOrders = new ArrayList<OrderHistory>();
 		arrayListMaintenances = new ArrayList<MaintenanceHistory>();
 		arrayListRepairs = new ArrayList<RepairHistory>();
-		
+
 		arrayListCart = new ArrayList<Assortment>();
 
 		mainScreenComponents = new ArrayList<Component>();
@@ -411,7 +409,6 @@ public class MainWindow {
 		mainFrame.add(scrollPaneItemPanel);
 		itemBrowseScreenComponents.add(scrollPaneItemPanel);
 
-
 		listOfAllItemsNames = new ArrayList<JLabel>();
 		listOfAllButtonPhotos = new ArrayList<JButton>();
 		for (int i = 0; i < arrayListModels.size(); i++) {
@@ -484,43 +481,29 @@ public class MainWindow {
 
 		textPaneItemDescription = new JTextPane();
 		textPaneItemDescription.setBounds(50, 370, 1170, 300);
-		textPaneItemDescription.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20)); 
+		textPaneItemDescription.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		textPaneItemDescription.setEnabled(false);
 		mainFrame.add(textPaneItemDescription);
 		itemInfoScreenComponents.add(textPaneItemDescription);
-		
-		labelDaysNumber = new JLabel("Dlugosc wypozyczenia od:");
-		labelDaysNumber.setBounds(650, 335, 150, 30);
-		mainFrame.add(labelDaysNumber);
-		itemInfoScreenComponents.add(labelDaysNumber);
-		
-		textFieldDaysNumber = new JTextField();
-		textFieldDaysNumber.setBounds(800, 335, 60, 30);
-		mainFrame.add(textFieldDaysNumber);
-		itemInfoScreenComponents.add(textFieldDaysNumber);
-		
-		labelDaysNumber2 = new JLabel("Dlugosc wypozyczenia do:");
-		labelDaysNumber2.setBounds(900, 335, 150, 30);
-		mainFrame.add(labelDaysNumber2);
-		itemInfoScreenComponents.add(labelDaysNumber2);
-		
-		textFieldDaysNumber2 = new JTextField();
-		textFieldDaysNumber2.setBounds(1050, 335, 60, 30);
-		mainFrame.add(textFieldDaysNumber2);
-		itemInfoScreenComponents.add(textFieldDaysNumber2);
-		
-		buttonOK = new JButton("OK");
-		buttonOK.setBounds(1150, 335, 60, 30);
-		mainFrame.add(buttonOK);
-		itemInfoScreenComponents.add(buttonOK);
-		
+
+		labelLength = new JLabel("Dlugosc wypozyczenia:");
+		labelLength.setBounds(900, 335, 150, 30);
+		mainFrame.add(labelLength);
+		itemInfoScreenComponents.add(labelLength);
+
+		textFieldlength = new JTextField();
+		textFieldlength.setBounds(1040, 335, 60, 30);
+		mainFrame.add(textFieldlength);
+		itemInfoScreenComponents.add(textFieldlength);
+
 		calendar = new JCalendar();
 		calendar.setBounds(900, 200, 300, 150);
-		calendar.setMinSelectableDate(Calendar.getInstance().getTime());
+		Date date = Calendar.getInstance().getTime();
+		date.setTime(date.getTime() + 86400000);
+		calendar.setMinSelectableDate(date);
 		mainFrame.add(calendar);
 		itemInfoScreenComponents.add(calendar);
-		
-		
+
 		// ELEMENTY EKRANU Z AKCJAMI PRACOWNIKA
 		buttonReturnToMainScreen3 = new JButton("Powrot do ekranu gl.");
 		buttonReturnToMainScreen3.setBounds(290, 20, 200, 30);
@@ -561,8 +544,7 @@ public class MainWindow {
 		buttonLogOut.setBounds(1040, 70, 200, 30);
 		mainFrame.add(buttonLogOut);
 		workerActionsComponents.add(buttonLogOut);
-		
-		
+
 		// ELEMENTY EKRANU KOSZYK
 		buttonReturnToMainScreen4 = new JButton("Powrot do ekranu gl.");
 		buttonReturnToMainScreen4.setBounds(290, 20, 200, 30);
@@ -577,8 +559,6 @@ public class MainWindow {
 		scrollPaneItemPanel2.setBounds(50, 200, 1170, 450);
 		mainFrame.add(scrollPaneItemPanel2);
 		cartActionsComponents.add(scrollPaneItemPanel2);
-		
-		
 
 		// panel tylko po to zeby byl kolor tla
 		panelDBContent = new JPanel();
@@ -778,9 +758,9 @@ public class MainWindow {
 
 		buttonFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//filterAssortment();
+				// filterAssortment();
 				setupItemInfoScreen(null);
-											
+
 			}
 		});
 
@@ -811,12 +791,17 @@ public class MainWindow {
 				toCart();
 			}
 		});
-		
-		buttonOK.addActionListener(new ActionListener() {
+
+		buttonAddToCart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int dateFrom = Integer.parseInt(textFieldDaysNumber.getText());
-				int dateTo = Integer.parseInt(textFieldDaysNumber2.getText());
-				displayCalendar(dateFrom,dateTo,1);
+				
+			}
+		});
+		
+		calendar.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				displayCalendar();
 			}
 		});
 
@@ -837,7 +822,7 @@ public class MainWindow {
 					c.setVisible(false);
 			}
 		});
-		
+
 		buttonReturnToMainScreen4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				for (Component c : mainScreenComponents)
@@ -1222,10 +1207,7 @@ public class MainWindow {
 		}
 	}
 
-	private void toCart()
-	{
-	
-		
+	private void toCart() {
 		for (Component c : mainScreenComponents)
 			c.setVisible(false);
 		for (Component c : itemBrowseScreenComponents)
@@ -1238,14 +1220,14 @@ public class MainWindow {
 			c.setVisible(false);
 		for (Component c : loginScreenComponents)
 			c.setVisible(false);
-		
+
 		panelDBContent.removeAll();
 		listOfDBContent = new ArrayList<JButton>();
 
 		for (int i = 0; i < arrayListMaintenances.size(); i++) {
 			MaintenanceHistory m = arrayListMaintenances.get(i);
-			JButton temp_button = new JButton("Numer konserwacji" + m.getMaintenanceNumber()
-					+ " ,data konserwacji: " + m.getMaintenanceDate());
+			JButton temp_button = new JButton(
+					"Numer konserwacji" + m.getMaintenanceNumber() + " ,data konserwacji: " + m.getMaintenanceDate());
 			temp_button.setPreferredSize(new Dimension(500, 30));
 
 			gridBagConstraintsWorkerActions.gridx = 1;
@@ -1254,7 +1236,6 @@ public class MainWindow {
 			listOfDBContent.add(temp_button);
 			panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
 		}
-		
 	}
 
 	private void searchInAssortment() {
@@ -1265,78 +1246,103 @@ public class MainWindow {
 		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
 	}
 
-	private void setupItemInfoScreen(Model model)
-	{
+	private void setupItemInfoScreen(Model model) {
 		for (Component c : itemBrowseScreenComponents)
 			c.setVisible(false);
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(true);
-		
-	
-		
-	//	for(Assortment assortment : arrayListAssortment) {
-	//		if(Integer.toString(assortment.getModelID()).equals(Integer.toString(model.getModelID())))
-	//		{
-	//			arrayListFreeAssortment.add(assortment);				
-	//		}
-	//	}
-	//	int jakaszmienna=0;
-	//	int counter = arrayListFreeAssortment.size();;
-	//	for(Assortment freeAssortment : arrayListFreeAssortment)
-	//	{
-		//	if (JAKIS dzien w kalendarzu == wolny)
-	//			jakaszmienna++;
-				
-		//tutaj bedzie trzeba skorzystac z tych arraylist ktore utworzylem
-		//w klasie Assortyment, jedna do dat, dluga do dlugosci zamowienia
-				
-	//	}
-	//	if (jakaszmienna != counter)
-	//	{	// dzien od, do, i miesiac 
-			
-	//	}
-		
-	//	int dateFrom = Integer.parseInt(textFieldDaysNumber.getText());
-	//	int dateTo = Integer.parseInt(textFieldDaysNumber.getText());
-	//	HighlightTest.display(dateFrom,dateTo,1);
-		
+
+		// for(Assortment assortment : arrayListAssortment) {
+		// if(Integer.toString(assortment.getModelID()).equals(Integer.toString(model.getModelID())))
+		// {
+		// arrayListFreeAssortment.add(assortment);
+		// }
+		// }
+		// int jakaszmienna=0;
+		// int counter = arrayListFreeAssortment.size();;
+		// for(Assortment freeAssortment : arrayListFreeAssortment)
+		// {
+		// if (JAKIS dzien w kalendarzu == wolny)
+		// jakaszmienna++;
+
+		// tutaj bedzie trzeba skorzystac z tych arraylist ktore utworzylem
+		// w klasie Assortyment, jedna do dat, dluga do dlugosci zamowienia
+
+		// }
+		// if (jakaszmienna != counter)
+		// { // dzien od, do, i miesiac
+
+		// }
+
+		// int dateFrom = Integer.parseInt(textFieldDaysNumber.getText());
+		// int dateTo = Integer.parseInt(textFieldDaysNumber.getText());
+		// HighlightTest.display(dateFrom,dateTo,1);
+
 		labelItemName.setText(model.getModelName());
 		textPaneItemDescription.setText(
 				model.getModelName() + " jest to suuuuuuuuper przedmiot (prawie tak super ta aplikacja) producena "
 						+ model.getProducer() + " który jest znanym dostawcą sprzętu sportowego i kosztuje jedyne "
-						+ model.getCostPerDay() / 100 + " złotych dziennie. \n" 
-						+ "Kaucja za zniszczenie wynosi: " + model.getDamageDeposit() / 100 + " złotych.");
+						+ model.getCostPerDay() / 100 + " złotych dziennie. \n" + "Kaucja za zniszczenie wynosi: "
+						+ model.getDamageDeposit() / 100 + " złotych.");
 	}
-	
-	
-	public void displayCalendar(int a, int b, int m) 
-	{
+
+	public void displayCalendar() {
+		String[] parts = calendar.getDate().toString().split(" ");
+		int day = Integer.parseInt(parts[2]);
+		int month;
+		if (parts[1].equals("Jan"))
+			month = 1;
+		else if (parts[1].equals("Feb"))
+			month = 2;
+		else if (parts[1].equals("Mar"))
+			month = 3;
+		else if (parts[1].equals("Apr"))
+			month = 4;
+		else if (parts[1].equals("May"))
+			month = 5;
+		else if (parts[1].equals("Jun"))
+			month = 6;
+		else if (parts[1].equals("Jul"))
+			month = 7;
+		else if (parts[1].equals("Aug"))
+			month = 8;
+		else if (parts[1].equals("Oct"))
+			month = 9;
+		else if (parts[1].equals("Sep"))
+			month = 10;
+		else if (parts[1].equals("Nov"))
+			month = 1;
+		else
+			month = 12;
+		int year = Integer.parseInt(parts[5]);
 		
-		HighlightEvaluator evaluator = new HighlightEvaluator();	 
-        int i;
-        for( i=a; i<=b; i++)
-        {
-        evaluator.add(createDate(i, m));
-        }
-        calendar.getDayChooser().addDateEvaluator(evaluator);
-        calendar.setCalendar(calendar.getCalendar());
-        calendar.setVisible(true);
-        mainFrame.repaint();
-        
-       
-    }
+		int length = 0;
+		try {
+			length = Integer.parseInt(textFieldlength.getText());
+		} catch (Exception e) {
+		}
 
-    private static Date createDate(int d, int m) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.MONTH, m-1);
-        c.set(Calendar.DAY_OF_MONTH, d);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        return (c.getTime());
-    }
+		calendar.getDayChooser().removeDateEvaluator(evaluator);
+		evaluator = new HighlightEvaluator();
+		for (int i = day; i < day + length; i++) {
+			evaluator.add(createDate(i, month, year));
+		}
 
+		calendar.getDayChooser().addDateEvaluator(evaluator);
+		calendar.setCalendar(calendar.getCalendar());
+	}
+
+	private Date createDate(int d, int m, int y) {
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.YEAR, y);
+		c.set(Calendar.MONTH, m - 1);
+		c.set(Calendar.DAY_OF_MONTH, d);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return (c.getTime());
+	}
 
 	public ArrayList<Client> getArrayListClients() {
 		return arrayListClients;
