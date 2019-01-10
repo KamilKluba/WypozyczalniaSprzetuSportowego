@@ -72,7 +72,7 @@ public class TestData {
 			.add(new Assortment(3, new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2008"), 0, null, true,
 					new SimpleDateFormat("dd/MM/yyyy").parse("01/06/2019"), "Średni", 2));
 			mainWindow.getArrayListAssortment()
-			.add(new Assortment(4, new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2010"), 0, null, true,
+			.add(new Assortment(4, new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2010"), 0, null, true,	
 					new SimpleDateFormat("dd/MM/yyyy").parse("01/06/2019"), "Uszkodzony", 2));
 			mainWindow.getArrayListAssortment()
 			.add(new Assortment(5, new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2010"), 0, null, true,
@@ -95,7 +95,31 @@ public class TestData {
 			mainWindow.getArrayListAssortment()
 			.add(new Assortment(11, new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2014"), 0, null, true,
 					new SimpleDateFormat("dd/MM/yyyy").parse("01/06/2019"), "Bardzo Dobry", 6));
+			
+			//zamownienia------------------------------------------------------------------------------------
+			mainWindow.getArrayListAssortment().get(0).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("12/01/2019"));
+			mainWindow.getArrayListAssortment().get(0).getListLengthOfOrder().add(7);
+			
+			mainWindow.getArrayListAssortment().get(0).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("27/01/2019"));
+			mainWindow.getArrayListAssortment().get(0).getListLengthOfOrder().add(10);
+			
+			mainWindow.getArrayListAssortment().get(1).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("17/01/2019"));
+			mainWindow.getArrayListAssortment().get(1).getListLengthOfOrder().add(5);
+			
+			mainWindow.getArrayListAssortment().get(1).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("15/02/2019"));
+			mainWindow.getArrayListAssortment().get(1).getListLengthOfOrder().add(4);
 
+			mainWindow.getArrayListAssortment().get(1).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("17/01/2019"));
+			mainWindow.getArrayListAssortment().get(1).getListLengthOfOrder().add(5);
+			
+			mainWindow.getArrayListAssortment().get(1).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("15/02/2019"));
+			mainWindow.getArrayListAssortment().get(1).getListLengthOfOrder().add(4);
+			
+			mainWindow.getArrayListAssortment().get(2).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("20/01/2019"));
+			mainWindow.getArrayListAssortment().get(2).getListLengthOfOrder().add(15);
+			
+			mainWindow.getArrayListAssortment().get(4).getListDateOfOrder().add(new SimpleDateFormat("dd/MM/yyyy").parse("26/03/2019"));
+			mainWindow.getArrayListAssortment().get(4).getListLengthOfOrder().add(9);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
