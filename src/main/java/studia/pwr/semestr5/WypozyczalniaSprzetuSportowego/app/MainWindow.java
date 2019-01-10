@@ -1,7 +1,6 @@
 package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.app;
 
 import java.awt.Color;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -25,6 +24,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,8 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 
 import com.toedter.calendar.JCalendar;
 
@@ -61,7 +59,6 @@ public class MainWindow {
 	ArrayList<Account> arrayListAccounts;
 	ArrayList<Address> arrayListAddresses;
 	ArrayList<Assortment> arrayListAssortment;
-	ArrayList<Assortment> arrayListFreeAssortment;
 	ArrayList<Model> arrayListModels;
 	ArrayList<OrderHistory> arrayListOrders;
 	ArrayList<MaintenanceHistory> arrayListMaintenances;
@@ -130,6 +127,12 @@ public class MainWindow {
 	JTextField textFieldlength;
 	JCalendar calendar;
 	HighlightEvaluator evaluator;
+	HighlightEvaluator evaluatorAllItems;
+	int selectedMonth;
+	Model selectedModel;
+	JLabel labelItemsOfModel;
+	JComboBox<Integer> comboBoxItemsOfModel;
+	JLabel labelErrorDate;
 
 	// elementy ekranu akcji pracownika
 	private List<Component> workerActionsComponents;
@@ -504,6 +507,24 @@ public class MainWindow {
 		mainFrame.add(calendar);
 		itemInfoScreenComponents.add(calendar);
 
+		selectedMonth = 0;
+
+		labelItemsOfModel = new JLabel("Egzemplarz modelu:");
+		labelItemsOfModel.setBounds(900, 120, 150, 30);
+		mainFrame.add(labelItemsOfModel);
+		itemInfoScreenComponents.add(labelItemsOfModel);
+
+		comboBoxItemsOfModel = new JComboBox<Integer>();
+		comboBoxItemsOfModel.setBounds(920, 150, 100, 30);
+		mainFrame.add(comboBoxItemsOfModel);
+		itemInfoScreenComponents.add(comboBoxItemsOfModel);
+		
+		labelErrorDate = new JLabel();
+		labelErrorDate.setFont(new Font("Arial", Font.PLAIN, 25));
+		labelErrorDate.setBounds(500, 250, 400, 60);
+		mainFrame.add(labelErrorDate);
+		itemInfoScreenComponents.add(labelErrorDate);
+
 		// ELEMENTY EKRANU Z AKCJAMI PRACOWNIKA
 		buttonReturnToMainScreen3 = new JButton("Powrot do ekranu gl.");
 		buttonReturnToMainScreen3.setBounds(290, 20, 200, 30);
@@ -794,14 +815,33 @@ public class MainWindow {
 
 		buttonAddToCart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				addToCart();
 			}
 		});
-		
+
 		calendar.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				displayCalendar();
+				int[] parsedDate = parseDate(calendar.getDate());
+				int length = 0;
+				try {
+					length = Integer.parseInt(textFieldlength.getText());
+				} catch (Exception e) {
+				}
+
+				if (parsedDate[1] == selectedMonth)
+					displayCalendar(parsedDate[0], parsedDate[1], parsedDate[2], length);
+				else
+					selectedMonth = parsedDate[1];
+			}
+		});
+
+		comboBoxItemsOfModel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					displayCalendar(0, 0, 0, 0);
+				} catch (Exception ex) {
+				}
 			}
 		});
 
@@ -1011,6 +1051,7 @@ public class MainWindow {
 				JButton temp_button = new JButton("Dodaj nowy przedmiot");
 				temp_button.setPreferredSize(new Dimension(500, 30));
 				temp_button.addActionListener(new ActionListener() {
+
 					public void actionPerformed(ActionEvent e) {
 						createAssortment();
 					}
@@ -1240,6 +1281,7 @@ public class MainWindow {
 
 	private void searchInAssortment() {
 		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
+		System.out.println(arrayListCart.size());
 	}
 
 	private void filterAssortment() {
@@ -1252,31 +1294,7 @@ public class MainWindow {
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(true);
 
-		// for(Assortment assortment : arrayListAssortment) {
-		// if(Integer.toString(assortment.getModelID()).equals(Integer.toString(model.getModelID())))
-		// {
-		// arrayListFreeAssortment.add(assortment);
-		// }
-		// }
-		// int jakaszmienna=0;
-		// int counter = arrayListFreeAssortment.size();;
-		// for(Assortment freeAssortment : arrayListFreeAssortment)
-		// {
-		// if (JAKIS dzien w kalendarzu == wolny)
-		// jakaszmienna++;
-
-		// tutaj bedzie trzeba skorzystac z tych arraylist ktore utworzylem
-		// w klasie Assortyment, jedna do dat, dluga do dlugosci zamowienia
-
-		// }
-		// if (jakaszmienna != counter)
-		// { // dzien od, do, i miesiac
-
-		// }
-
-		// int dateFrom = Integer.parseInt(textFieldDaysNumber.getText());
-		// int dateTo = Integer.parseInt(textFieldDaysNumber.getText());
-		// HighlightTest.display(dateFrom,dateTo,1);
+		selectedModel = model;
 
 		labelItemName.setText(model.getModelName());
 		textPaneItemDescription.setText(
@@ -1284,10 +1302,68 @@ public class MainWindow {
 						+ model.getProducer() + " który jest znanym dostawcą sprzętu sportowego i kosztuje jedyne "
 						+ model.getCostPerDay() / 100 + " złotych dziennie. \n" + "Kaucja za zniszczenie wynosi: "
 						+ model.getDamageDeposit() / 100 + " złotych.");
+
+		//dodanie do comboBoxa wszystkich egzemplarzy danego modelu
+		comboBoxItemsOfModel.removeAllItems();
+		for (Assortment a : arrayListAssortment)
+			if (a.getModelID() == selectedModel.getModelID())
+				comboBoxItemsOfModel.addItem(comboBoxItemsOfModel.getItemCount() + 1);
+		
+		// tylko po to zeby od razu podswietlilo na czerwono juz zarezerwowane
+		// terminy
+		displayCalendar(0, 0, 0, 0);
 	}
 
-	public void displayCalendar() {
-		String[] parts = calendar.getDate().toString().split(" ");
+	public void displayCalendar(int day, int month, int year, int length) {
+		ArrayList<Assortment> arrayList_items_of_this_model = new ArrayList<Assortment>();
+
+		calendar.getDayChooser().removeDateEvaluator(evaluator);
+		calendar.getDayChooser().removeDateEvaluator(evaluatorAllItems);
+		//2 evaluatory dla dwoch kolorow
+		evaluator = new HighlightEvaluator();
+		evaluator.setBackgroundColor(Color.GREEN);
+		evaluatorAllItems = new HighlightEvaluator();
+		evaluatorAllItems.setBackgroundColor(Color.RED);
+
+		for (int i = day; i < day + length; i++) {
+			evaluator.add(createDate(i, month, year));
+		}
+
+		for (Assortment a : arrayListAssortment)
+			if (a.getModelID() == selectedModel.getModelID())
+				arrayList_items_of_this_model.add(a);
+
+		Assortment assortment = arrayList_items_of_this_model.get(comboBoxItemsOfModel.getSelectedIndex());
+		
+		//zaznaczenie wszystkich dat w ktorych egzemplarz jest zajety
+		for (int i = 0; i < assortment.getListDateOfOrder().size(); i++) {
+			Date date = assortment.getListDateOfOrder().get(i);
+			int length_of_order = assortment.getListLengthOfOrder().get(i);
+			int[] parsedDate = parseDate(date);
+
+			for (int j = parsedDate[0]; j < parsedDate[0] + length_of_order; j++)
+				evaluatorAllItems.add(createDate(j, parsedDate[1], parsedDate[2]));
+		}
+
+		calendar.getDayChooser().addDateEvaluator(evaluatorAllItems);
+		calendar.getDayChooser().addDateEvaluator(evaluator);
+		calendar.setCalendar(calendar.getCalendar());
+	}
+
+	private Date createDate(int d, int m, int y) {
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.YEAR, y);
+		c.set(Calendar.MONTH, m - 1);
+		c.set(Calendar.DAY_OF_MONTH, d);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return (c.getTime());
+	}
+
+	private int[] parseDate(Date date) {
+		String[] parts = date.toString().split(" ");
 		int day = Integer.parseInt(parts[2]);
 		int month;
 		if (parts[1].equals("Jan"))
@@ -1311,39 +1387,93 @@ public class MainWindow {
 		else if (parts[1].equals("Sep"))
 			month = 10;
 		else if (parts[1].equals("Nov"))
-			month = 1;
+			month = 11;
 		else
 			month = 12;
 		int year = Integer.parseInt(parts[5]);
+
+		int[] parsedDate = new int[3];
+		parsedDate[0] = day;
+		parsedDate[1] = month;
+		parsedDate[2] = year;
 		
+		return parsedDate;
+	}
+
+	private void addToCart(){
+		if(!loggedIn){
+			new Thread(new Runnable() {
+				public void run() {			
+					try {
+						labelErrorDate.setText("Najpierw sie zaloguj!");
+						Thread.sleep(3000);
+						labelErrorDate.setText("");
+					} catch (InterruptedException e) {
+					}
+				}
+			}).start();
+			return;
+		}
+		ArrayList<Assortment> arrayList_items_of_model = new ArrayList<Assortment>();
+		ArrayList<Date> arrayList_all_dates_of_item = new ArrayList<Date>();
+		
+		//wyszukanie listy wszystkich egzemplarzy modelu
+		for (Assortment a : arrayListAssortment)
+			if (a.getModelID() == selectedModel.getModelID())
+				arrayList_items_of_model.add(a);
+		
+		Assortment assortment = arrayList_items_of_model.get(comboBoxItemsOfModel.getSelectedIndex());
+		
+		Date date = calendar.getDate();
 		int length = 0;
-		try {
+		try{
 			length = Integer.parseInt(textFieldlength.getText());
-		} catch (Exception e) {
+		} catch(Exception ex){}
+		
+		//stworzenie listy wszystkich dat w ktorych dany egzemplarz jest wypozyczony
+		for(int i = 0; i < assortment.getListDateOfOrder().size(); i++){
+			System.out.println("NOWA DATA");
+			for (int j = 0; j < assortment.getListLengthOfOrder().get(i); j++){
+				int[] parsedDate = parseDate(assortment.getListDateOfOrder().get(i));
+				parsedDate[0] += j;
+				arrayList_all_dates_of_item.add(createDate(parsedDate[0], parsedDate[1], parsedDate[2]));
+			}
 		}
-
-		calendar.getDayChooser().removeDateEvaluator(evaluator);
-		evaluator = new HighlightEvaluator();
-		for (int i = day; i < day + length; i++) {
-			evaluator.add(createDate(i, month, year));
+		
+		//sprawdzenie czy w podanych datach egzemplarz jest wolny
+		//watki sa dla efektu(lepszy niz JOptionPane.messagedialog)
+		for(int i = 0; i < length; i++){
+			int[] parsedDate = parseDate(calendar.getDate());
+			parsedDate[0] += i;
+			date = createDate(parsedDate[0], parsedDate[1], parsedDate[2]);
+			for(Date d : arrayList_all_dates_of_item)
+				if(d.compareTo(date) == 0){
+					new Thread(new Runnable() {
+						public void run() {			
+							try {
+								labelErrorDate.setText("<html>W podanym terminie sprzęt <br> jest już zarezerwowany!</html>");
+								Thread.sleep(3000);
+								labelErrorDate.setText("");
+							} catch (InterruptedException e) {
+							}
+						}
+					}).start();
+					return;
+				}	
 		}
-
-		calendar.getDayChooser().addDateEvaluator(evaluator);
-		calendar.setCalendar(calendar.getCalendar());
+		new Thread(new Runnable() {
+			public void run() {			
+				try {
+					labelErrorDate.setText("Pomyslnie dodano do koszyka!");
+					Thread.sleep(3000);
+					labelErrorDate.setText("");
+				} catch (InterruptedException e) {
+				}
+			}
+		}).start();
+		arrayListCart.add(assortment);
 	}
-
-	private Date createDate(int d, int m, int y) {
-		Calendar c = Calendar.getInstance();
-		c.set(Calendar.YEAR, y);
-		c.set(Calendar.MONTH, m - 1);
-		c.set(Calendar.DAY_OF_MONTH, d);
-		c.set(Calendar.HOUR_OF_DAY, 0);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
-		return (c.getTime());
-	}
-
+	
 	public ArrayList<Client> getArrayListClients() {
 		return arrayListClients;
 	}
