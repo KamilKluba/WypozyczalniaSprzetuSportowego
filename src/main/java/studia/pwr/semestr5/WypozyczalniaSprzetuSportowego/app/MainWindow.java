@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -1264,8 +1265,9 @@ public class MainWindow {
 			c.setVisible(false);
 
 		panelItems2.removeAll();
+		int size=arrayListCart.size();
 
-		for (int i = 0; i < arrayListCart.size(); i++) {
+		for (int i = 0; i < size; i++) {
 			final Assortment a = arrayListCart.get(i);
 			JButton temp_button = new JButton("ID sprzetu: " + a.getItemID() + " ,liczba wypozyczen: "
 					+ a.getLoansNumber() + " ,stan: " + a.getCondition());
@@ -1273,19 +1275,28 @@ public class MainWindow {
 			
 			temp_button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					arrayListCart.remove(a);
-					toCart();
+					
+											
+						JOptionPane.showMessageDialog(mainFrame, "Usunieto z listy zamowien");
+						arrayListCart.remove(a);
+						for (Component c : cartActionsComponents)
+							c.setVisible(false);
+						for (Component c : cartActionsComponents)
+							c.setVisible(true);
+						toCart();
+				
 				}			
 			});
-			
-
 			gridBagConstraintsBrowse2.gridx = 1;
 			gridBagConstraintsBrowse2.gridy = i + 1;
-
+			
 			//listOfDBContent.add(temp_button);
 			panelItems2.add(temp_button, gridBagConstraintsBrowse2);
+			
 		}
 	}
+	
+
 
 	private void searchInAssortment() {
 		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
