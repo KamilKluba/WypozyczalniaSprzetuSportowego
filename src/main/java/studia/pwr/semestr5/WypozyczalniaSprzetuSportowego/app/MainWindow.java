@@ -1264,13 +1264,20 @@ public class MainWindow {
 			c.setVisible(false);
 
 		panelItems2.removeAll();
-		//listOfDBContent = new ArrayList<JButton>();
 
 		for (int i = 0; i < arrayListCart.size(); i++) {
 			final Assortment a = arrayListCart.get(i);
 			JButton temp_button = new JButton("ID sprzetu: " + a.getItemID() + " ,liczba wypozyczen: "
 					+ a.getLoansNumber() + " ,stan: " + a.getCondition());
 			temp_button.setPreferredSize(new Dimension(500, 30));
+			
+			temp_button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					arrayListCart.remove(a);
+					toCart();
+				}			
+			});
+			
 
 			gridBagConstraintsBrowse2.gridx = 1;
 			gridBagConstraintsBrowse2.gridy = i + 1;
