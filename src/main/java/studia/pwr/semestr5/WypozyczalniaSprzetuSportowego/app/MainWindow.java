@@ -152,9 +152,10 @@ public class MainWindow {
 	// elementy ekranu koszyk
 	private List<Component> cartActionsComponents;
 	JButton buttonReturnToMainScreen4;
-	JPanel panelItems2; // tutaj zaczynają się elementy scrollowalnego panelu
-	GridBagConstraints gridBagConstraintsBrowse2;
+	JPanel panelItems2; 
 	JScrollPane scrollPaneItemPanel2;
+	GridBagConstraints gridBagConstraintsBrowse2;
+	
 
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
@@ -1262,20 +1263,20 @@ public class MainWindow {
 		for (Component c : loginScreenComponents)
 			c.setVisible(false);
 
-		panelDBContent.removeAll();
-		listOfDBContent = new ArrayList<JButton>();
+		panelItems2.removeAll();
+		//listOfDBContent = new ArrayList<JButton>();
 
-		for (int i = 0; i < arrayListMaintenances.size(); i++) {
-			MaintenanceHistory m = arrayListMaintenances.get(i);
-			JButton temp_button = new JButton(
-					"Numer konserwacji" + m.getMaintenanceNumber() + " ,data konserwacji: " + m.getMaintenanceDate());
+		for (int i = 0; i < arrayListCart.size(); i++) {
+			final Assortment a = arrayListCart.get(i);
+			JButton temp_button = new JButton("ID sprzetu: " + a.getItemID() + " ,liczba wypozyczen: "
+					+ a.getLoansNumber() + " ,stan: " + a.getCondition());
 			temp_button.setPreferredSize(new Dimension(500, 30));
 
-			gridBagConstraintsWorkerActions.gridx = 1;
-			gridBagConstraintsWorkerActions.gridy = i + 1;
+			gridBagConstraintsBrowse2.gridx = 1;
+			gridBagConstraintsBrowse2.gridy = i + 1;
 
-			listOfDBContent.add(temp_button);
-			panelDBContent.add(temp_button, gridBagConstraintsWorkerActions);
+			//listOfDBContent.add(temp_button);
+			panelItems2.add(temp_button, gridBagConstraintsBrowse2);
 		}
 	}
 
