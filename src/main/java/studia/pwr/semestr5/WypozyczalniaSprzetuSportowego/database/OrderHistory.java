@@ -9,17 +9,21 @@ public class OrderHistory {
 	private int workerID;
 	private Date orderDate;
 	private List<Integer> listEquipmentID;
+	private List<Integer> listEquipmentLoanLength;
 
 	public OrderHistory() {
 		super();
 	}
 
-	public OrderHistory(int orderNumber, int clientID, Date orderDate, List<Integer> listEquipmentID) {
+	public OrderHistory(int orderNumber, int clientID, Date orderDate, List<Integer> listEquipmentID,
+			List<Integer> listEquipmentLoanLength) {
 		super();
 		this.orderNumber = orderNumber;
 		this.clientID = clientID;
+		this.workerID = -1;
 		this.orderDate = orderDate;
 		this.listEquipmentID = listEquipmentID;
+		this.listEquipmentLoanLength = listEquipmentLoanLength;
 	}
 
 	public int getOrderNumber() {
@@ -60,6 +64,14 @@ public class OrderHistory {
 
 	public void setListEquipmentID(List<Integer> listEquipmentID) {
 		this.listEquipmentID = listEquipmentID;
+	}
+
+	public List<Integer> getListEquipmentLoanLength() {
+		return listEquipmentLoanLength;
+	}
+
+	public void setListEquipmentLoanLength(List<Integer> listEquipmentLoanLength) {
+		this.listEquipmentLoanLength = listEquipmentLoanLength;
 	}
 
 	@Override
