@@ -993,6 +993,11 @@ public class MainWindow {
 					OrderHistory o = arrayListOrders.get(i);
 					JButton temp_button = new JButton("Zamownienie numer: " + o.getOrderNumber());
 					temp_button.setPreferredSize(new Dimension(500, 30));
+					temp_button.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							new ManageOrder(MainWindow.this, o);
+						}
+					});
 
 					gridBagConstraintsWorkerActions.gridx = 1;
 					gridBagConstraintsWorkerActions.gridy = i + 1;
@@ -1221,11 +1226,24 @@ public class MainWindow {
 						int orderID = arrayListOrders.size() + 1;
 						Date date = Calendar.getInstance().getTime();
 						ArrayList<Integer> arrayListEquipmentID = new ArrayList<Integer>();
-						for (Assortment a : arrayListCartItems)
-							arrayListEquipmentID.add(a.getItemID());
+						ArrayList<Integer> arrayListEquipmentLoanLength = new ArrayList<Integer>();
+						while (arrayListCartItems.size() > 0) {
+							arrayListEquipmentID.add(arrayListCartItems.get(0).getItemID());
+							arrayListEquipmentLoanLength.add(arrayListCartLength.get(0));
+							arrayListCartItems.get(0).getListDateOfOrder().add(arrayListCartDates.get(0));
+							arrayListCartItems.get(0).getListLengthOfOrder().add(arrayListCartLength.get(0));
 
-						arrayListOrders.add(new OrderHistory(orderID, loggedID, date, arrayListEquipmentID));
-						
+							arrayListCartItems.remove(0);
+							arrayListCartDates.remove(0);
+							arrayListCartLength.remove(0);
+						}
+
+						panelItems2.removeAll();
+						panelItems2.repaint();
+
+						arrayListOrders.add(new OrderHistory(orderID, loggedID, date, arrayListEquipmentID,
+								arrayListEquipmentLoanLength));
+
 						new Thread(new Runnable() {
 							public void run() {
 								try {
