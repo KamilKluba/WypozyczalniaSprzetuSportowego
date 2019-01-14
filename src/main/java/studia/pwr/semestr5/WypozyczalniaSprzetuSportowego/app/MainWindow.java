@@ -16,6 +16,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +55,7 @@ import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Worker;
 public class MainWindow {
 	private JFrame mainFrame;
 	private boolean loggedIn;
+	private int loggedID;
 
 	ArrayList<Client> arrayListClients;
 	ArrayList<Worker> arrayListWorkers;
@@ -65,7 +68,9 @@ public class MainWindow {
 	ArrayList<MaintenanceHistory> arrayListMaintenances;
 	ArrayList<RepairHistory> arrayListRepairs;
 
-	ArrayList<Assortment> arrayListCart;
+	ArrayList<Assortment> arrayListCartItems;
+	ArrayList<Date> arrayListCartDates;
+	ArrayList<Integer> arrayListCartLength;
 
 	// elementy ekranu startowego aplikacji
 	private List<Component> mainScreenComponents;
@@ -152,11 +157,16 @@ public class MainWindow {
 
 	// elementy ekranu koszyk
 	private List<Component> cartActionsComponents;
+	JLabel labelLogo3;
+	JLabel labelRemoved;
 	JButton buttonReturnToMainScreen4;
-	JPanel panelItems2; 
+	JButton buttonReturnToBrowse2;
+	JButton buttonLogin3;
+	JButton buttonCreateAccount4;
+	JButton buttonOrder;
+	JPanel panelItems2;
 	JScrollPane scrollPaneItemPanel2;
 	GridBagConstraints gridBagConstraintsBrowse2;
-	
 
 	// elementy widziane/nie widziane niezależnie od ekranu;
 	JButton buttonWorkerActions;
@@ -196,7 +206,9 @@ public class MainWindow {
 		arrayListMaintenances = new ArrayList<MaintenanceHistory>();
 		arrayListRepairs = new ArrayList<RepairHistory>();
 
-		arrayListCart = new ArrayList<Assortment>();
+		arrayListCartItems = new ArrayList<Assortment>();
+		arrayListCartDates = new ArrayList<Date>();
+		arrayListCartLength = new ArrayList<Integer>();
 
 		mainScreenComponents = new ArrayList<Component>();
 		loginScreenComponents = new ArrayList<Component>();
@@ -520,7 +532,7 @@ public class MainWindow {
 		comboBoxItemsOfModel.setBounds(920, 150, 100, 30);
 		mainFrame.add(comboBoxItemsOfModel);
 		itemInfoScreenComponents.add(comboBoxItemsOfModel);
-		
+
 		labelErrorDate = new JLabel();
 		labelErrorDate.setFont(new Font("Arial", Font.PLAIN, 25));
 		labelErrorDate.setBounds(500, 250, 400, 60);
@@ -569,10 +581,44 @@ public class MainWindow {
 		workerActionsComponents.add(buttonLogOut);
 
 		// ELEMENTY EKRANU KOSZYK
+		labelLogo3 = new JLabel();
+		labelLogo3.setBounds(500, 20, 400, 150);
+		labelLogo3.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		mainFrame.add(labelLogo3);
+		cartActionsComponents.add(labelLogo3);
+
+		labelRemoved = new JLabel();
+		labelRemoved.setBounds(50, 150, 400, 50);
+		labelRemoved.setFont(new Font("Arial", Font.PLAIN, 20));
+		mainFrame.add(labelRemoved);
+		cartActionsComponents.add(labelRemoved);
+
+		buttonReturnToBrowse2 = new JButton("Powrót do przeglądania sprzętu");
+		buttonReturnToBrowse2.setBounds(240, 100, 250, 30);
+		mainFrame.add(buttonReturnToBrowse2);
+		cartActionsComponents.add(buttonReturnToBrowse2);
+
 		buttonReturnToMainScreen4 = new JButton("Powrot do ekranu gl.");
-		buttonReturnToMainScreen4.setBounds(290, 20, 200, 30);
+		buttonReturnToMainScreen4.setBounds(290, 50, 200, 30);
 		mainFrame.add(buttonReturnToMainScreen4);
 		cartActionsComponents.add(buttonReturnToMainScreen4);
+
+		buttonLogin3 = new JButton("Logowanie");
+		buttonLogin3.setBounds(1050, 50, 150, 30);
+		mainFrame.add(buttonLogin3);
+		cartActionsComponents.add(buttonLogin3);
+
+		buttonCreateAccount4 = new JButton("Utwórz konto");
+		buttonCreateAccount4.setBounds(1050, 100, 150, 30);
+		mainFrame.add(buttonCreateAccount4);
+		cartActionsComponents.add(buttonCreateAccount4);
+
+		buttonOrder = new JButton("Zamow");
+		buttonOrder.setBounds(1050, 150, 150, 30);
+		buttonOrder.setEnabled(false);
+		mainFrame.add(buttonOrder);
+		cartActionsComponents.add(buttonOrder);
+
 		panelItems2 = new JPanel();
 		panelItems2.setBackground(Color.LIGHT_GRAY);
 		panelItems2.setLayout(new GridBagLayout());
@@ -865,23 +911,6 @@ public class MainWindow {
 			}
 		});
 
-		buttonReturnToMainScreen4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				for (Component c : mainScreenComponents)
-					c.setVisible(true);
-				for (Component c : loginScreenComponents)
-					c.setVisible(false);
-				for (Component c : itemBrowseScreenComponents)
-					c.setVisible(false);
-				for (Component c : itemInfoScreenComponents)
-					c.setVisible(false);
-				for (Component c : workerActionsComponents)
-					c.setVisible(false);
-				for (Component c : cartActionsComponents)
-					c.setVisible(false);
-			}
-		});
-
 		buttonLogOut.addActionListener(new ActionListener() {
 			// ten listener sie rozni od funkcji loginScreen() tym
 			// ze nie wyrzuca do ekranu logowania tylko do glownego
@@ -1127,6 +1156,92 @@ public class MainWindow {
 			}
 		});
 
+		// listenery ekranu koszyka
+		buttonReturnToMainScreen4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (Component c : mainScreenComponents)
+					c.setVisible(true);
+				for (Component c : loginScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemBrowseScreenComponents)
+					c.setVisible(false);
+				for (Component c : itemInfoScreenComponents)
+					c.setVisible(false);
+				for (Component c : workerActionsComponents)
+					c.setVisible(false);
+				for (Component c : cartActionsComponents)
+					c.setVisible(false);
+			}
+		});
+
+		buttonReturnToBrowse2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (Component c : cartActionsComponents)
+					c.setVisible(false);
+				for (Component c : itemBrowseScreenComponents)
+					c.setVisible(true);
+			}
+		});
+
+		buttonLogin3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loginScreen();
+			}
+		});
+
+		buttonCreateAccount4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createAccount();
+			}
+		});
+
+		buttonOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (arrayListCartItems.size() == 0)
+					new Thread(new Runnable() {
+						public void run() {
+							try {
+								labelRemoved.setText("Koszyk jest pusty!");
+								Thread.sleep(3000);
+								labelRemoved.setText("");
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}).start();
+				else {
+					int confirmed = 1;
+					String[] objects = { "Tak", "Nie" };
+					confirmed = JOptionPane.showOptionDialog(mainFrame,
+							"Na pewno chcesz zlozyc zamowienie? Tej operacji nie da sie cofnac.",
+							"Potwierdzenie zamowienia", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+							objects, "Tak");
+
+					if (confirmed == 0) {
+						int orderID = arrayListOrders.size() + 1;
+						Date date = Calendar.getInstance().getTime();
+						ArrayList<Integer> arrayListEquipmentID = new ArrayList<Integer>();
+						for (Assortment a : arrayListCartItems)
+							arrayListEquipmentID.add(a.getItemID());
+
+						arrayListOrders.add(new OrderHistory(orderID, loggedID, date, arrayListEquipmentID));
+						
+						new Thread(new Runnable() {
+							public void run() {
+								try {
+									labelRemoved.setText("Zlozono zamowienie!");
+									Thread.sleep(3000);
+									labelRemoved.setText("");
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+						}).start();
+					}
+				}
+			}
+		});
+
 		// listenery elementow widzianych/niewidzianych niezaleznie od ekranu
 		buttonWorkerActions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1144,7 +1259,6 @@ public class MainWindow {
 					c.setVisible(true);
 			}
 		});
-
 	}
 
 	private void createAccount() {
@@ -1187,6 +1301,8 @@ public class MainWindow {
 				c.setVisible(false);
 			for (Component c : workerActionsComponents)
 				c.setVisible(false);
+			for (Component c : cartActionsComponents)
+				c.setVisible(false);
 			for (Component c : loginScreenComponents)
 				c.setVisible(true);
 			buttonLogIn.requestFocus(); // tylko po ro zeby na textfieldach
@@ -1198,20 +1314,25 @@ public class MainWindow {
 		buttonLogin.setText("Zaloguj");
 		buttonLogin1.setText("Zaloguj");
 		buttonLogin2.setText("Zaloguj");
+		buttonLogin3.setText("Zaloguj");
 		buttonCreateAccount.setEnabled(true);
 		buttonCreateAccount2.setEnabled(true);
 		buttonCreateAccount3.setEnabled(true);
+		buttonCreateAccount4.setEnabled(true);
 		buttonWorkerActions.setVisible(false);
+		buttonOrder.setEnabled(false);
 	}
 
 	private void logIn() {
 		String login = textFieldLogin.getText();
 		String password = String.valueOf(passwordFieldPassword.getPassword());
 		boolean correct = false;
+		int personID = 0;
 
 		for (Person p : arrayListPeople) {
 			if (p.getLogin().equals(login) && p.getPassword().equals(password)) {
 				correct = true;
+				personID = p.getPersonID();
 				for (Worker w : arrayListWorkers)
 					if (p.getPersonID() == w.getPersonID()) {
 						buttonWorkerActions.setVisible(true);
@@ -1244,9 +1365,13 @@ public class MainWindow {
 			buttonLogin.setText("Wyloguj");
 			buttonLogin1.setText("Wyloguj");
 			buttonLogin2.setText("Wyloguj");
+			buttonLogin3.setText("Wyloguj");
 			buttonCreateAccount.setEnabled(false);
 			buttonCreateAccount2.setEnabled(false);
 			buttonCreateAccount3.setEnabled(false);
+			buttonCreateAccount4.setEnabled(false);
+			buttonOrder.setEnabled(true);
+			loggedID = personID;
 		}
 	}
 
@@ -1265,42 +1390,85 @@ public class MainWindow {
 			c.setVisible(false);
 
 		panelItems2.removeAll();
-		int size=arrayListCart.size();
 
-		for (int i = 0; i < size; i++) {
-			final Assortment a = arrayListCart.get(i);
-			JButton temp_button = new JButton("ID sprzetu: " + a.getItemID() + " ,liczba wypozyczen: "
-					+ a.getLoansNumber() + " ,stan: " + a.getCondition());
-			temp_button.setPreferredSize(new Dimension(500, 30));
-			
-			temp_button.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-											
-						JOptionPane.showMessageDialog(mainFrame, "Usunieto z listy zamowien");
-						arrayListCart.remove(a);
-						for (Component c : cartActionsComponents)
-							c.setVisible(false);
-						for (Component c : cartActionsComponents)
-							c.setVisible(true);
-						toCart();
-				
-				}			
-			});
+		for (int i = 0; i < arrayListCartItems.size(); i++) {
+			int iterator = i;
+			final Assortment a = arrayListCartItems.get(i);
+			Model model = null;
+			int[] parsedDate = null;
+
+			for (Model m : arrayListModels)
+				if (m.getModelID() == a.getModelID()) {
+					model = m;
+					break;
+				}
+			parsedDate = parseDate(arrayListCartDates.get(i));
+
+			JLabel temp_label = new JLabel(
+					"Nazwa: " + model.getModelName() + ", Data wypozyczenia: " + parsedDate[0] + "/" + parsedDate[1]
+							+ "/" + parsedDate[2] + ", Dlugosc wypozyczenia: " + arrayListCartLength.get(i) + ", Cena:"
+							+ arrayListCartLength.get(i) * model.getCostPerDay() / 100 + "zl.",
+					SwingConstants.CENTER);
+			temp_label.setPreferredSize(new Dimension(700, 30));
 			gridBagConstraintsBrowse2.gridx = 1;
 			gridBagConstraintsBrowse2.gridy = i + 1;
-			
-			//listOfDBContent.add(temp_button);
-			panelItems2.add(temp_button, gridBagConstraintsBrowse2);
-			
-		}
-	}
-	
+			panelItems2.add(temp_label, gridBagConstraintsBrowse2);
 
+			JButton temp_button = new JButton("Usun");
+			temp_button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					new Thread(new Runnable() {
+						public void run() {
+							try {
+								labelRemoved.setText("Usunieto przedmiot z koszyka.");
+								Thread.sleep(3000);
+								labelRemoved.setText("");
+							} catch (InterruptedException e) {
+							}
+						}
+					}).start();
+					arrayListCartItems.remove(a);
+					arrayListCartDates.remove(arrayListCartDates.get(iterator));
+					arrayListCartLength.remove(arrayListCartLength.get(iterator));
+
+					for (Component c : cartActionsComponents)
+						c.setVisible(false);
+					for (Component c : cartActionsComponents)
+						c.setVisible(true);
+
+					toCart();
+					return;
+				}
+			});
+			gridBagConstraintsBrowse2.gridx = 2;
+			gridBagConstraintsBrowse2.gridy = i + 1;
+			panelItems2.add(temp_button, gridBagConstraintsBrowse2);
+		}
+
+		int total_cost = 0;
+		for (int i = 0; i < arrayListCartLength.size(); i++) {
+			Assortment assortment = arrayListCartItems.get(i);
+			Model model = null;
+			int length = arrayListCartLength.get(i);
+
+			for (Model m : arrayListModels)
+				if (m.getModelID() == assortment.getModelID()) {
+					model = m;
+					break;
+				}
+			total_cost += model.getCostPerDay() * length;
+		}
+		JLabel temp_label = new JLabel("Calkowity koszt: " + total_cost / 100 + "zl.", SwingConstants.CENTER);
+		temp_label.setPreferredSize(new Dimension(500, 60));
+		temp_label.setFont(new Font("Arial", Font.PLAIN, 20));
+		gridBagConstraintsBrowse2.gridx = 1;
+		gridBagConstraintsBrowse2.gridy = arrayListCartItems.size() + 1;
+		panelItems2.add(temp_label, gridBagConstraintsBrowse2);
+	}
 
 	private void searchInAssortment() {
 		JOptionPane.showMessageDialog(mainFrame, "Bedzie dodane");
-		System.out.println(arrayListCart.size());
+		System.out.println(arrayListCartItems.size());
 	}
 
 	private void filterAssortment() {
@@ -1322,12 +1490,12 @@ public class MainWindow {
 						+ model.getCostPerDay() / 100 + " złotych dziennie. \n" + "Kaucja za zniszczenie wynosi: "
 						+ model.getDamageDeposit() / 100 + " złotych.");
 
-		//dodanie do comboBoxa wszystkich egzemplarzy danego modelu
+		// dodanie do comboBoxa wszystkich egzemplarzy danego modelu
 		comboBoxItemsOfModel.removeAllItems();
 		for (Assortment a : arrayListAssortment)
 			if (a.getModelID() == selectedModel.getModelID())
 				comboBoxItemsOfModel.addItem(comboBoxItemsOfModel.getItemCount() + 1);
-		
+
 		// tylko po to zeby od razu podswietlilo na czerwono juz zarezerwowane
 		// terminy
 		displayCalendar(0, 0, 0, 0);
@@ -1338,7 +1506,7 @@ public class MainWindow {
 
 		calendar.getDayChooser().removeDateEvaluator(evaluator);
 		calendar.getDayChooser().removeDateEvaluator(evaluatorAllItems);
-		//2 evaluatory dla dwoch kolorow
+		// 2 evaluatory dla dwoch kolorow
 		evaluator = new HighlightEvaluator();
 		evaluator.setBackgroundColor(Color.GREEN);
 		evaluatorAllItems = new HighlightEvaluator();
@@ -1353,8 +1521,8 @@ public class MainWindow {
 				arrayList_items_of_this_model.add(a);
 
 		Assortment assortment = arrayList_items_of_this_model.get(comboBoxItemsOfModel.getSelectedIndex());
-		
-		//zaznaczenie wszystkich dat w ktorych egzemplarz jest zajety
+
+		// zaznaczenie wszystkich dat w ktorych egzemplarz jest zajety
 		for (int i = 0; i < assortment.getListDateOfOrder().size(); i++) {
 			Date date = assortment.getListDateOfOrder().get(i);
 			int length_of_order = assortment.getListLengthOfOrder().get(i);
@@ -1415,14 +1583,14 @@ public class MainWindow {
 		parsedDate[0] = day;
 		parsedDate[1] = month;
 		parsedDate[2] = year;
-		
+
 		return parsedDate;
 	}
 
-	private void addToCart(){
-		if(!loggedIn){
+	private void addToCart() {
+		if (!loggedIn) {
 			new Thread(new Runnable() {
-				public void run() {			
+				public void run() {
 					try {
 						labelErrorDate.setText("Najpierw sie zaloguj!");
 						Thread.sleep(3000);
@@ -1435,42 +1603,59 @@ public class MainWindow {
 		}
 		ArrayList<Assortment> arrayList_items_of_model = new ArrayList<Assortment>();
 		ArrayList<Date> arrayList_all_dates_of_item = new ArrayList<Date>();
-		
-		//wyszukanie listy wszystkich egzemplarzy modelu
+
+		// wyszukanie listy wszystkich egzemplarzy modelu
 		for (Assortment a : arrayListAssortment)
 			if (a.getModelID() == selectedModel.getModelID())
 				arrayList_items_of_model.add(a);
-		
+
 		Assortment assortment = arrayList_items_of_model.get(comboBoxItemsOfModel.getSelectedIndex());
-		
+
 		Date date = calendar.getDate();
 		int length = 0;
-		try{
+		try {
 			length = Integer.parseInt(textFieldlength.getText());
-		} catch(Exception ex){}
-		
-		//stworzenie listy wszystkich dat w ktorych dany egzemplarz jest wypozyczony
-		for(int i = 0; i < assortment.getListDateOfOrder().size(); i++){
-			System.out.println("NOWA DATA");
-			for (int j = 0; j < assortment.getListLengthOfOrder().get(i); j++){
+			if (length == 0)
+				length = Integer.parseInt("");
+			textFieldlength.setText("");
+		} catch (Exception ex) {
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						labelErrorDate.setText("<html>Podana dlugosc zamowienia <br> jest bledna</html>");
+						Thread.sleep(3000);
+						labelErrorDate.setText("");
+					} catch (InterruptedException e) {
+					}
+				}
+			}).start();
+			textFieldlength.setText("");
+			return;
+		}
+
+		// stworzenie listy wszystkich dat w ktorych dany egzemplarz jest
+		// wypozyczony
+		for (int i = 0; i < assortment.getListDateOfOrder().size(); i++) {
+			for (int j = 0; j < assortment.getListLengthOfOrder().get(i); j++) {
 				int[] parsedDate = parseDate(assortment.getListDateOfOrder().get(i));
 				parsedDate[0] += j;
 				arrayList_all_dates_of_item.add(createDate(parsedDate[0], parsedDate[1], parsedDate[2]));
 			}
 		}
-		
-		//sprawdzenie czy w podanych datach egzemplarz jest wolny
-		//watki sa dla efektu(lepszy niz JOptionPane.messagedialog)
-		for(int i = 0; i < length; i++){
+
+		// sprawdzenie czy w podanych datach egzemplarz jest wolny
+		// watki sa dla efektu(lepszy niz JOptionPane.messagedialog)
+		for (int i = 0; i < length; i++) {
 			int[] parsedDate = parseDate(calendar.getDate());
 			parsedDate[0] += i;
 			date = createDate(parsedDate[0], parsedDate[1], parsedDate[2]);
-			for(Date d : arrayList_all_dates_of_item)
-				if(d.compareTo(date) == 0){
+			for (Date d : arrayList_all_dates_of_item)
+				if (d.compareTo(date) == 0) {
 					new Thread(new Runnable() {
-						public void run() {			
+						public void run() {
 							try {
-								labelErrorDate.setText("<html>W podanym terminie sprzęt <br> jest już zarezerwowany!</html>");
+								labelErrorDate
+										.setText("<html>W podanym terminie sprzęt <br> jest już zarezerwowany!</html>");
 								Thread.sleep(3000);
 								labelErrorDate.setText("");
 							} catch (InterruptedException e) {
@@ -1478,10 +1663,10 @@ public class MainWindow {
 						}
 					}).start();
 					return;
-				}	
+				}
 		}
 		new Thread(new Runnable() {
-			public void run() {			
+			public void run() {
 				try {
 					labelErrorDate.setText("Pomyslnie dodano do koszyka!");
 					Thread.sleep(3000);
@@ -1490,9 +1675,11 @@ public class MainWindow {
 				}
 			}
 		}).start();
-		arrayListCart.add(assortment);
+		arrayListCartItems.add(assortment);
+		arrayListCartDates.add(calendar.getDate());
+		arrayListCartLength.add(length);
 	}
-	
+
 	public ArrayList<Client> getArrayListClients() {
 		return arrayListClients;
 	}
