@@ -330,6 +330,7 @@ public class ManageAssortment {
 
 	private void createAssortment() {
 
+		Connect oracle = new Connect();
 		String assortmentID = textFieldAssortmentID.getText();
 		String modelID = textFieldModelID.getText();
 		java.util.Date buyDate = null;
@@ -374,6 +375,13 @@ public class ManageAssortment {
 		int modelID2 = Integer.parseInt(textFieldModelID.getText());
 		int rentNumber2 = Integer.parseInt(textFieldRentNumber.getText());
 		int assortmentID2 = Integer.parseInt(textFieldAssortmentID.getText());
+		int availability2 = availability ? 1 : 0;
+		
+		oracle.db_connect();
+		oracle.db_createAssortment(assortmentID2, buyDate, rentNumber2, lastRentDate, availability2,
+				dateNextMaintenance, condition, modelID2);
+		oracle.db_disconnect();
+
 
 		arrayListAssortment.add(new Assortment(assortmentID2, buyDate, rentNumber2, lastRentDate, true,
 				dateNextMaintenance, condition, modelID2));

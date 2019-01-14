@@ -180,6 +180,7 @@ public class ManageModel {
 	}
 
 	private void createModel() {
+		Connect oracle = new Connect();
 		String model_ID = textFieldModelID.getText();
 		String model_name = textFieldModelName.getText();
 		String producer = textFieldProducer.getText();
@@ -208,6 +209,12 @@ public class ManageModel {
 			int modelID2 = Integer.parseInt(textFieldModelID.getText());
 			int costPerDay = Integer.parseInt(textFieldPrice.getText());
 			int damageDeposit = Integer.parseInt(textFieldDeposit.getText());
+			int season_of_use2 = season_of_use ? 1 : 0;
+			
+			oracle.db_connect();
+			oracle.db_createModel(modelID2, model_name, producer, equipment_type, season_of_use2, costPerDay,
+					damageDeposit);
+			oracle.db_disconnect();
 
 			arrayListModels.add(new Model(modelID2, model_name, producer, equipment_type, season_of_use, costPerDay,
 					damageDeposit));

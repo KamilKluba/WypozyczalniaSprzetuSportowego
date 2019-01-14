@@ -375,6 +375,7 @@ public class ManageAccount {
 	}
 
 	private void createAccount() {
+		Connect oracle = new Connect();
 		String login = textFieldLogin.getText();
 		String password = String.valueOf(passwordFieldPassword.getPassword());
 		String repeated_password = String.valueOf(passwordFieldRepeatPassword.getPassword());
@@ -424,6 +425,18 @@ public class ManageAccount {
 					JOptionPane.showMessageDialog(dialogCreateAccount, "Użytkownik o podanym nicku już istnieje!");
 					return;
 				}
+			int house_number2 = Integer.parseInt(textFieldHouseNumber.getText());
+			int flat_number2 = Integer.parseInt(textFieldFlatNumber.getText());
+			
+			oracle.db_connect();		
+			oracle.db_createAccount(mainWindow.getArrayListClients().size() + 1 ,login, password, security_question,
+					security_answer);
+			oracle.db_createAddress(mainWindow.getArrayListAddresses().size() + 1, city, postal_code, street, house_number2, flat_number2);
+			oracle.db_createPerson(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
+					mainWindow.getArrayListAddresses().size());
+			
+			oracle.db_createClient(mainWindow.getArrayListClients().size(),mainWindow.getArrayListPeople().size(), mainWindow.getArrayListAddresses().size(), new Date(), 0,null, 0);
+			oracle.db_disconnect();
 
 			mainWindow.getArrayListAddresses().add(new Address(mainWindow.getArrayListAddresses().size() + 1, city,
 					postal_code, street, house_number, flat_number));

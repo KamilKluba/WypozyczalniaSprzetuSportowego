@@ -101,7 +101,7 @@ public class Connect {
 	
 
 	
-	public boolean db_createPerson(int personID, String name, String last_name, java.sql.Date birth_date,
+	public boolean db_createPerson(int personID, String name, String last_name, java.util.Date birth_date,
 			int addressID) 
 	{
 			

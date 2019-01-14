@@ -21,7 +21,7 @@ public class TestData {
 			mainWindow.getArrayListAddresses().add(new Address(1, "Wroclaw", "12-345", "Krotka", "1", "1"));
 			mainWindow.getArrayListPeople()
 					.add(new Person(1, "Kamil", "Kluba", new SimpleDateFormat("dd/MM/yyyy").parse("12/06/1996"), 123456789, 1,
-							"Czachodym", "password1", "Imie kota", "Jurgen"));
+							"a", "a", "Imie kota", "Jurgen"));
 			mainWindow.getArrayListWorkers()
 					.add(new Worker(1, new SimpleDateFormat("dd/MM/yyyy").parse("01/02/2010"), 3000, 0, 1));
 
@@ -36,7 +36,7 @@ public class TestData {
 			mainWindow.getArrayListAddresses().add(new Address(3, "Krakow", "98-754", "Krakowska", "143", "12"));
 			mainWindow.getArrayListPeople()
 					.add(new Person(3, "Tomasz", "Nowak", new SimpleDateFormat("dd/MM/yyyy").parse("31/12/1980"), 123654789, 3,
-							"Tomeczek1", "password3", "Wzrost", "185"));
+							"b", "b", "Wzrost", "185"));
 			mainWindow.getArrayListClients()
 					.add(new Client(1, new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2015"), 0, null, false, 3));
 
