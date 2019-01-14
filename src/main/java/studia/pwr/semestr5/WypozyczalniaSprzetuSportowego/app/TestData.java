@@ -20,14 +20,14 @@ public class TestData {
 			// pracownicy-------------------------------------------------------------------------------------------
 			mainWindow.getArrayListAddresses().add(new Address(1, "Wroclaw", "12-345", "Krotka", "1", "1"));
 			mainWindow.getArrayListPeople()
-					.add(new Person(1, "Kamil", "Kluba", new SimpleDateFormat("dd/MM/yyyy").parse("12/06/1996"), 1,
+					.add(new Person(1, "Kamil", "Kluba", new SimpleDateFormat("dd/MM/yyyy").parse("12/06/1996"), 123456789, 1,
 							"Czachodym", "password1", "Imie kota", "Jurgen"));
 			mainWindow.getArrayListWorkers()
 					.add(new Worker(1, new SimpleDateFormat("dd/MM/yyyy").parse("01/02/2010"), 3000, 0, 1));
 
 			mainWindow.getArrayListAddresses().add(new Address(2, "Wroclaw", "21-434", "Dluga", "15", null));
 			mainWindow.getArrayListPeople()
-					.add(new Person(2, "Jerzy", "Jerzowski", new SimpleDateFormat("dd/MM/yyyy").parse("22/02/1986"), 2,
+					.add(new Person(2, "Jerzy", "Jerzowski", new SimpleDateFormat("dd/MM/yyyy").parse("22/02/1986"), 987654321, 2,
 							"Frankensztajn", "password2", "Ulubiony kolor", "Niebieski"));
 			mainWindow.getArrayListWorkers()
 					.add(new Worker(2, new SimpleDateFormat("dd/MM/yyyy").parse("11/12/2014"), 3000, 0, 2));
@@ -35,21 +35,21 @@ public class TestData {
 			// klienci----------------------------------------------------------------------------------------------
 			mainWindow.getArrayListAddresses().add(new Address(3, "Krakow", "98-754", "Krakowska", "143", "12"));
 			mainWindow.getArrayListPeople()
-					.add(new Person(3, "Tomasz", "Nowak", new SimpleDateFormat("dd/MM/yyyy").parse("31/12/1980"), 3,
+					.add(new Person(3, "Tomasz", "Nowak", new SimpleDateFormat("dd/MM/yyyy").parse("31/12/1980"), 123654789, 3,
 							"Tomeczek1", "password3", "Wzrost", "185"));
 			mainWindow.getArrayListClients()
 					.add(new Client(1, new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2015"), 0, null, false, 3));
 
 			mainWindow.getArrayListAddresses().add(new Address(4, "Czestochowa", "88-888", "Krzywa", "132", null));
 			mainWindow.getArrayListPeople()
-					.add(new Person(5, "Jan", "Nowak", new SimpleDateFormat("dd/MM/yyyy").parse("20/12/1995"), 4,
+					.add(new Person(5, "Jan", "Nowak", new SimpleDateFormat("dd/MM/yyyy").parse("20/12/1995"), 987456321, 4,
 							"Jano12", "password4", "Pierwsze auto", "Golf 3"));
 			mainWindow.getArrayListClients()
 					.add(new Client(2, new SimpleDateFormat("dd/MM/yyyy").parse("04/11/2016"), 0, null, false, 4));
 
 			mainWindow.getArrayListAddresses().add(new Address(5, "Wroclaw", "98-987", "Kwadratowa", "99", "12"));
 			mainWindow.getArrayListPeople().add(new Person(5, "Bartosz", "Kurek",
-					new SimpleDateFormat("dd/MM/yyyy").parse("05/07/1990"), 5, "Siatkarz", "password5", "MVP?", "Tak"));
+					new SimpleDateFormat("dd/MM/yyyy").parse("05/07/1990"), 132457689, 5, "Siatkarz", "password5", "MVP?", "Tak"));
 			mainWindow.getArrayListClients()
 					.add(new Client(3, new SimpleDateFormat("dd/MM/yyyy").parse("15/08/2016"), 0, null, false, 5));
 			
