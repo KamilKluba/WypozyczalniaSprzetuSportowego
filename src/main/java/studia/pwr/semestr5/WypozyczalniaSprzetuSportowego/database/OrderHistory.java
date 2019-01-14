@@ -9,21 +9,17 @@ public class OrderHistory {
 	private int workerID;
 	private Date orderDate;
 	private List<Integer> listEquipmentID;
-	private int orderLength;
-	
+
 	public OrderHistory() {
 		super();
 	}
 
-	public OrderHistory(int orderNumber, int clientID, int workerID, Date orderDate, List<Integer> listEquipmentID,
-			int orderLength) {
+	public OrderHistory(int orderNumber, int clientID, Date orderDate, List<Integer> listEquipmentID) {
 		super();
 		this.orderNumber = orderNumber;
 		this.clientID = clientID;
-		this.workerID = workerID;
 		this.orderDate = orderDate;
 		this.listEquipmentID = listEquipmentID;
-		this.orderLength = orderLength;
 	}
 
 	public int getOrderNumber() {
@@ -66,23 +62,11 @@ public class OrderHistory {
 		this.listEquipmentID = listEquipmentID;
 	}
 
-	public int getOrderLength() {
-		return orderLength;
-	}
-
-	public void setOrderLength(int orderLength) {
-		this.orderLength = orderLength;
-	}
-
 	@Override
 	public String toString() {
 		return "OrderHistory [orderNumber=" + orderNumber + ", clientID=" + clientID + ", workerID=" + workerID
-				+ ", orderDate=" + orderDate + ", listEquipmentID=" + listEquipmentID + ", orderLength=" + orderLength
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
+				+ ", orderDate=" + orderDate + ", listEquipmentID=" + listEquipmentID + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
 
-
-	
-	
 }
