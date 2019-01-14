@@ -373,6 +373,9 @@ public class ManageAccount {
 			}
 		});
 	}
+	
+
+
 
 	private void createAccount() {
 		Connect oracle = new Connect();
@@ -385,7 +388,7 @@ public class ManageAccount {
 		String last_name = textFieldLastName.getText();
 		java.util.Date birth_date = null;
 		try {
-			birth_date = new SimpleDateFormat("dd/MM/yyyy").parse(textFieldBirthDate.getText());
+			birth_date = new SimpleDateFormat("dd/mm/yyyy").parse(textFieldBirthDate.getText());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -433,9 +436,9 @@ public class ManageAccount {
 					security_answer);
 			oracle.db_createAddress(mainWindow.getArrayListAddresses().size() + 1, city, postal_code, street, house_number2, flat_number2);
 			oracle.db_createPerson(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
-					mainWindow.getArrayListAddresses().size());
+					mainWindow.getArrayListAddresses().size() + 1);
 			
-			oracle.db_createClient(mainWindow.getArrayListClients().size(),mainWindow.getArrayListPeople().size(), mainWindow.getArrayListAddresses().size(), new Date(), 0,null, 0);
+			oracle.db_createClient(mainWindow.getArrayListClients().size()+1,mainWindow.getArrayListPeople().size()+1, mainWindow.getArrayListClients().size()+1, new Date(), 0,null, 0);
 			oracle.db_disconnect();
 
 			mainWindow.getArrayListAddresses().add(new Address(mainWindow.getArrayListAddresses().size() + 1, city,

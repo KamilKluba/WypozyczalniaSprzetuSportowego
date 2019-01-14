@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import javax.swing.JOptionPane;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -99,20 +102,27 @@ public class Connect {
 		return true;
 	}
 	
+	private static java.sql.Date convertUtilToSql(java.util.Date uDate) {
+		
+        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
+        return sDate;
+
+    }
 
 	
 	public boolean db_createPerson(int personID, String name, String last_name, java.util.Date birth_date,
 			int addressID) 
 	{
-			
+		java.sql.Date sDate = convertUtilToSql(birth_date);
+
 		try {
-			
+		
 			PreparedStatement prepStmt = connection.prepareStatement(
 					"INSERT INTO Dane_Osobowe VALUES (?, ?, ?, ?, ?)");
 			prepStmt.setInt(1, personID);
 			prepStmt.setString(2, name);
 			prepStmt.setString(3, last_name);
-			prepStmt.setDate(4, (Date) birth_date);
+			prepStmt.setDate(4, sDate);
 			prepStmt.setInt(5, addressID);
 			prepStmt.execute();
 		
@@ -123,18 +133,20 @@ public class Connect {
 		return true;
 	}
 
-	public boolean db_createClient(int clientID, int personID, int adressID, java.util.Date date, int orderQuantity, java.util.Date lastOrderDate, int suspendedAccount)
+	public boolean db_createClient(int clientID, int personID, int accountID, java.util.Date date, int orderQuantity, java.util.Date lastOrderDate, int suspendedAccount)
 	{
+	
+		java.sql.Date sDate = convertUtilToSql(date);
 		
 		try {
 			PreparedStatement prepStmt = connection.prepareStatement(
 					"INSERT INTO KLIENT VALUES (?, ?, ?, ?, ?, ?, ?)");
 			prepStmt.setInt(1, clientID);
 			prepStmt.setInt(2, personID);
-			prepStmt.setInt(3, adressID);
-			prepStmt.setDate(4, (Date) date);
+			prepStmt.setInt(3, accountID);
+			prepStmt.setDate(4, sDate);
 			prepStmt.setInt(5, orderQuantity);
-			prepStmt.setDate(6, (Date) lastOrderDate);
+			prepStmt.setDate(6, null);
 			prepStmt.setInt(7, suspendedAccount);
 			prepStmt.execute();
 		
@@ -147,15 +159,17 @@ public class Connect {
 	
 	public boolean db_createAssortment(int assortmentID, java.util.Date buyDate, int rentNumber, java.util.Date lastRentDate, int availability, java.util.Date dateNextMaintenance, String condition, int modelID)
 	{
+		java.sql.Date sDate = convertUtilToSql(buyDate);
+		java.sql.Date sDate2 = convertUtilToSql(dateNextMaintenance);
 		try {
 			PreparedStatement prepStmt = connection.prepareStatement(
 					"INSERT INTO SPRZET VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			prepStmt.setInt(1, assortmentID);
-			prepStmt.setDate(2, (Date)buyDate);
+			prepStmt.setDate(2, sDate);
 			prepStmt.setInt(3, rentNumber);
-			prepStmt.setDate(4, (Date) lastRentDate);
+			prepStmt.setDate(4, null);
 			prepStmt.setInt(5, availability);
-			prepStmt.setDate(6, (Date) dateNextMaintenance);
+			prepStmt.setDate(6, sDate2);
 			prepStmt.setString(7, condition);
 			prepStmt.setInt(8, modelID);
 			prepStmt.execute();
