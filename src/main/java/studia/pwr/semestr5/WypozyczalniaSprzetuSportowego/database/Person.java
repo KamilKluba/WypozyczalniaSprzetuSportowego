@@ -8,6 +8,7 @@ public class Person {
 	private String lastName;
 	private Date birthDate;
 	private int addressID;
+	private int phoneNumber;
 	private String login;
 	private String password;
 	private String securityQuestion;
@@ -17,13 +18,14 @@ public class Person {
 		super();
 	}
 
-	public Person(int personID, String firstName, String lastName, Date birthDate, int addressID, String login,
+	public Person(int personID, String firstName, String lastName, Date birthDate, int phoneNumber, int addressID, String login,
 			String password, String securityQuestion, String securityAnswer) {
 		super();
 		this.personID = personID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthDate = birthDate;
+		this.phoneNumber = phoneNumber;
 		this.addressID = addressID;
 		this.login = login;
 		this.password = password;
@@ -61,6 +63,14 @@ public class Person {
 
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
+	}
+
+	public int getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(int phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public int getAddressID() {
@@ -106,7 +116,7 @@ public class Person {
 	@Override
 	public String toString() {
 		return personID + " !&#*&% " + firstName + " !&#*&% " + lastName + " !&#*&% "
-				+ birthDate + " !&#*&% " + addressID + " !&#*&% " + login + " !&#*&% " + password
+				+ birthDate + " !&#*&% " + phoneNumber + " !&#*&% " + addressID + " !&#*&% " + login + " !&#*&% " + password
 				+ " !&#*&% " + securityQuestion + " !&#*&% " + securityAnswer;
 	}
 

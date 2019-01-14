@@ -46,6 +46,8 @@ public class ManageAccount {
 	JTextField textFieldLastName;
 	JLabel labelBirthDate;
 	JTextField textFieldBirthDate;
+	JLabel labelPhoneNumber;
+	JTextField textFieldPhoneNumber;
 	JLabel labelCity;
 	JTextField textFieldCity;
 	JLabel labelPostalCode;
@@ -101,13 +103,55 @@ public class ManageAccount {
 		dividedPerson = person.toString().split(Pattern.quote(" !&#*&% "));
 
 		for (Address a : mainWindow.getArrayListAddresses()) {
-			if (a.getAdressID() == Integer.parseInt(dividedPerson[4])) {
+			if (a.getAdressID() == Integer.parseInt(dividedPerson[5])) {
 				address = a;
 				break;
 			}
 		}
 
-		dividedAddress = address.toString().split(Pattern.quote(" !&#*&% "));
+		try {
+			dividedAddress = address.toString().split(Pattern.quote(" !&#*&% "));
+
+			if (dividedAddress[0].equals("."))
+				dividedAddress[0] = dividedAddress[0].substring(1);
+			else if (dividedAddress[0].equals("null."))
+				dividedAddress[0] = dividedAddress[0].substring(4);
+			else
+				dividedAddress[0] = dividedAddress[0].substring(0, dividedAddress[0].length() - 1);
+			if (dividedAddress[1].equals("."))
+				dividedAddress[1] = dividedAddress[1].substring(1);
+			else if (dividedAddress[1].equals("null."))
+				dividedAddress[1] = dividedAddress[1].substring(4);
+			else
+				dividedAddress[1] = dividedAddress[1].substring(0, dividedAddress[1].length() - 1);
+			if (dividedAddress[2].equals("."))
+				dividedAddress[2] = dividedAddress[2].substring(1);
+			else if (dividedAddress[2].equals("null."))
+				dividedAddress[2] = dividedAddress[2].substring(4);
+			else
+				dividedAddress[2] = dividedAddress[2].substring(0, dividedAddress[2].length() - 1);
+			if (dividedAddress[3].equals("."))
+				dividedAddress[3] = dividedAddress[3].substring(1);
+			else if (dividedAddress[3].equals("null."))
+				dividedAddress[3] = dividedAddress[3].substring(4);
+			else
+				dividedAddress[3] = dividedAddress[3].substring(0, dividedAddress[3].length() - 1);
+			if (dividedAddress[4].equals("."))
+				dividedAddress[4] = dividedAddress[4].substring(1);
+			else if (dividedAddress[4].equals("null."))
+				dividedAddress[4] = dividedAddress[4].substring(4);
+			else
+				dividedAddress[4] = dividedAddress[4].substring(0, dividedAddress[4].length() - 1);
+			if (dividedAddress[5].equals("."))
+				dividedAddress[5] = dividedAddress[5].substring(1);
+			else if (dividedAddress[5].equals("null."))
+				dividedAddress[5] = dividedAddress[5].substring(4);
+			else
+				dividedAddress[5] = dividedAddress[5].substring(0, dividedAddress[5].length() - 1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println(address.toString());
 	}
 
 	private void initComponents() {
@@ -127,7 +171,7 @@ public class ManageAccount {
 		textFieldLogin = new JTextField();
 		textFieldLogin.setBounds(180, 30, 150, 30);
 		if (!create) {
-			textFieldLogin.setText(dividedPerson[5]);
+			textFieldLogin.setText(dividedPerson[6]);
 			textFieldLogin.setEnabled(false);
 		}
 		dialogCreateAccount.add(textFieldLogin);
@@ -139,7 +183,7 @@ public class ManageAccount {
 		passwordFieldPassword.setBounds(180, 70, 150, 30);
 		passwordFieldPassword.setEchoChar('*');
 		if (!create)
-			passwordFieldPassword.setText(dividedPerson[6]);
+			passwordFieldPassword.setText(dividedPerson[7]);
 		dialogCreateAccount.add(passwordFieldPassword);
 
 		labelRepeatPassword = new JLabel("Powtórz hasło:*");
@@ -149,7 +193,7 @@ public class ManageAccount {
 		passwordFieldRepeatPassword.setBounds(180, 110, 150, 30);
 		passwordFieldRepeatPassword.setEchoChar('*');
 		if (!create)
-			passwordFieldRepeatPassword.setText(dividedPerson[6]);
+			passwordFieldRepeatPassword.setText(dividedPerson[7]);
 		dialogCreateAccount.add(passwordFieldRepeatPassword);
 
 		labelShowPassword = new JLabel("Pokaz haslo:");
@@ -165,7 +209,7 @@ public class ManageAccount {
 		textFieldSecurityQuestion = new JTextField();
 		textFieldSecurityQuestion.setBounds(180, 170, 150, 30);
 		if (!create)
-			textFieldSecurityQuestion.setText(dividedPerson[7]);
+			textFieldSecurityQuestion.setText(dividedPerson[8]);
 		dialogCreateAccount.add(textFieldSecurityQuestion);
 
 		labelSecurityAnswer = new JLabel("Odpowiedz:*");
@@ -174,7 +218,7 @@ public class ManageAccount {
 		textFieldSecurityAnswer = new JTextField();
 		textFieldSecurityAnswer.setBounds(180, 210, 150, 30);
 		if (!create)
-			textFieldSecurityAnswer.setText(dividedPerson[8]);
+			textFieldSecurityAnswer.setText(dividedPerson[9]);
 		dialogCreateAccount.add(textFieldSecurityAnswer);
 
 		labelName = new JLabel("Imie:*");
@@ -195,12 +239,12 @@ public class ManageAccount {
 			textFieldLastName.setText(dividedPerson[2]);
 		dialogCreateAccount.add(textFieldLastName);
 
-		labelBirthDate = new JLabel("Data urodzenia:* **");
+		labelBirthDate = new JLabel("Data urodzenia: * **");
 		labelBirthDate.setBounds(350, 30, 150, 30);
 		dialogCreateAccount.add(labelBirthDate);
 		textFieldBirthDate = new JTextField();
 		textFieldBirthDate.setBounds(500, 30, 150, 30);
-		if (!create){
+		if (!create) {
 			String[] parts = dividedPerson[3].split(" ");
 
 			if (parts[1].equals("Jan"))
@@ -232,63 +276,72 @@ public class ManageAccount {
 		}
 		dialogCreateAccount.add(textFieldBirthDate);
 
+		labelPhoneNumber = new JLabel("Numer telefonu: * ***");
+		labelPhoneNumber.setBounds(350, 70, 150, 30);
+		dialogCreateAccount.add(labelPhoneNumber);
+		textFieldPhoneNumber = new JTextField();
+		textFieldPhoneNumber.setBounds(500, 70, 150, 30);
+		if (!create)
+			textFieldPhoneNumber.setText(dividedPerson[4]);
+		dialogCreateAccount.add(textFieldPhoneNumber);
+
 		labelCity = new JLabel("Miasto:");
-		labelCity.setBounds(350, 70, 150, 30);
+		labelCity.setBounds(350, 110, 150, 30);
 		dialogCreateAccount.add(labelCity);
 		textFieldCity = new JTextField();
-		textFieldCity.setBounds(500, 70, 150, 30);
+		textFieldCity.setBounds(500, 110, 150, 30);
 		if (!create)
 			textFieldCity.setText(dividedAddress[1]);
 		dialogCreateAccount.add(textFieldCity);
 
 		labelPostalCode = new JLabel("Kod pocztowy:");
-		labelPostalCode.setBounds(350, 110, 150, 30);
+		labelPostalCode.setBounds(350, 150, 150, 30);
 		dialogCreateAccount.add(labelPostalCode);
 		textFieldPostalCode = new JTextField();
-		textFieldPostalCode.setBounds(500, 110, 150, 30);
+		textFieldPostalCode.setBounds(500, 150, 150, 30);
 		if (!create)
 			textFieldPostalCode.setText(dividedAddress[2]);
 		dialogCreateAccount.add(textFieldPostalCode);
 
 		labelStreet = new JLabel("Ulica:");
-		labelStreet.setBounds(350, 150, 150, 30);
+		labelStreet.setBounds(350, 190, 150, 30);
 		dialogCreateAccount.add(labelStreet);
 		textFieldStreet = new JTextField();
-		textFieldStreet.setBounds(500, 150, 150, 30);
+		textFieldStreet.setBounds(500, 190, 150, 30);
 		if (!create)
 			textFieldStreet.setText(dividedAddress[3]);
 		dialogCreateAccount.add(textFieldStreet);
 
 		labelHouseNumber = new JLabel("Numer domu:");
-		labelHouseNumber.setBounds(350, 190, 150, 30);
+		labelHouseNumber.setBounds(350, 230, 150, 30);
 		dialogCreateAccount.add(labelHouseNumber);
 		textFieldHouseNumber = new JTextField();
-		textFieldHouseNumber.setBounds(500, 190, 150, 30);
+		textFieldHouseNumber.setBounds(500, 230, 150, 30);
 		if (!create)
 			textFieldHouseNumber.setText(dividedAddress[4]);
 		dialogCreateAccount.add(textFieldHouseNumber);
 
 		labelFlatNumber = new JLabel("Numer mieszkania:");
-		labelFlatNumber.setBounds(350, 230, 150, 30);
+		labelFlatNumber.setBounds(350, 270, 150, 30);
 		dialogCreateAccount.add(labelFlatNumber);
 		textFieldFlatNumber = new JTextField();
-		textFieldFlatNumber.setBounds(500, 230, 150, 30);
+		textFieldFlatNumber.setBounds(500, 270, 150, 30);
 		if (!create)
 			textFieldFlatNumber.setText(dividedAddress[5]);
 		dialogCreateAccount.add(textFieldFlatNumber);
 
-		labelRequiredFields = new JLabel("* - wymagane pola       ** - format dd/mm/yyyy");
-		labelRequiredFields.setBounds(40, 340, 350, 30);
+		labelRequiredFields = new JLabel("* - wymagane pola       ** - format dd/mm/yyyy       *** - dziewiec cyfr");
+		labelRequiredFields.setBounds(40, 340, 450, 30);
 		dialogCreateAccount.add(labelRequiredFields);
 
 		buttonCancel = new JButton("Anuluj");
-		buttonCancel.setBounds(500, 310, 80, 30);
+		buttonCancel.setBounds(550, 330, 80, 30);
 		dialogCreateAccount.add(buttonCancel);
 
 		buttonCreateAccount = new JButton("Utworz");
 		if (!create)
 			buttonCreateAccount.setText("Zapisz");
-		buttonCreateAccount.setBounds(410, 310, 80, 30);
+		buttonCreateAccount.setBounds(460, 330, 80, 30);
 		dialogCreateAccount.add(buttonCreateAccount);
 	}
 
@@ -335,6 +388,12 @@ public class ManageAccount {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		int phone_number = 0;
+		try {
+			phone_number = Integer.parseInt(textFieldPhoneNumber.getText());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		String city = textFieldCity.getText();
 		String postal_code = textFieldPostalCode.getText();
 		String street = textFieldStreet.getText();
@@ -357,6 +416,8 @@ public class ManageAccount {
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Nazwisko nie moze byc puste");
 		else if (birth_date == null)
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Data urodzenia nie moze byc pusta");
+		else if (phone_number < 100000000 || phone_number > 999999999)
+			JOptionPane.showMessageDialog(dialogCreateAccount, "Bledny numer telefonu");
 		else {
 			for (Person p : mainWindow.getArrayListPeople())
 				if (p.getLogin().equals(login)) {
@@ -368,7 +429,7 @@ public class ManageAccount {
 					postal_code, street, house_number, flat_number));
 			mainWindow.getArrayListPeople()
 					.add(new Person(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
-							mainWindow.getArrayListAddresses().size(), login, password, security_question,
+							phone_number, mainWindow.getArrayListAddresses().size(), login, password, security_question,
 							security_answer));
 			mainWindow.getArrayListClients().add(new Client(mainWindow.getArrayListClients().size() + 1, new Date(), 0,
 					null, false, mainWindow.getArrayListPeople().size()));
@@ -393,6 +454,12 @@ public class ManageAccount {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		int phone_number = 0;
+		try {
+			phone_number = Integer.parseInt(textFieldPhoneNumber.getText());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		String city = textFieldCity.getText();
 		String postal_code = textFieldPostalCode.getText();
 		String street = textFieldStreet.getText();
@@ -413,9 +480,13 @@ public class ManageAccount {
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Nazwisko nie moze byc puste");
 		else if (birth_date == null)
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Data urodzenia nie moze byc pusta");
+		else if (phone_number < 100000000 || phone_number > 999999999)
+			JOptionPane.showMessageDialog(dialogCreateAccount, "Bledny numer telefonu");
 		else {
 			person.setFirstName(name);
 			person.setLastName(last_name);
+			person.setBirthDate(birth_date);
+			person.setPhoneNumber(phone_number);
 			person.setLogin(login);
 			person.setPassword(password);
 			person.setSecurityQuestion(security_question);
