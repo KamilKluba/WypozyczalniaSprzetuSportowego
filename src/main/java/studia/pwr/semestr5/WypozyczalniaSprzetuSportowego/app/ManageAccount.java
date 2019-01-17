@@ -373,9 +373,6 @@ public class ManageAccount {
 			}
 		});
 	}
-	
-
-
 
 	private void createAccount() {
 		Connect oracle = new Connect();
@@ -428,29 +425,47 @@ public class ManageAccount {
 					JOptionPane.showMessageDialog(dialogCreateAccount, "Użytkownik o podanym nicku już istnieje!");
 					return;
 				}
-			int house_number2 = Integer.parseInt(textFieldHouseNumber.getText());
-			int flat_number2 = Integer.parseInt(textFieldFlatNumber.getText());
-			
-			oracle.db_connect();		
-			oracle.db_createAccount(mainWindow.getArrayListClients().size() + 1 ,login, password, security_question,
-					security_answer);
-			oracle.db_createAddress(mainWindow.getArrayListAddresses().size() + 1, city, postal_code, street, house_number2, flat_number2);
-			oracle.db_createPerson(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
-					mainWindow.getArrayListAddresses().size() + 1);
-			
-			oracle.db_createClient(mainWindow.getArrayListClients().size()+1,mainWindow.getArrayListPeople().size()+1, mainWindow.getArrayListClients().size()+1, new Date(), 0,null, 0);
-			oracle.db_disconnect();
+			Integer house_number2 = null;
+			Integer flat_number2 = null;
+			try {
+				house_number2 = Integer.parseInt(textFieldHouseNumber.getText());
+				flat_number2 = Integer.parseInt(textFieldFlatNumber.getText());
+			} catch (Exception ex) {
+			}
 
-			mainWindow.getArrayListAddresses().add(new Address(mainWindow.getArrayListAddresses().size() + 1, city,
-					postal_code, street, house_number, flat_number));
-			mainWindow.getArrayListPeople()
-					.add(new Person(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
-							phone_number, mainWindow.getArrayListAddresses().size(), login, password, security_question,
-							security_answer));
-			mainWindow.getArrayListClients().add(new Client(mainWindow.getArrayListClients().size() + 1, new Date(), 0,
-					null, false, mainWindow.getArrayListPeople().size()));
+			int nextAddressID = mainWindow.getArrayListAddresses().get(mainWindow.getArrayListAddresses().size() - 1)
+					.getAdressID() + 1;
+			int nextPersonID = mainWindow.getArrayListPeople().get(mainWindow.getArrayListPeople().size() - 1)
+					.getPersonID() + 1;
+			int nextClientID = mainWindow.getArrayListClients().get(mainWindow.getArrayListClients().size() - 1)
+					.getClientID() + 1;
+
+			try {
+				if (oracle.db_connect()) {
+					oracle.db_createAccount(mainWindow.getArrayListClients().size() + 1, login, password,
+							security_question, security_answer);
+					oracle.db_createAddress(mainWindow.getArrayListAddresses().size() + 1, city, postal_code, street,
+							house_number2, flat_number2);
+					oracle.db_createPerson(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
+							mainWindow.getArrayListAddresses().size() + 1);
+
+					oracle.db_createClient(mainWindow.getArrayListClients().size() + 1,
+							mainWindow.getArrayListPeople().size() + 1, mainWindow.getArrayListClients().size() + 1,
+							new Date(), 0, null, 0);
+					oracle.db_disconnect();
+				}
+			} catch (Exception ex) {
+			}
+
+			mainWindow.getArrayListAddresses()
+					.add(new Address(nextAddressID, city, postal_code, street, house_number, flat_number));
+			mainWindow.getArrayListPeople().add(new Person(nextPersonID, name, last_name, birth_date, phone_number,
+					nextAddressID, login, password, security_question, security_answer));
+			mainWindow.getArrayListClients().add(new Client(nextClientID, new Date(), 0, null, false, nextPersonID));
+
 			dialogCreateAccount.dispose();
 		}
+
 		// Poza tym co tu jest trzeba dodać w bazie danych
 		// pytanie pomocnicze oraz odpowiedz na nie
 		// haslo i login maja byc w tabelu Dane_kont
