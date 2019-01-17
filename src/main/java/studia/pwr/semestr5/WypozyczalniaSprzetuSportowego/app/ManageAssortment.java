@@ -97,15 +97,16 @@ public class ManageAssortment {
 		if (!create)
 			dialogManageAssortment.setTitle("Edycja sprzętu");
 		dialogManageAssortment.setLayout(null);
-
+		
 		labelAssortmentID = new JLabel("ID sprzetu:");
 		labelAssortmentID.setBounds(20, 30, 180, 30);
 		dialogManageAssortment.add(labelAssortmentID);
 		textFieldAssortmentID = new JTextField();
+		textFieldAssortmentID.setEditable(false);
+		textFieldAssortmentID.setText("" + (arrayListAssortment.get(arrayListAssortment.size() - 1).getItemID() + 1));
 		textFieldAssortmentID.setBounds(200, 30, 150, 30);
 		if (!create) {
-			textFieldAssortmentID.setText(dividedModel[0]);
-			textFieldAssortmentID.setEnabled(false);
+			textFieldAssortmentID.setText(dividedModel[7]);
 		}
 		dialogManageAssortment.add(textFieldAssortmentID);
 
@@ -116,7 +117,6 @@ public class ManageAssortment {
 		textFieldModelID.setBounds(200, 70, 150, 30);
 		if (!create) {
 			textFieldModelID.setText(dividedModel[7]);
-			textFieldModelID.setEnabled(false);
 		}
 		dialogManageAssortment.add(textFieldModelID);
 
@@ -162,9 +162,9 @@ public class ManageAssortment {
 		dialogManageAssortment.add(labelRentNumber);
 		textFieldRentNumber = new JTextField();
 		textFieldRentNumber.setBounds(200, 150, 150, 30);
+		textFieldRentNumber.setEnabled(false);
 		if (!create) {
 			textFieldRentNumber.setText(dividedModel[2]);
-			textFieldRentNumber.setEnabled(false);
 		}
 		dialogManageAssortment.add(textFieldRentNumber);
 
@@ -173,9 +173,8 @@ public class ManageAssortment {
 		dialogManageAssortment.add(labelLastRentDate);
 		textFieldLastRentDate = new JTextField();
 		textFieldLastRentDate.setBounds(200, 190, 150, 30);
+		textFieldLastRentDate.setEnabled(false);
 		if (!create) {
-			textFieldLastRentDate.setEnabled(false);
-
 			try {
 				String[] parts = dividedModel[3].split(" ");
 
@@ -331,7 +330,7 @@ public class ManageAssortment {
 	private void createAssortment() {
 
 		Connect oracle = new Connect();
-		String assortmentID = textFieldAssortmentID.getText();
+		int assortmentID = arrayListAssortment.get(arrayListAssortment.size() - 1).getItemID() + 1;
 		String modelID = textFieldModelID.getText();
 		java.util.Date buyDate = null;
 		try {
@@ -355,42 +354,41 @@ public class ManageAssortment {
 		}
 		String condition = textFieldCondition.getText();
 
-		if (assortmentID.equals(""))
-			JOptionPane.showMessageDialog(dialogManageAssortment, "Pole ID sprzetu nie moze byc puste");
-		else if (modelID.equals(""))
+		if (modelID.equals(""))
 			JOptionPane.showMessageDialog(dialogManageAssortment, "Pole ID modelu nie moze byc puste");
 		else if (condition.equals(""))
 			JOptionPane.showMessageDialog(dialogManageAssortment, "Pole stan nie moze byc puste");
 		else if (buyDate == null)
 			JOptionPane.showMessageDialog(dialogManageAssortment, "Wprowadz date zakupu");
-
 		else {
-			for (Assortment a : arrayListAssortment)
-				if (Integer.toString(a.getItemID()).equals(assortmentID)) {
-					JOptionPane.showMessageDialog(dialogManageAssortment,
-							"Sprzet o podanym ID znajduje sie juz w bazie");
-					return;
-				}
+			int modelID2;
+			int rentNumber2;
+			int availability2;
+			try {
+				modelID2 = Integer.parseInt(textFieldModelID.getText());
+				rentNumber2 = Integer.parseInt(textFieldRentNumber.getText());
+				availability2 = availability ? 1 : 0;
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(dialogManageAssortment, "Bledne dane");
+				return;
+			}
+
+			try {
+				oracle.db_connect();
+				oracle.db_createAssortment(assortmentID, buyDate, rentNumber2, lastRentDate, availability2,
+						dateNextMaintenance, condition, modelID2);
+				oracle.db_disconnect();
+			} catch (Exception ex) {
+			}
+
+			arrayListAssortment.add(new Assortment(assortmentID, buyDate, 0, null,
+					checkBoxAvailability.isSelected(), dateNextMaintenance, condition, modelID2));
+			JOptionPane.showMessageDialog(dialogManageAssortment, "Dodano sprzet");
+			dialogManageAssortment.dispose();
 		}
-		int modelID2 = Integer.parseInt(textFieldModelID.getText());
-		int rentNumber2 = Integer.parseInt(textFieldRentNumber.getText());
-		int assortmentID2 = Integer.parseInt(textFieldAssortmentID.getText());
-		int availability2 = availability ? 1 : 0;
-		
-		oracle.db_connect();
-		oracle.db_createAssortment(assortmentID2, buyDate, rentNumber2, lastRentDate, availability2,
-				dateNextMaintenance, condition, modelID2);
-		oracle.db_disconnect();
-
-
-		arrayListAssortment.add(new Assortment(assortmentID2, buyDate, rentNumber2, lastRentDate, true,
-				dateNextMaintenance, condition, modelID2));
-		JOptionPane.showMessageDialog(dialogManageAssortment, "Dodano sprzet");
-		dialogManageAssortment.dispose();
 	}
 
 	private void editAssortment() {
-		String assortmentID = textFieldAssortmentID.getText();
 		String modelID = textFieldModelID.getText();
 		String rentNumber = textFieldRentNumber.getText();
 		boolean availability = checkBoxAvailability.isSelected();
@@ -415,9 +413,7 @@ public class ManageAssortment {
 			ex.printStackTrace();
 		}
 
-		if (assortmentID.equals(""))
-			JOptionPane.showMessageDialog(dialogManageAssortment, "Pole ID sprzetu nie moze byc puste");
-		else if (modelID.equals(""))
+		if (modelID.equals(""))
 			JOptionPane.showMessageDialog(dialogManageAssortment, "Pole ID modelu nie moze byc puste");
 		else if (condition.equals(""))
 			JOptionPane.showMessageDialog(dialogManageAssortment, "Pole stan nie moze byc puste");

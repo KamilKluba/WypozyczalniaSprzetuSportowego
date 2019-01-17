@@ -90,9 +90,10 @@ public class ManageModel {
 		dialogCreateModel.add(labelModelID);
 		textFieldModelID = new JTextField();
 		textFieldModelID.setBounds(200, 30, 150, 30);
+		textFieldModelID.setEnabled(false);
+		textFieldModelID.setText("" + (arrayListModels.get(arrayListModels.size() - 1).getModelID() + 1));
 		if (!create) {
 			textFieldModelID.setText(dividedModel[0]);
-			textFieldModelID.setEnabled(false);
 		}
 		dialogCreateModel.add(textFieldModelID);
 
@@ -210,11 +211,14 @@ public class ManageModel {
 			int costPerDay = Integer.parseInt(textFieldPrice.getText());
 			int damageDeposit = Integer.parseInt(textFieldDeposit.getText());
 			int season_of_use2 = season_of_use ? 1 : 0;
-			
-			oracle.db_connect();
-			oracle.db_createModel(modelID2, model_name, producer, equipment_type, season_of_use2, costPerDay,
-					damageDeposit);
-			oracle.db_disconnect();
+
+			try {
+				oracle.db_connect();
+				oracle.db_createModel(modelID2, model_name, producer, equipment_type, season_of_use2, costPerDay,
+						damageDeposit);
+				oracle.db_disconnect();
+			} catch (Exception ex) {
+			}
 
 			arrayListModels.add(new Model(modelID2, model_name, producer, equipment_type, season_of_use, costPerDay,
 					damageDeposit));
