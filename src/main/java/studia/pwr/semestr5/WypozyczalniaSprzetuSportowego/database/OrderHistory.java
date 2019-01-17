@@ -7,6 +7,7 @@ public class OrderHistory {
 	private int orderNumber;
 	private int clientID;
 	private int workerID;
+	private int cost;
 	private Date orderDate;
 	private List<Integer> listEquipmentID;
 	private List<Integer> listEquipmentLoanLength;
@@ -15,13 +16,14 @@ public class OrderHistory {
 		super();
 	}
 
-	public OrderHistory(int orderNumber, int clientID, Date orderDate, List<Integer> listEquipmentID,
+	public OrderHistory(int orderNumber, int clientID, Date orderDate, int cost, List<Integer> listEquipmentID,
 			List<Integer> listEquipmentLoanLength) {
 		super();
 		this.orderNumber = orderNumber;
 		this.clientID = clientID;
 		this.workerID = -1;
 		this.orderDate = orderDate;
+		this.cost = cost;
 		this.listEquipmentID = listEquipmentID;
 		this.listEquipmentLoanLength = listEquipmentLoanLength;
 	}
@@ -56,6 +58,14 @@ public class OrderHistory {
 
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+	}
+
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
 	}
 
 	public List<Integer> getListEquipmentID() {

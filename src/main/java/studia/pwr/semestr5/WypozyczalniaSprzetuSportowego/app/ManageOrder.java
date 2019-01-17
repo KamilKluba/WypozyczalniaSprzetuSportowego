@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -23,10 +24,12 @@ public class ManageOrder {
 	JTextField textFieldOrderNumber;
 	JLabel labelClientID;
 	JTextField textFieldClientID;
-	JLabel labelWorkerID;
-	JTextField textFieldWorkerID;
+	JLabel labelConfirmed;
+	JCheckBox checkBoxConfirmed;
 	JLabel labelOrderDate;
 	JTextField textFieldOrderDate;
+	JLabel labelCost;
+	JTextField textFieldCost;
 	JLabel labelItemIDAndLoanLength;
 	JComboBox<String> comboBoxItemIDAndLoanLength;
 	JButton buttonSave;
@@ -49,7 +52,7 @@ public class ManageOrder {
 		dialogManageOrder.setResizable(false);
 		dialogManageOrder.setModal(true);
 		dialogManageOrder.setLayout(null);
-		dialogManageOrder.setSize(680, 230);
+		dialogManageOrder.setSize(680, 270);
 
 		labelOrderNumber = new JLabel("Numer zamowienia: ");
 		labelOrderNumber.setBounds(20, 20, 150, 30);
@@ -69,16 +72,12 @@ public class ManageOrder {
 		textFieldClientID.setText("" + order.getClientID());
 		dialogManageOrder.add(textFieldClientID);
 
-		labelWorkerID = new JLabel("ID pracownika: ");
-		labelWorkerID.setBounds(360, 20, 150, 30);
-		dialogManageOrder.add(labelWorkerID);
-		textFieldWorkerID = new JTextField();
-		textFieldWorkerID.setBounds(510, 20, 150, 30);
-		if (order.getWorkerID() == -1)
-			textFieldWorkerID.setText("");
-		else
-			textFieldWorkerID.setText("" + order.getWorkerID());
-		dialogManageOrder.add(textFieldWorkerID);
+		labelConfirmed = new JLabel("Potwierdz zamowienie: ");
+		labelConfirmed.setBounds(360, 20, 150, 30);
+		dialogManageOrder.add(labelConfirmed);
+		checkBoxConfirmed = new JCheckBox();
+		checkBoxConfirmed.setBounds(510, 20, 150, 30);
+		dialogManageOrder.add(checkBoxConfirmed);
 
 		labelOrderDate = new JLabel("Data zamowienia: ");
 		labelOrderDate.setBounds(360, 60, 150, 30);
@@ -89,12 +88,21 @@ public class ManageOrder {
 		int[] parsedDate = parseDate(order.getOrderDate());
 		textFieldOrderDate.setText(parsedDate[0] + "/" + parsedDate[1] + "/" + parsedDate[2]);
 		dialogManageOrder.add(textFieldOrderDate);
+		
+		labelCost = new JLabel("Koszt: ");
+		labelCost.setBounds(20, 100, 150, 30);
+		dialogManageOrder.add(labelCost);
+		textFieldCost = new JTextField();
+		textFieldCost.setBounds(170, 100, 150, 30);
+		textFieldCost.setEnabled(false);
+		textFieldCost.setText((order.getCost() / 100) + "zl");
+		dialogManageOrder.add(textFieldCost);
 
 		labelItemIDAndLoanLength = new JLabel("Wypozyczone sprzety i dlugosc wypozyczenia: ");
-		labelItemIDAndLoanLength.setBounds(110, 100, 300, 30);
+		labelItemIDAndLoanLength.setBounds(110, 140, 300, 30);
 		dialogManageOrder.add(labelItemIDAndLoanLength);
 		comboBoxItemIDAndLoanLength = new JComboBox<String>();
-		comboBoxItemIDAndLoanLength.setBounds(430, 100, 150, 30);
+		comboBoxItemIDAndLoanLength.setBounds(430, 140, 150, 30);
 		for (int i = 0; i < order.getListEquipmentID().size(); i++) {
 			comboBoxItemIDAndLoanLength.addItem("ID: " + order.getListEquipmentID().get(i) + ", Dlugosc:"
 					+ order.getListEquipmentLoanLength().get(i));
@@ -102,38 +110,20 @@ public class ManageOrder {
 		dialogManageOrder.add(comboBoxItemIDAndLoanLength);
 
 		buttonSave = new JButton("Zapisz");
-		buttonSave.setBounds(230, 150, 100, 30);
+		buttonSave.setBounds(230, 190, 100, 30);
 		dialogManageOrder.add(buttonSave);
 
 		buttonCancel = new JButton("Anuluj");
-		buttonCancel.setBounds(350, 150, 100, 30);
+		buttonCancel.setBounds(350, 190, 100, 30);
 		dialogManageOrder.add(buttonCancel);
 	}
 
 	private void initListeners() {
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean found = false;
-				int id = -1;
-				try {
-					id = Integer.parseInt(textFieldWorkerID.getText());
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(dialogManageOrder, "Bledne id");
-					return;
-				}
-
-				for (Worker w : window.getArrayListWorkers())
-					if (w.getWorkerID() == id) {
-						found = true;
-						break;
-					}
 				
-				if(!found){
-						JOptionPane.showMessageDialog(dialogManageOrder, "Zaden pracownik nie ma takiego ID");
-						return;
-				}
-						
-				order.setWorkerID(id);
+				if (checkBoxConfirmed.isSelected())
+					order.setWorkerID(window.getLoggedID());
 				dialogManageOrder.dispose();
 			}
 		});
