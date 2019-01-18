@@ -8,18 +8,20 @@ public class Worker extends Person{
 	private int salary;
 	private int servedClientsAmount;
 	private int personID;
+	private boolean isAdmin;
 	
 	public Worker() {
 		super();
 	}
 	
-	public Worker(int workerID, Date hireDate, int salary, int servedClientsAmount, int personID) {
+	public Worker(int workerID, Date hireDate, int salary, int servedClientsAmount, int personID, boolean isAdmin) {
 		super();
 		this.workerID = workerID;
 		this.hireDate = hireDate;
 		this.salary = salary;
 		this.servedClientsAmount = servedClientsAmount;
 		this.personID = personID;
+		this.isAdmin = isAdmin;
 	}
 
 	public int getWorkerID() {
@@ -60,6 +62,14 @@ public class Worker extends Person{
 
 	public void setPersonID(int personID) {
 		this.personID = personID;
+	}
+	
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 	@Override

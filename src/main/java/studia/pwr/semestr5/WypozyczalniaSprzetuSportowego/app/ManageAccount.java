@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Address;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Client;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Person;
+import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Worker;
 
 public class ManageAccount {
 	private MainWindow mainWindow;
@@ -26,6 +27,7 @@ public class ManageAccount {
 	private String[] dividedPerson;
 	private String[] dividedAddress;
 	private Address address;
+	private boolean isWorker;
 
 	JDialog dialogCreateAccount;
 	JLabel labelLogin;
@@ -58,6 +60,8 @@ public class ManageAccount {
 	JTextField textFieldHouseNumber;
 	JLabel labelFlatNumber;
 	JTextField textFieldFlatNumber;
+	JLabel labelSalary;
+	JTextField textFieldSalary;
 	JLabel labelRequiredFields;
 	JButton buttonCancel;
 	JButton buttonCreateAccount;
@@ -70,6 +74,18 @@ public class ManageAccount {
 	public ManageAccount(MainWindow mainWindow, boolean create) {
 		this.mainWindow = mainWindow;
 		this.create = create;
+		isWorker = false;
+
+		initComponents();
+		initListeners();
+
+		dialogCreateAccount.setVisible(true);
+	}
+
+	public ManageAccount(MainWindow mainWindow, boolean create, boolean isWorker) {
+		this.mainWindow = mainWindow;
+		this.create = create;
+		this.isWorker = isWorker;
 
 		initComponents();
 		initListeners();
@@ -81,6 +97,7 @@ public class ManageAccount {
 		this.mainWindow = mainWindow;
 		this.create = create;
 		this.person = person;
+		this.isWorker = false;
 
 		dividePerson();
 		initComponents();
@@ -159,7 +176,7 @@ public class ManageAccount {
 		dialogCreateAccount.setTitle("Tworzenie konta");
 		if (!create)
 			dialogCreateAccount.setTitle("Edycja konta");
-		dialogCreateAccount.setSize(new Dimension(700, 400));
+		dialogCreateAccount.setSize(new Dimension(700, 420));
 		dialogCreateAccount.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialogCreateAccount.setResizable(false);
 		dialogCreateAccount.setModal(true);
@@ -238,6 +255,15 @@ public class ManageAccount {
 		if (!create)
 			textFieldLastName.setText(dividedPerson[2]);
 		dialogCreateAccount.add(textFieldLastName);
+
+		if (isWorker) {
+			labelSalary = new JLabel("Pensja:");
+			labelSalary.setBounds(30, 330, 150, 30);
+			dialogCreateAccount.add(labelSalary);
+			textFieldSalary = new JTextField();
+			textFieldSalary.setBounds(180, 330, 150, 30);
+			dialogCreateAccount.add(textFieldSalary);
+		}
 
 		labelBirthDate = new JLabel("Data urodzenia: * **");
 		labelBirthDate.setBounds(350, 30, 150, 30);
@@ -331,7 +357,7 @@ public class ManageAccount {
 		dialogCreateAccount.add(textFieldFlatNumber);
 
 		labelRequiredFields = new JLabel("* - wymagane pola       ** - format dd/mm/yyyy       *** - dziewiec cyfr");
-		labelRequiredFields.setBounds(40, 340, 450, 30);
+		labelRequiredFields.setBounds(40, 360, 450, 30);
 		dialogCreateAccount.add(labelRequiredFields);
 
 		buttonCancel = new JButton("Anuluj");
@@ -400,6 +426,7 @@ public class ManageAccount {
 		String street = textFieldStreet.getText();
 		String house_number = textFieldHouseNumber.getText();
 		String flat_number = textFieldFlatNumber.getText();
+		String salary = textFieldSalary.getText();
 
 		if (login.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Login nie moze byc pusty");
@@ -425,12 +452,22 @@ public class ManageAccount {
 					JOptionPane.showMessageDialog(dialogCreateAccount, "Użytkownik o podanym nicku już istnieje!");
 					return;
 				}
+
 			Integer house_number2 = null;
 			Integer flat_number2 = null;
+			int salary2;
+
 			try {
 				house_number2 = Integer.parseInt(textFieldHouseNumber.getText());
 				flat_number2 = Integer.parseInt(textFieldFlatNumber.getText());
 			} catch (Exception ex) {
+			}
+
+			try {
+				salary2 = Integer.parseInt(salary);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(dialogCreateAccount, "Pensja musi byc liczba!");
+				return;
 			}
 
 			int nextAddressID = mainWindow.getArrayListAddresses().get(mainWindow.getArrayListAddresses().size() - 1)
@@ -439,6 +476,8 @@ public class ManageAccount {
 					.getPersonID() + 1;
 			int nextClientID = mainWindow.getArrayListClients().get(mainWindow.getArrayListClients().size() - 1)
 					.getClientID() + 1;
+			int nextWorkerID = mainWindow.getArrayListWorkers().get(mainWindow.getArrayListWorkers().size() - 1)
+					.getWorkerID() + 1;
 
 			try {
 				if (oracle.db_connect()) {
@@ -461,7 +500,12 @@ public class ManageAccount {
 					.add(new Address(nextAddressID, city, postal_code, street, house_number, flat_number));
 			mainWindow.getArrayListPeople().add(new Person(nextPersonID, name, last_name, birth_date, phone_number,
 					nextAddressID, login, password, security_question, security_answer));
-			mainWindow.getArrayListClients().add(new Client(nextClientID, new Date(), 0, null, false, nextPersonID));
+			if (!isWorker)
+				mainWindow.getArrayListClients()
+						.add(new Client(nextClientID, new Date(), 0, null, false, nextPersonID));
+			else
+				mainWindow.getArrayListWorkers()
+						.add(new Worker(nextWorkerID, new Date(), salary2, 0, nextPersonID, false));
 
 			dialogCreateAccount.dispose();
 		}
