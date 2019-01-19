@@ -56,6 +56,7 @@ public class MainWindow {
 	private JFrame mainFrame;
 	private boolean loggedIn;
 	private int loggedID;
+	private Connect connect;
 
 	ArrayList<Client> arrayListClients;
 	ArrayList<Worker> arrayListWorkers;
@@ -174,7 +175,7 @@ public class MainWindow {
 
 	public MainWindow() {
 		initVariables();
-		new TestData(this);
+		//new TestData(this);
 		initComponents(); // tylko tworzenie i dodawanie elementów do okna
 		initListeners(); // tworzenie i obsługa listenerów,
 
@@ -195,6 +196,11 @@ public class MainWindow {
 
 	private void initVariables() {
 		loggedIn = false;
+		
+    	connect = new Connect();
+    	connect.dbConnectAsSpectator();
+    	
+    	
 
 		arrayListClients = new ArrayList<Client>();
 		arrayListWorkers = new ArrayList<Worker>();
@@ -202,7 +208,7 @@ public class MainWindow {
 		arrayListAccounts = new ArrayList<Account>();
 		arrayListAddresses = new ArrayList<Address>();
 		arrayListAssortment = new ArrayList<Assortment>();
-		arrayListModels = new ArrayList<Model>();
+		arrayListModels = connect.dbQueryModels();
 		arrayListOrders = new ArrayList<OrderHistory>();
 		arrayListMaintenances = new ArrayList<MaintenanceHistory>();
 		arrayListRepairs = new ArrayList<RepairHistory>();
@@ -217,6 +223,8 @@ public class MainWindow {
 		itemInfoScreenComponents = new ArrayList<Component>();
 		workerActionsComponents = new ArrayList<Component>();
 		cartActionsComponents = new ArrayList<Component>();
+		
+		connect.db_disconnect();
 	}
 
 	private void initComponents() {
