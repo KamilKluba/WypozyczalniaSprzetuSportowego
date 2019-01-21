@@ -70,6 +70,7 @@ public class MainWindow {
 	ArrayList<OrderHistory> arrayListOrders;
 	ArrayList<MaintenanceHistory> arrayListMaintenances;
 	ArrayList<RepairHistory> arrayListRepairs;
+	ArrayList<Integer> arrayListPopularItems;
 
 	ArrayList<Assortment> arrayListCartItems;
 	ArrayList<Date> arrayListCartDates;
@@ -210,6 +211,7 @@ public class MainWindow {
 		arrayListModels = dbConnection.dbQueryModels();
 		arrayListAssortment = dbConnection.dbQueryAssortment();
 		arrayListOrders = dbConnection.dbQueryOrders();
+		arrayListPopularItems = dbConnection.dbQueryPopularItems();
 
 		arrayListCartItems = new ArrayList<Assortment>();
 		arrayListCartDates = new ArrayList<Date>();
@@ -312,6 +314,9 @@ public class MainWindow {
 		labelPopularItemDesc1 = new JLabel("Popularny przedmiot #1");
 		labelPopularItemDesc1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		labelPopularItemDesc1.setBounds(300, 60, 400, 100);
+		for(Model m : arrayListModels)
+			if(m.getModelID() == arrayListPopularItems.get(0))
+				labelPopularItemDesc1.setText(m.getModelName());
 		mainFrame.add(labelPopularItemDesc1);
 		mainScreenComponents.add(labelPopularItemDesc1);
 
@@ -325,6 +330,9 @@ public class MainWindow {
 		labelPopularItemDesc2 = new JLabel("Popularny przedmiot #2");
 		labelPopularItemDesc2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		labelPopularItemDesc2.setBounds(300, 180, 400, 100);
+		for(Model m : arrayListModels)
+			if(m.getModelID() == arrayListPopularItems.get(1))
+				labelPopularItemDesc2.setText(m.getModelName());
 		mainFrame.add(labelPopularItemDesc2);
 		mainScreenComponents.add(labelPopularItemDesc2);
 
@@ -338,6 +346,9 @@ public class MainWindow {
 		labelPopularItemDesc3 = new JLabel("Popularny przedmiot #3");
 		labelPopularItemDesc3.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		labelPopularItemDesc3.setBounds(300, 300, 400, 100);
+		for(Model m : arrayListModels)
+			if(m.getModelID() == arrayListPopularItems.get(2))
+				labelPopularItemDesc3.setText(m.getModelName());
 		mainFrame.add(labelPopularItemDesc3);
 		mainScreenComponents.add(labelPopularItemDesc3);
 
@@ -351,6 +362,9 @@ public class MainWindow {
 		labelPopularItemDesc4 = new JLabel("Popularny przedmiot #4");
 		labelPopularItemDesc4.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		labelPopularItemDesc4.setBounds(300, 420, 400, 100);
+		for(Model m : arrayListModels)
+			if(m.getModelID() == arrayListPopularItems.get(3))
+				labelPopularItemDesc4.setText(m.getModelName());
 		mainFrame.add(labelPopularItemDesc4);
 		mainScreenComponents.add(labelPopularItemDesc4);
 
@@ -360,10 +374,14 @@ public class MainWindow {
 		buttonPopularItemPhoto5.setBounds(100, 540, 150, 100);
 		mainFrame.add(buttonPopularItemPhoto5);
 		mainScreenComponents.add(buttonPopularItemPhoto5);
+		
 
 		labelPopularItemDesc5 = new JLabel("Popularny przedmiot #5");
 		labelPopularItemDesc5.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		labelPopularItemDesc5.setBounds(300, 540, 400, 100);
+		for(Model m : arrayListModels)
+			if(m.getModelID() == arrayListPopularItems.get(4))
+				labelPopularItemDesc5.setText(m.getModelName());
 		mainFrame.add(labelPopularItemDesc5);
 		mainScreenComponents.add(labelPopularItemDesc5);
 
@@ -423,7 +441,7 @@ public class MainWindow {
 		// ------------------------------------------------------------------------------------
 		labelLogo1 = new JLabel();
 		labelLogo1.setBounds(500, 20, 400, 150);
-		labelLogo1.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		labelLogo1.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo2.png")));
 		mainFrame.add(labelLogo1);
 		itemBrowseScreenComponents.add(labelLogo1);
 
@@ -502,7 +520,7 @@ public class MainWindow {
 		// ELEMENTY SZEGÓŁÓW KAŻDEGO ZE SPRZĘTÓW
 		labelLogo2 = new JLabel();
 		labelLogo2.setBounds(500, 20, 400, 150);
-		labelLogo2.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		labelLogo2.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo2.png")));
 		mainFrame.add(labelLogo2);
 		itemInfoScreenComponents.add(labelLogo2);
 
@@ -528,7 +546,7 @@ public class MainWindow {
 
 		labelItemPhoto = new JLabel();
 		labelItemPhoto.setBounds(50, 200, 150, 150);
-		labelItemPhoto.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		labelItemPhoto.setIcon(new ImageIcon(getClass().getResource("/Resources/przedmiotminiaturka.png")));
 		mainFrame.add(labelItemPhoto);
 		itemInfoScreenComponents.add(labelItemPhoto);
 
@@ -635,7 +653,7 @@ public class MainWindow {
 		// ELEMENTY EKRANU KOSZYK
 		labelLogo3 = new JLabel();
 		labelLogo3.setBounds(500, 20, 400, 150);
-		labelLogo3.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo.png")));
+		labelLogo3.setIcon(new ImageIcon(getClass().getResource("/Resources/Logo2.png")));
 		mainFrame.add(labelLogo3);
 		cartActionsComponents.add(labelLogo3);
 
@@ -728,6 +746,56 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(mainFrame, "Jeszcze sie napisze\n Ludzi: " + arrayListPeople.size()
 						+ "\n Klientow:" + arrayListClients.size() + "\n Adresow: " + arrayListAddresses.size());
+			}
+		});
+		buttonPopularItemPhoto1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Model model = null;
+				for(Model m : arrayListModels)
+					if(m.getModelID() == arrayListPopularItems.get(0))
+						model = m;
+				buttonPopularItemPhoto1.setText(model.getModelName());
+				setupItemInfoScreen(model);
+			}
+		});
+		buttonPopularItemPhoto2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Model model = null;
+				for(Model m : arrayListModels)
+					if(m.getModelID() == arrayListPopularItems.get(1))
+						model = m;
+				buttonPopularItemPhoto2.setText(model.getModelName());
+				setupItemInfoScreen(model);
+			}
+		});
+		buttonPopularItemPhoto3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Model model = null;
+				for(Model m : arrayListModels)
+					if(m.getModelID() == arrayListPopularItems.get(2))
+						model = m;
+				buttonPopularItemPhoto3.setText(model.getModelName());
+				setupItemInfoScreen(model);
+			}
+		});
+		buttonPopularItemPhoto4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Model model = null;
+				for(Model m : arrayListModels)
+					if(m.getModelID() == arrayListPopularItems.get(3))
+						model = m;
+				buttonPopularItemPhoto4.setText(model.getModelName());
+				setupItemInfoScreen(model);
+			}
+		});
+		buttonPopularItemPhoto5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Model model = null;
+				for(Model m : arrayListModels)
+					if(m.getModelID() == arrayListPopularItems.get(4))
+						model = m;
+				buttonPopularItemPhoto5.setText(model.getModelName());
+				setupItemInfoScreen(model);
 			}
 		});
 		// listenery ekranu
@@ -1653,6 +1721,8 @@ public class MainWindow {
 
 	private void setupItemInfoScreen(Model model) {
 		for (Component c : itemBrowseScreenComponents)
+			c.setVisible(false);
+		for (Component c : mainScreenComponents)
 			c.setVisible(false);
 		for (Component c : itemInfoScreenComponents)
 			c.setVisible(true);
