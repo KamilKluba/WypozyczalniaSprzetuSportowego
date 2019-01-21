@@ -16,14 +16,13 @@ public class Assortment {
 	private List<Integer> listOrdersNumber;
 	private List<Integer> listRepairsNumber;
 	private List<Integer> listMaintenancesNumber;
-	
+
 	private List<Date> listDateOfOrder;
 	private List<Integer> listLengthOfOrder;
 
 	public Assortment() {
 		super();
 	}
-
 
 	public Assortment(int itemID, Date pucharseDate, int loansNumber, Date lastLoanDate, boolean availability,
 			Date nextMaintenanceDate, String condition, int modelID) {
@@ -36,14 +35,33 @@ public class Assortment {
 		this.nextMaintenanceDate = nextMaintenanceDate;
 		this.condition = condition;
 		this.modelID = modelID;
-		
+
 		listOrdersNumber = new ArrayList<Integer>();
-		listRepairsNumber =  new ArrayList<Integer>();
-		listMaintenancesNumber =  new ArrayList<Integer>();
+		listRepairsNumber = new ArrayList<Integer>();
+		listMaintenancesNumber = new ArrayList<Integer>();
 		listDateOfOrder = new ArrayList<Date>();
 		listLengthOfOrder = new ArrayList<Integer>();
 	}
 
+	public Assortment(int itemID, Date pucharseDate, int loansNumber, Date lastLoanDate, boolean availability,
+			Date nextMaintenanceDate, String condition, int modelID, ArrayList<Integer> listOrdersNumber,
+			ArrayList<Date> listDateOfOrder, ArrayList<Integer> listLengthOfOrder) {
+		super();
+		this.itemID = itemID;
+		this.pucharseDate = pucharseDate;
+		this.loansNumber = loansNumber;
+		this.lastLoanDate = lastLoanDate;
+		this.availability = availability;
+		this.nextMaintenanceDate = nextMaintenanceDate;
+		this.condition = condition;
+		this.modelID = modelID;
+		this.listOrdersNumber = listOrdersNumber;
+		this.listDateOfOrder = listDateOfOrder;
+		this.listLengthOfOrder = listLengthOfOrder;
+		
+		listRepairsNumber = new ArrayList<Integer>();
+		listMaintenancesNumber = new ArrayList<Integer>();
+	}
 
 	public int getItemID() {
 		return itemID;
@@ -121,22 +139,18 @@ public class Assortment {
 		return listRepairsNumber;
 	}
 
-
 	public void setListRepairsNumber(List<Integer> listRepairsNumber) {
 		this.listRepairsNumber = listRepairsNumber;
 	}
-
 
 	public List<Integer> getListMaintenancesNumber() {
 		return listMaintenancesNumber;
 	}
 
-
 	public void setListMaintenancesNumber(List<Integer> listMaintenancesNumber) {
 		this.listMaintenancesNumber = listMaintenancesNumber;
 	}
 
-	
 	public List<Date> getListDateOfOrder() {
 		return listDateOfOrder;
 	}
@@ -145,21 +159,18 @@ public class Assortment {
 		this.listDateOfOrder = listDateOfOrder;
 	}
 
-
 	public List<Integer> getListLengthOfOrder() {
 		return listLengthOfOrder;
 	}
-
 
 	public void setListLengthOfOrder(List<Integer> listLengthOfOrder) {
 		this.listLengthOfOrder = listLengthOfOrder;
 	}
 
-
 	@Override
 	public String toString() {
-		return itemID + " !&#*&% " + pucharseDate + " !&#*&% " + loansNumber
-				+ " !&#*&% " + lastLoanDate + " !&#*&% " + availability + " !&#*&% "
-				+ nextMaintenanceDate + " !&#*&% " + condition + " !&#*&% " + modelID + " !&#*&% ";
+		return itemID + " !&#*&% " + pucharseDate + " !&#*&% " + loansNumber + " !&#*&% " + lastLoanDate + " !&#*&% "
+				+ availability + " !&#*&% " + nextMaintenanceDate + " !&#*&% " + condition + " !&#*&% " + modelID
+				+ " !&#*&% ";
 	}
 }

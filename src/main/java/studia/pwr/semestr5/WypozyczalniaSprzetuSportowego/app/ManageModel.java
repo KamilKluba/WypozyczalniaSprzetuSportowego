@@ -23,6 +23,7 @@ public class ManageModel {
 	private Model model;
 	private String[] dividedModel;
 	JPanel panelDBContent;
+	private Connect dbConnection;
 
 	JDialog dialogCreateModel;
 	JLabel labelModelID;
@@ -45,9 +46,10 @@ public class ManageModel {
 	public ManageModel() {
 	}
 
-	public ManageModel(ArrayList<Model> arrayListModels, boolean create) {
+	public ManageModel(ArrayList<Model> arrayListModels, boolean create, Connect dbConnection) {
 		this.arrayListModels = arrayListModels;
 		this.create = create;
+		this.dbConnection = dbConnection;
 
 		initComponents();
 		initListeners();
@@ -55,11 +57,13 @@ public class ManageModel {
 		dialogCreateModel.setVisible(true);
 	}
 
-	public ManageModel(ArrayList<Model> arrayListModels, boolean create, Model model, JPanel panelDBContent) {
+	public ManageModel(ArrayList<Model> arrayListModels, boolean create, Model model, JPanel panelDBContent,
+			Connect dbConnection) {
 		this.arrayListModels = arrayListModels;
 		this.create = create;
 		this.model = model;
 		this.panelDBContent = panelDBContent;
+		this.dbConnection = dbConnection;
 
 		divideModel();
 		initComponents();
@@ -212,16 +216,12 @@ public class ManageModel {
 			int damageDeposit = Integer.parseInt(textFieldDeposit.getText());
 			int season_of_use2 = season_of_use ? 1 : 0;
 
-			try {
-				oracle.db_connect();
-				oracle.db_createModel(modelID2, model_name, producer, equipment_type, season_of_use2, costPerDay,
-						damageDeposit);
-				oracle.db_disconnect();
-			} catch (Exception ex) {
-			}
+			Model model = new Model(modelID2, model_name, producer, equipment_type, season_of_use, costPerDay,
+					damageDeposit);
 
-			arrayListModels.add(new Model(modelID2, model_name, producer, equipment_type, season_of_use, costPerDay,
-					damageDeposit));
+			arrayListModels.add(model);
+			dbConnection.dbCreateModel(model);
+			
 			JOptionPane.showMessageDialog(dialogCreateModel, "Dodano model");
 
 			dialogCreateModel.dispose();

@@ -28,6 +28,7 @@ public class ManageAccount {
 	private String[] dividedAddress;
 	private Address address;
 	private boolean isWorker;
+	private Connect dbConnection;
 
 	JDialog dialogCreateAccount;
 	JLabel labelLogin;
@@ -71,10 +72,11 @@ public class ManageAccount {
 
 	// jeśli create jest true, tworzy nowe konto, jeśli false to edytuje
 	// istniejące
-	public ManageAccount(MainWindow mainWindow, boolean create) {
+	public ManageAccount(MainWindow mainWindow, boolean create, Connect dbConnection) {
 		this.mainWindow = mainWindow;
 		this.create = create;
 		isWorker = false;
+		this.dbConnection = dbConnection;
 
 		initComponents();
 		initListeners();
@@ -82,10 +84,11 @@ public class ManageAccount {
 		dialogCreateAccount.setVisible(true);
 	}
 
-	public ManageAccount(MainWindow mainWindow, boolean create, boolean isWorker) {
+	public ManageAccount(MainWindow mainWindow, boolean create, boolean isWorker, Connect dbConnection) {
 		this.mainWindow = mainWindow;
 		this.create = create;
 		this.isWorker = isWorker;
+		this.dbConnection = dbConnection;
 
 		initComponents();
 		initListeners();
@@ -93,11 +96,12 @@ public class ManageAccount {
 		dialogCreateAccount.setVisible(true);
 	}
 
-	public ManageAccount(MainWindow mainWindow, boolean create, Person person) {
+	public ManageAccount(MainWindow mainWindow, boolean create, Person person, Connect dbConnection) {
 		this.mainWindow = mainWindow;
 		this.create = create;
 		this.person = person;
 		this.isWorker = false;
+		this.dbConnection = dbConnection;
 
 		dividePerson();
 		initComponents();
@@ -401,7 +405,6 @@ public class ManageAccount {
 	}
 
 	private void createAccount() {
-		Connect oracle = new Connect();
 		String login = textFieldLogin.getText();
 		String password = String.valueOf(passwordFieldPassword.getPassword());
 		String repeated_password = String.valueOf(passwordFieldRepeatPassword.getPassword());
@@ -426,7 +429,9 @@ public class ManageAccount {
 		String street = textFieldStreet.getText();
 		String house_number = textFieldHouseNumber.getText();
 		String flat_number = textFieldFlatNumber.getText();
-		String salary = textFieldSalary.getText();
+		String salary = null;
+		if (isWorker)
+			salary = textFieldSalary.getText();
 
 		if (login.equals(""))
 			JOptionPane.showMessageDialog(dialogCreateAccount, "Login nie moze byc pusty");
@@ -455,7 +460,7 @@ public class ManageAccount {
 
 			Integer house_number2 = null;
 			Integer flat_number2 = null;
-			int salary2;
+			int salary2 = 0;
 
 			try {
 				house_number2 = Integer.parseInt(textFieldHouseNumber.getText());
@@ -463,12 +468,13 @@ public class ManageAccount {
 			} catch (Exception ex) {
 			}
 
-			try {
-				salary2 = Integer.parseInt(salary);
-			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(dialogCreateAccount, "Pensja musi byc liczba!");
-				return;
-			}
+			if (isWorker)
+				try {
+					salary2 = Integer.parseInt(salary) * 100;
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(dialogCreateAccount, "Pensja musi byc liczba!");
+					return;
+				}
 
 			int nextAddressID = mainWindow.getArrayListAddresses().get(mainWindow.getArrayListAddresses().size() - 1)
 					.getAdressID() + 1;
@@ -479,34 +485,24 @@ public class ManageAccount {
 			int nextWorkerID = mainWindow.getArrayListWorkers().get(mainWindow.getArrayListWorkers().size() - 1)
 					.getWorkerID() + 1;
 
-			try {
-				if (oracle.db_connect()) {
-					oracle.db_createAccount(mainWindow.getArrayListClients().size() + 1, login, password,
-							security_question, security_answer);
-					oracle.db_createAddress(mainWindow.getArrayListAddresses().size() + 1, city, postal_code, street,
-							house_number2, flat_number2);
-					oracle.db_createPerson(mainWindow.getArrayListPeople().size() + 1, name, last_name, birth_date,
-							mainWindow.getArrayListAddresses().size() + 1);
+			Address address = new Address(nextAddressID, city, postal_code, street, house_number, flat_number);
+			mainWindow.getArrayListAddresses().add(address);
+			dbConnection.dbCreateAddress(address);
 
-					oracle.db_createClient(mainWindow.getArrayListClients().size() + 1,
-							mainWindow.getArrayListPeople().size() + 1, mainWindow.getArrayListClients().size() + 1,
-							new Date(), 0, null, 0);
-					oracle.db_disconnect();
-				}
-			} catch (Exception ex) {
+			Person person = new Person(nextPersonID, name, last_name, birth_date, phone_number, nextAddressID, login,
+					password, security_question, security_answer);
+			mainWindow.getArrayListPeople().add(person);
+			dbConnection.dbCreatePerson(person);
+
+			if (!isWorker) {
+				Client client = new Client(nextClientID, new Date(), 0, null, true, nextPersonID);
+				mainWindow.getArrayListClients().add(client);
+				dbConnection.dbCreateClient(client);
+			} else {
+				Worker worker = new Worker(nextWorkerID, new Date(), salary2, 0, nextPersonID, false);
+				mainWindow.getArrayListWorkers().add(worker);
+				dbConnection.dbCreateWorker(worker);
 			}
-
-			mainWindow.getArrayListAddresses()
-					.add(new Address(nextAddressID, city, postal_code, street, house_number, flat_number));
-			mainWindow.getArrayListPeople().add(new Person(nextPersonID, name, last_name, birth_date, phone_number,
-					nextAddressID, login, password, security_question, security_answer));
-			if (!isWorker)
-				mainWindow.getArrayListClients()
-						.add(new Client(nextClientID, new Date(), 0, null, false, nextPersonID));
-			else
-				mainWindow.getArrayListWorkers()
-						.add(new Worker(nextWorkerID, new Date(), salary2, 0, nextPersonID, false));
-
 			dialogCreateAccount.dispose();
 		}
 

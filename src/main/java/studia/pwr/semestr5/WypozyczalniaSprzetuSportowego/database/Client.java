@@ -2,26 +2,24 @@ package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database;
 
 import java.util.Date;
 
-public class Client extends Person{
+public class Client{
 	private int clientID;
 	private Date registrationDate;
 	private int orderQuantity;
 	private Date lastOrderDate;
-	private boolean suspendedAccount;
+	private boolean activeAccount;
 	private int personID;
 	
 	public Client() {
-		super();
 	}
 	
 	public Client(int clientID, Date registrationDate, int orderQuantity, Date lastOrderDate, boolean suspendedAccount,
 			int personID) {
-		super();
 		this.clientID = clientID;
 		this.registrationDate = registrationDate;
 		this.orderQuantity = orderQuantity;
 		this.lastOrderDate = lastOrderDate;
-		this.suspendedAccount = suspendedAccount;
+		this.activeAccount = suspendedAccount;
 		this.personID = personID;
 	}
 
@@ -58,11 +56,11 @@ public class Client extends Person{
 	}
 
 	public boolean isSuspendedAccount() {
-		return suspendedAccount;
+		return activeAccount;
 	}
 
 	public void setSuspendedAccount(boolean suspendedAccount) {
-		this.suspendedAccount = suspendedAccount;
+		this.activeAccount = suspendedAccount;
 	}
 
 	public int getPersonID() {
@@ -76,10 +74,8 @@ public class Client extends Person{
 	@Override
 	public String toString() {
 		return "Client [clientID=" + clientID + ", registrationDate=" + registrationDate + ", orderQuantity="
-				+ orderQuantity + ", lastOrderDate=" + lastOrderDate + ", suspendedAccount=" + suspendedAccount
-				+ ", personID=" + personID + ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName()
-				+ ", getBirthDate()=" + getBirthDate() + ", getAddressID()=" + getAddressID() + ", toString()="
-				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+				+ orderQuantity + ", lastOrderDate=" + lastOrderDate + ", suspendedAccount=" + activeAccount
+				+ ", personID=" + personID;
 	}
 	
 	

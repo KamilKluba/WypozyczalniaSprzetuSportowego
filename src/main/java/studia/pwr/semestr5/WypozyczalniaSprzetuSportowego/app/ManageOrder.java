@@ -16,8 +16,8 @@ import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.OrderHistory;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Worker;
 
 public class ManageOrder {
-	MainWindow window;
-	OrderHistory order;
+	private MainWindow window;
+	private OrderHistory order;
 
 	JDialog dialogManageOrder;
 	JLabel labelOrderNumber;
@@ -77,6 +77,8 @@ public class ManageOrder {
 		dialogManageOrder.add(labelConfirmed);
 		checkBoxConfirmed = new JCheckBox();
 		checkBoxConfirmed.setBounds(510, 20, 150, 30);
+		if(order.getWorkerID() != -1)
+			checkBoxConfirmed.setSelected(true);
 		dialogManageOrder.add(checkBoxConfirmed);
 
 		labelOrderDate = new JLabel("Data zamowienia: ");
@@ -88,7 +90,7 @@ public class ManageOrder {
 		int[] parsedDate = parseDate(order.getOrderDate());
 		textFieldOrderDate.setText(parsedDate[0] + "/" + parsedDate[1] + "/" + parsedDate[2]);
 		dialogManageOrder.add(textFieldOrderDate);
-		
+
 		labelCost = new JLabel("Koszt: ");
 		labelCost.setBounds(20, 100, 150, 30);
 		dialogManageOrder.add(labelCost);
@@ -99,12 +101,14 @@ public class ManageOrder {
 		dialogManageOrder.add(textFieldCost);
 
 		labelItemIDAndLoanLength = new JLabel("Wypozyczone sprzety i dlugosc wypozyczenia: ");
-		labelItemIDAndLoanLength.setBounds(110, 140, 300, 30);
+		labelItemIDAndLoanLength.setBounds(60, 140, 300, 30);
 		dialogManageOrder.add(labelItemIDAndLoanLength);
 		comboBoxItemIDAndLoanLength = new JComboBox<String>();
-		comboBoxItemIDAndLoanLength.setBounds(430, 140, 150, 30);
+		comboBoxItemIDAndLoanLength.setBounds(330, 140, 300, 30);
 		for (int i = 0; i < order.getListEquipmentID().size(); i++) {
-			comboBoxItemIDAndLoanLength.addItem("ID: " + order.getListEquipmentID().get(i) + ", Dlugosc:"
+			int[] parsed_date = parseDate(order.getListEqupimentLoanDate().get(i));
+			comboBoxItemIDAndLoanLength.addItem("ID: " + order.getListEquipmentID().get(i) + ", Data rozpoczecia: "
+					+ parsed_date[0] + "/" + parsed_date[1] + "/" + parsed_date[2] + ", Dlugosc: "
 					+ order.getListEquipmentLoanLength().get(i));
 		}
 		dialogManageOrder.add(comboBoxItemIDAndLoanLength);
@@ -121,9 +125,13 @@ public class ManageOrder {
 	private void initListeners() {
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if (checkBoxConfirmed.isSelected())
-					order.setWorkerID(window.getLoggedID());
+					for(Worker w : window.getArrayListWorkers())
+						if(w.getPersonID() == window.getLoggedID())
+							order.setWorkerID(w.getWorkerID());
+				else
+					order.setWorkerID(-1);
 				dialogManageOrder.dispose();
 			}
 		});
@@ -134,7 +142,7 @@ public class ManageOrder {
 			}
 		});
 	}
-	
+
 	private int[] parseDate(Date date) {
 		String[] parts = date.toString().split(" ");
 		int day = Integer.parseInt(parts[2]);

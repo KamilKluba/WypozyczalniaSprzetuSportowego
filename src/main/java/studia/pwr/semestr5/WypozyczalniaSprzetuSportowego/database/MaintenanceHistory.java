@@ -9,7 +9,7 @@ public class MaintenanceHistory {
 	private List<Integer> listEquipmentID;
 	private int workerID;
 	private int price;
-	
+
 	public MaintenanceHistory() {
 		super();
 	}
@@ -71,6 +71,5 @@ public class MaintenanceHistory {
 				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
 				+ "]";
 	}
-	
-	
+
 }

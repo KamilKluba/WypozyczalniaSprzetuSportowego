@@ -14,6 +14,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
@@ -56,7 +58,7 @@ public class MainWindow {
 	private JFrame mainFrame;
 	private boolean loggedIn;
 	private int loggedID;
-	private Connect connect;
+	private Connect dbConnection;
 
 	ArrayList<Client> arrayListClients;
 	ArrayList<Worker> arrayListWorkers;
@@ -175,7 +177,7 @@ public class MainWindow {
 
 	public MainWindow() {
 		initVariables();
-		//new TestData(this);
+		// new TestData(this);
 		initComponents(); // tylko tworzenie i dodawanie elementów do okna
 		initListeners(); // tworzenie i obsługa listenerów,
 
@@ -196,22 +198,18 @@ public class MainWindow {
 
 	private void initVariables() {
 		loggedIn = false;
-		
-    	connect = new Connect();
-    	connect.dbConnectAsSpectator();
-    	
-    	
 
-		arrayListClients = new ArrayList<Client>();
-		arrayListWorkers = new ArrayList<Worker>();
-		arrayListPeople = new ArrayList<Person>();
+		dbConnection = new Connect();
+		dbConnection.dbConnectAsSpectator();
+
+		arrayListClients = dbConnection.dbQueryClients();
+		arrayListWorkers = dbConnection.dbQueryWorkers();
+		arrayListPeople = dbConnection.dbQueryPeople();
 		arrayListAccounts = new ArrayList<Account>();
-		arrayListAddresses = new ArrayList<Address>();
-		arrayListAssortment = new ArrayList<Assortment>();
-		arrayListModels = connect.dbQueryModels();
-		arrayListOrders = new ArrayList<OrderHistory>();
-		arrayListMaintenances = new ArrayList<MaintenanceHistory>();
-		arrayListRepairs = new ArrayList<RepairHistory>();
+		arrayListAddresses = dbConnection.dbQueryAddresses();
+		arrayListModels = dbConnection.dbQueryModels();
+		arrayListAssortment = dbConnection.dbQueryAssortment();
+		arrayListOrders = dbConnection.dbQueryOrders();
 
 		arrayListCartItems = new ArrayList<Assortment>();
 		arrayListCartDates = new ArrayList<Date>();
@@ -223,8 +221,24 @@ public class MainWindow {
 		itemInfoScreenComponents = new ArrayList<Component>();
 		workerActionsComponents = new ArrayList<Component>();
 		cartActionsComponents = new ArrayList<Component>();
-		
-		connect.db_disconnect();
+
+//		System.out.println(arrayListClients.size() + " " + arrayListWorkers.size() + " " + arrayListPeople.size() + " "
+//				+ arrayListAddresses.size() + " " + arrayListModels.size() + " " + arrayListAssortment.size());
+//		for(Worker w : arrayListWorkers)
+//			System.out.println(w.toString());
+//		for(Person p : arrayListPeople)
+//			System.out.println(p.toString());
+//		for(Assortment a : arrayListAssortment)
+//			System.out.println(a.toString());
+	}
+
+	private void initVariablesAsClient() {
+	}
+
+	private void initVariablesAsWorker() {
+		arrayListMaintenances = dbConnection.dbQueryMaintenances();
+		arrayListRepairs = dbConnection.dbQueryRepairs();
+		;
 	}
 
 	private void initComponents() {
@@ -233,6 +247,29 @@ public class MainWindow {
 		mainFrame = new JFrame("Wypozyczalnia sprzetu sportowego");
 		mainFrame.setSize(new Dimension(1280, 720));
 		mainFrame.setResizable(false);
+		mainFrame.addWindowListener(new WindowListener() {
+			public void windowOpened(WindowEvent e) {
+			}
+
+			public void windowIconified(WindowEvent e) {
+			}
+
+			public void windowDeiconified(WindowEvent e) {
+			}
+
+			public void windowDeactivated(WindowEvent e) {
+			}
+
+			public void windowClosing(WindowEvent e) {
+				dbConnection.db_disconnect();
+			}
+
+			public void windowClosed(WindowEvent e) {
+			}
+
+			public void windowActivated(WindowEvent e) {
+			}
+		});
 		mainFrame.setLayout(null);
 
 		labelLogo = new JLabel();
@@ -1143,7 +1180,7 @@ public class MainWindow {
 					temp_button.setPreferredSize(new Dimension(500, 30));
 					temp_button.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							new ManageMaintenanceRepair(false, arrayListAssortment, m, null);
+							new ManageMaintenanceRepair(false, arrayListAssortment, m, null, dbConnection);
 						}
 					});
 
@@ -1158,8 +1195,15 @@ public class MainWindow {
 				temp_button.setPreferredSize(new Dimension(500, 30));
 				temp_button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						new ManageMaintenanceRepair(false, loggedID, arrayListMaintenances, arrayListRepairs,
-								arrayListAssortment);
+						int worker_ID = -1;
+						for(Worker w : arrayListWorkers) {
+							System.out.println(w.getWorkerID());
+							if(w.getPersonID() == loggedID) {
+								worker_ID = w.getWorkerID();
+								break;
+							}}
+						new ManageMaintenanceRepair(false, worker_ID, arrayListMaintenances, arrayListRepairs,
+								arrayListAssortment, dbConnection);
 					}
 				});
 				temp_button.setBackground(new Color(220, 255, 220));
@@ -1185,11 +1229,11 @@ public class MainWindow {
 				for (int i = 0; i < arrayListRepairs.size(); i++) {
 					RepairHistory r = arrayListRepairs.get(i);
 					JButton temp_button = new JButton(
-							"Numer konserwacji" + r.getRepairNumber() + " ,data konserwacji: " + r.getRepairDate());
+							"Numer naprawy: " + r.getRepairNumber() + " ,data konserwacji: " + r.getRepairDate());
 					temp_button.setPreferredSize(new Dimension(500, 30));
 					temp_button.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							new ManageMaintenanceRepair(true, arrayListAssortment, null, r);
+							new ManageMaintenanceRepair(true, arrayListAssortment, null, r, dbConnection);
 						}
 					});
 
@@ -1199,13 +1243,20 @@ public class MainWindow {
 					listOfDBContent.add(temp_button);
 					panelManageDataAsWorker.add(temp_button, gridBagConstraintsWorkerActions);
 				}
-				
+
 				JButton temp_button = new JButton("Dodaj nowa naprawe");
 				temp_button.setPreferredSize(new Dimension(500, 30));
 				temp_button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						new ManageMaintenanceRepair(true, loggedID, arrayListMaintenances, arrayListRepairs,
-								arrayListAssortment);
+						int worker_ID = -1;
+						for(Worker w : arrayListWorkers) {
+							System.out.println(w.getWorkerID());
+							if(w.getPersonID() == loggedID) {
+								worker_ID = w.getWorkerID();
+								break;
+							}}
+						new ManageMaintenanceRepair(true, worker_ID, arrayListMaintenances, arrayListRepairs,
+								arrayListAssortment, dbConnection);
 					}
 				});
 				temp_button.setBackground(new Color(220, 255, 220));
@@ -1225,7 +1276,7 @@ public class MainWindow {
 
 		buttonAddWorker.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ManageAccount(MainWindow.this, true, true);
+				new ManageAccount(MainWindow.this, true, true, dbConnection);
 			}
 		});
 
@@ -1295,11 +1346,15 @@ public class MainWindow {
 						Date date = Calendar.getInstance().getTime();
 						int total_cost = 0;
 						ArrayList<Integer> arrayListEquipmentID = new ArrayList<Integer>();
+						ArrayList<Date> arrayListEquipmentLoanDate = new ArrayList<Date>();
 						ArrayList<Integer> arrayListEquipmentLoanLength = new ArrayList<Integer>();
 						while (arrayListCartItems.size() > 0) {
+							arrayListCartItems.get(0).setLastLoanDate(new Date());
+							arrayListCartItems.get(0).setLoansNumber(arrayListCartItems.get(0).getLoansNumber() + 1);
 							total_cost += arrayListModels.get(arrayListCartItems.get(0).getModelID() - 1)
 									.getCostPerDay() * arrayListCartLength.get(0);
 							arrayListEquipmentID.add(arrayListCartItems.get(0).getItemID());
+							arrayListEquipmentLoanDate.add(arrayListCartDates.get(0));
 							arrayListEquipmentLoanLength.add(arrayListCartLength.get(0));
 							arrayListCartItems.get(0).getListDateOfOrder().add(arrayListCartDates.get(0));
 							arrayListCartItems.get(0).getListLengthOfOrder().add(arrayListCartLength.get(0));
@@ -1312,8 +1367,17 @@ public class MainWindow {
 						panelItems2.removeAll();
 						panelItems2.repaint();
 
-						arrayListOrders.add(new OrderHistory(orderID, loggedID, date, total_cost, arrayListEquipmentID,
-								arrayListEquipmentLoanLength));
+						int order_client_ID = -1;
+						for (Client c : arrayListClients)
+							if (c.getPersonID() == loggedID) {
+								order_client_ID = c.getClientID();
+								break;
+							}
+
+						OrderHistory order = new OrderHistory(orderID, order_client_ID, date, total_cost,
+								arrayListEquipmentID, arrayListEquipmentLoanDate, arrayListEquipmentLoanLength);
+						arrayListOrders.add(order);
+						dbConnection.dbCreateOrder(order);
 
 						new Thread(new Runnable() {
 							public void run() {
@@ -1353,27 +1417,27 @@ public class MainWindow {
 	}
 
 	private void createAccount() {
-		new ManageAccount(this, true);
+		new ManageAccount(this, true, dbConnection);
 	}
 
 	private void editAccount(Person p) {
-		new ManageAccount(this, false, p);
+		new ManageAccount(this, false, p, dbConnection);
 	}
 
 	private void createModel() {
-		new ManageModel(arrayListModels, true);
+		new ManageModel(arrayListModels, true, dbConnection);
 	}
 
 	private void editModel(Model m) {
-		new ManageModel(arrayListModels, false, m, panelManageDataAsWorker);
+		new ManageModel(arrayListModels, false, m, panelManageDataAsWorker, dbConnection);
 	}
 
 	private void createAssortment() {
-		new ManageAssortment(arrayListAssortment, true);
+		new ManageAssortment(arrayListAssortment, true, dbConnection);
 	}
 
 	private void editAssortment(Assortment a) {
-		new ManageAssortment(arrayListAssortment, false, a, panelManageDataAsWorker);
+		new ManageAssortment(arrayListAssortment, false, a, panelManageDataAsWorker, dbConnection);
 	}
 
 	private void remindPassword() {
@@ -1412,6 +1476,8 @@ public class MainWindow {
 		buttonCreateAccount4.setEnabled(true);
 		buttonWorkerActions.setVisible(false);
 		buttonOrder.setEnabled(false);
+
+		dbConnection.dbConnectAsSpectator();
 	}
 
 	private void logIn() {
@@ -1421,18 +1487,33 @@ public class MainWindow {
 		int personID = 0;
 
 		for (Person p : arrayListPeople) {
+			boolean stop = false;
 			if (p.getLogin().equals(login) && p.getPassword().equals(password)) {
 				correct = true;
 				personID = p.getPersonID();
 				for (Worker w : arrayListWorkers)
 					if (p.getPersonID() == w.getPersonID()) {
 						buttonWorkerActions.setVisible(true);
-						if (w.isAdmin())
+						if (w.isAdmin()) {
 							buttonAddWorker.setEnabled(true);
-						else
+							dbConnection.dbConnectAsAdministrator();
+							System.out.println("admin");
+							initVariablesAsWorker();
+							stop = true;
+							break;
+						} else
 							buttonAddWorker.setEnabled(false);
+						dbConnection.dbConnectAsWorker();
+						System.out.println("pracownik");
+						initVariablesAsWorker();
+						stop = true;
 						break;
 					}
+				if (stop)
+					break;
+				dbConnection.dbConnectAsClient();
+				System.out.println("klient");
+				initVariablesAsClient();
 				break;
 			}
 		}
@@ -1615,18 +1696,23 @@ public class MainWindow {
 			if (a.getModelID() == selectedModel.getModelID())
 				arrayList_items_of_this_model.add(a);
 
-		Assortment assortment = arrayList_items_of_this_model.get(comboBoxItemsOfModel.getSelectedIndex());
+		try {
+			Assortment assortment = arrayList_items_of_this_model.get(comboBoxItemsOfModel.getSelectedIndex());
 
-		// zaznaczenie wszystkich dat w ktorych egzemplarz jest zajety
-		for (int i = 0; i < assortment.getListDateOfOrder().size(); i++) {
-			Date date = assortment.getListDateOfOrder().get(i);
-			int length_of_order = assortment.getListLengthOfOrder().get(i);
-			int[] parsedDate = parseDate(date);
+			// zaznaczenie wszystkich dat w ktorych egzemplarz jest zajety
+			for (int i = 0; i < assortment.getListDateOfOrder().size(); i++) {
 
-			for (int j = parsedDate[0]; j < parsedDate[0] + length_of_order; j++)
-				evaluatorAllItems.add(createDate(j, parsedDate[1], parsedDate[2]));
+				Date date = assortment.getListDateOfOrder().get(i);
+				int length_of_order = assortment.getListLengthOfOrder().get(i);
+				int[] parsedDate = parseDate(date);
+
+				for (int j = parsedDate[0]; j < parsedDate[0] + length_of_order; j++)
+					evaluatorAllItems.add(createDate(j, parsedDate[1], parsedDate[2]));
+			}
+		} catch (Exception e) {
+			return;
 		}
-
+		
 		calendar.getDayChooser().addDateEvaluator(evaluatorAllItems);
 		calendar.getDayChooser().addDateEvaluator(evaluator);
 		calendar.setCalendar(calendar.getCalendar());
@@ -1863,4 +1949,7 @@ public class MainWindow {
 		this.loggedID = loggedID;
 	}
 
+	public static void main(String[] args) {
+		new MainWindow();
+	}
 }

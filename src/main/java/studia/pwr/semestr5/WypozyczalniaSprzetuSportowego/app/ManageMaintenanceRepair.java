@@ -29,10 +29,11 @@ public class ManageMaintenanceRepair {
 	private ArrayList<RepairHistory> arrayListRepairs;
 	private ArrayList<Assortment> arrayListAssortment;
 	private ArrayList<JButton> arrayListButtons;
-	private int loggedID;
+	private int workerID;
 	private boolean editting;
 	private MaintenanceHistory maintenance;
 	private RepairHistory repair;
+	private Connect dbConnection;
 
 	JDialog dialogManageMaintenanceRepair;
 	JLabel labelMRID;
@@ -50,12 +51,13 @@ public class ManageMaintenanceRepair {
 	JButton buttonCancel;
 
 	public ManageMaintenanceRepair(boolean isRepair, ArrayList<Assortment> arrayListAssortment,
-			MaintenanceHistory maintenance, RepairHistory repair) {
+			MaintenanceHistory maintenance, RepairHistory repair, Connect dbConnection) {
 		this.isRepair = isRepair;
 		this.arrayListAssortment = arrayListAssortment;
 		this.maintenance = maintenance;
 		this.repair = repair;
 		this.editting = true;
+		this.dbConnection = dbConnection;
 
 		this.arrayListButtons = new ArrayList<JButton>();
 
@@ -65,15 +67,16 @@ public class ManageMaintenanceRepair {
 		dialogManageMaintenanceRepair.setVisible(true);
 	}
 
-	public ManageMaintenanceRepair(boolean isRepair, int loggedID, ArrayList<MaintenanceHistory> arrayListMaintenances,
-			ArrayList<RepairHistory> arrayListRepairs, ArrayList<Assortment> arrayListAssortment) {
+	public ManageMaintenanceRepair(boolean isRepair, int workerID, ArrayList<MaintenanceHistory> arrayListMaintenances,
+			ArrayList<RepairHistory> arrayListRepairs, ArrayList<Assortment> arrayListAssortment, Connect dbConnection) {
 		this.isRepair = isRepair;
 		this.editting = false;
+		this.dbConnection = dbConnection;
 
 		this.arrayListRepairs = arrayListRepairs;
 		this.arrayListMaintenances = arrayListMaintenances;
 		this.arrayListAssortment = arrayListAssortment;
-		this.loggedID = loggedID;
+		this.workerID = workerID;
 		this.arrayListButtons = new ArrayList<JButton>();
 		this.arrayListMRID = new ArrayList<Integer>();
 
@@ -85,7 +88,7 @@ public class ManageMaintenanceRepair {
 
 	private void initComponents() {
 		dialogManageMaintenanceRepair = new JDialog();
-		dialogManageMaintenanceRepair.setSize(new Dimension(1000, 500));
+		dialogManageMaintenanceRepair.setSize(new Dimension(620, 320));
 		if (isRepair)
 			dialogManageMaintenanceRepair.setTitle("Zarzadzanie naprawa");
 		else
@@ -163,16 +166,16 @@ public class ManageMaintenanceRepair {
 		if (editting) {
 			textFieldPrice.setEnabled(false);
 			if (isRepair)
-				textFieldPrice.setText("" + repair.getPrice());
+				textFieldPrice.setText((repair.getPrice() / 100) + "zl");
 			else
-				textFieldPrice.setText("" + maintenance.getPrice());
+				textFieldPrice.setText((maintenance.getPrice() / 100) + "zl");
 		}
 		dialogManageMaintenanceRepair.add(textFieldPrice);
 
 		labelWorkerID = new JLabel("ID pracownika:");
 		labelWorkerID.setBounds(20, 150, 150, 30);
 		dialogManageMaintenanceRepair.add(labelWorkerID);
-		textFieldWorkerID = new JTextField("" + loggedID);
+		textFieldWorkerID = new JTextField("" + workerID);
 		textFieldWorkerID.setBounds(170, 150, 150, 30);
 		textFieldWorkerID.setEnabled(false);
 		if (editting)
@@ -282,12 +285,16 @@ public class ManageMaintenanceRepair {
 					else
 						nextRepairID = arrayListRepairs.get(arrayListRepairs.size() - 1).getRepairNumber() + 1;
 
-					for(Assortment a : arrayListAssortment)
-						for(Integer i : arrayListMRID)
-							if(a.getItemID() == i)
+					for (Assortment a : arrayListAssortment)
+						for (Integer i : arrayListMRID)
+							if (a.getItemID() == i)
 								a.setCondition("Dobry");
+
+
+					RepairHistory repair = new RepairHistory(nextRepairID, new Date(), arrayListMRID, workerID, price);
 					
-					arrayListRepairs.add(new RepairHistory(nextRepairID, new Date(), arrayListMRID, loggedID, price));
+					arrayListRepairs.add(repair);
+					dbConnection.dbCreateRepair(repair);
 				} else {
 					int nextMaintenanceID;
 					if (arrayListMaintenances.size() == 0)
@@ -295,18 +302,20 @@ public class ManageMaintenanceRepair {
 					else
 						nextMaintenanceID = arrayListMaintenances.get(arrayListMaintenances.size() - 1)
 								.getMaintenanceNumber() + 1;
-					
+
 					Date date = new Date();
 					date.setTime(date.getTime() + (315569088 * 100));
-					System.out.println(date.getTime());
-					for(Assortment a : arrayListAssortment)
-						for(Integer i : arrayListMRID)
-							if(a.getItemID() == i) {
+					for (Assortment a : arrayListAssortment)
+						for (Integer i : arrayListMRID)
+							if (a.getItemID() == i) {
 								a.setNextMaintenanceDate(date);
-								System.out.println(i + " " + a.getItemID() + " " + date);
 							}
-					arrayListMaintenances
-							.add(new MaintenanceHistory(nextMaintenanceID, new Date(), arrayListMRID, loggedID, price));
+
+					MaintenanceHistory maintenance = new MaintenanceHistory(nextMaintenanceID, new Date(),
+							arrayListMRID, workerID, price);
+					System.out.println(maintenance.getMaintenanceNumber() + " " + maintenance.getMaintenanceDate() + " " + maintenance.getWorkerID());
+					arrayListMaintenances.add(maintenance);
+					dbConnection.dbCreateMaintenance(maintenance);
 				}
 				dialogManageMaintenanceRepair.dispose();
 			}

@@ -2,7 +2,7 @@ package studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database;
 
 import java.util.Date;
 
-public class Worker extends Person{
+public class Worker{
 	private int workerID;
 	private Date hireDate;
 	private int salary;
@@ -11,11 +11,9 @@ public class Worker extends Person{
 	private boolean isAdmin;
 	
 	public Worker() {
-		super();
 	}
 	
 	public Worker(int workerID, Date hireDate, int salary, int servedClientsAmount, int personID, boolean isAdmin) {
-		super();
 		this.workerID = workerID;
 		this.hireDate = hireDate;
 		this.salary = salary;
@@ -75,10 +73,7 @@ public class Worker extends Person{
 	@Override
 	public String toString() {
 		return "Worker [workerID=" + workerID + ", hireDate=" + hireDate + ", salary=" + salary
-				+ ", servedClientsAmount=" + servedClientsAmount + ", personID=" + personID + ", getFirstName()="
-				+ getFirstName() + ", getLastName()=" + getLastName() + ", getBirthDate()=" + getBirthDate()
-				+ ", getAddressID()=" + getAddressID() + ", toString()=" + super.toString() + ", getClass()="
-				+ getClass() + ", hashCode()=" + hashCode() + "]";
+				+ ", servedClientsAmount=" + servedClientsAmount + ", personID=" + personID;
 	}
 
 

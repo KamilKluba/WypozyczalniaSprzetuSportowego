@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
@@ -19,12 +20,12 @@ import javax.swing.JTextField;
 import studia.pwr.semestr5.WypozyczalniaSprzetuSportowego.database.Assortment;
 
 public class ManageAssortment {
-
 	private ArrayList<Assortment> arrayListAssortment;
 	private boolean create;
 	private Assortment assortment;
 	private String[] dividedModel;
 	JPanel panelDBContent;
+	Connect dbConnection;
 
 	JDialog dialogManageAssortment;
 
@@ -56,11 +57,12 @@ public class ManageAssortment {
 	public ManageAssortment() {
 	}
 
-	public ManageAssortment(ArrayList<Assortment> arrayListAssortment, boolean create) {
+	public ManageAssortment(ArrayList<Assortment> arrayListAssortment, boolean create, Connect dbConnection) {
 
 		this.arrayListAssortment = arrayListAssortment;
 		this.create = create;
-
+		this.dbConnection = dbConnection;
+		
 		initComponents();
 		initListeners();
 
@@ -68,12 +70,13 @@ public class ManageAssortment {
 	}
 
 	public ManageAssortment(ArrayList<Assortment> arrayListAssortment, boolean create, Assortment assortment,
-			JPanel panelDBContent) {
+			JPanel panelDBContent, Connect dbConnection) {
 
 		this.arrayListAssortment = arrayListAssortment;
 		this.create = create;
 		this.assortment = assortment;
 		this.panelDBContent = panelDBContent;
+		this.dbConnection = dbConnection;
 
 		divideModel();
 		initComponents();
@@ -97,7 +100,7 @@ public class ManageAssortment {
 		if (!create)
 			dialogManageAssortment.setTitle("Edycja sprzętu");
 		dialogManageAssortment.setLayout(null);
-		
+
 		labelAssortmentID = new JLabel("ID sprzetu:");
 		labelAssortmentID.setBounds(20, 30, 180, 30);
 		dialogManageAssortment.add(labelAssortmentID);
@@ -106,7 +109,7 @@ public class ManageAssortment {
 		textFieldAssortmentID.setText("" + (arrayListAssortment.get(arrayListAssortment.size() - 1).getItemID() + 1));
 		textFieldAssortmentID.setBounds(200, 30, 150, 30);
 		if (!create) {
-			textFieldAssortmentID.setText(dividedModel[7]);
+			textFieldAssortmentID.setText(dividedModel[0]);
 		}
 		dialogManageAssortment.add(textFieldAssortmentID);
 
@@ -328,29 +331,27 @@ public class ManageAssortment {
 	}
 
 	private void createAssortment() {
-
-		Connect oracle = new Connect();
 		int assortmentID = arrayListAssortment.get(arrayListAssortment.size() - 1).getItemID() + 1;
 		String modelID = textFieldModelID.getText();
 		java.util.Date buyDate = null;
 		try {
 			buyDate = new SimpleDateFormat("dd/MM/yyyy").parse(textFieldBuyDate.getText());
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 		String rentNumber = textFieldRentNumber.getText();
 		java.util.Date lastRentDate = null;
 		try {
 			lastRentDate = new SimpleDateFormat("dd/MM/yyyy").parse(textFieldLastRentDate.getText());
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 		boolean availability = checkBoxAvailability.isSelected();
 		java.util.Date dateNextMaintenance = null;
 		try {
 			dateNextMaintenance = new SimpleDateFormat("dd/MM/yyyy").parse(textFieldDateNextMaintenance.getText());
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 		String condition = textFieldCondition.getText();
 
@@ -366,23 +367,18 @@ public class ManageAssortment {
 			int availability2;
 			try {
 				modelID2 = Integer.parseInt(textFieldModelID.getText());
-				rentNumber2 = Integer.parseInt(textFieldRentNumber.getText());
 				availability2 = availability ? 1 : 0;
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(dialogManageAssortment, "Bledne dane");
 				return;
 			}
 
-			try {
-				oracle.db_connect();
-				oracle.db_createAssortment(assortmentID, buyDate, rentNumber2, lastRentDate, availability2,
-						dateNextMaintenance, condition, modelID2);
-				oracle.db_disconnect();
-			} catch (Exception ex) {
-			}
+			Assortment assortment = new Assortment(assortmentID, buyDate, 0, lastRentDate, checkBoxAvailability.isSelected(),
+					dateNextMaintenance, condition, modelID2);
 
-			arrayListAssortment.add(new Assortment(assortmentID, buyDate, 0, null,
-					checkBoxAvailability.isSelected(), dateNextMaintenance, condition, modelID2));
+			arrayListAssortment.add(assortment);
+			dbConnection.dbCreateAssortment(assortment);
+
 			JOptionPane.showMessageDialog(dialogManageAssortment, "Dodano sprzet");
 			dialogManageAssortment.dispose();
 		}
