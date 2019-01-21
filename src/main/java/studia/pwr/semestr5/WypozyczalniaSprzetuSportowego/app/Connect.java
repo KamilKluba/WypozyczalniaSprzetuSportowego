@@ -661,6 +661,26 @@ public class Connect {
 		return arrayListRepairs;
 	}
 
+	public ArrayList<Integer> dbQueryPopularItems() {
+		ArrayList<Integer> arrayListPopularItems = new ArrayList<Integer>();
+
+		try {
+			String queryRepair = "SELECT ID_MODELU FROM administrator.Najpopularniejsze_przedmioty";
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(queryRepair);
+			
+			int items_number = 0;
+			while(rs.next() || items_number == 5) {
+				arrayListPopularItems.add(rs.getInt("ID_MODELU"));
+				items_number++;
+			}
+		} catch (Exception e) {
+			System.out.println("popular items");
+		}
+
+		return arrayListPopularItems;
+	}
+
 	private Date convertSqlToUtil(java.sql.Date date) {
 		try {
 			String[] parts = date.toString().split("-");
