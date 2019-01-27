@@ -106,7 +106,12 @@ public class ManageAssortment {
 		dialogManageAssortment.add(labelAssortmentID);
 		textFieldAssortmentID = new JTextField();
 		textFieldAssortmentID.setEditable(false);
-		textFieldAssortmentID.setText("" + (arrayListAssortment.get(arrayListAssortment.size() - 1).getItemID() + 1));
+		int assortmentID = 0;
+		for(int i = 0; i < arrayListAssortment.size(); i++)
+				if(arrayListAssortment.get(i).getItemID() > assortmentID)
+					assortmentID = arrayListAssortment.get(i).getItemID();
+		assortmentID += 1;
+		textFieldAssortmentID.setText("" + assortmentID);
 		textFieldAssortmentID.setBounds(200, 30, 150, 30);
 		if (!create) {
 			textFieldAssortmentID.setText(dividedModel[0]);
@@ -331,7 +336,11 @@ public class ManageAssortment {
 	}
 
 	private void createAssortment() {
-		int assortmentID = arrayListAssortment.get(arrayListAssortment.size() - 1).getItemID() + 1;
+		int assortmentID = 0;
+		for(int i = 0; i < arrayListAssortment.size(); i++)
+				if(arrayListAssortment.get(i).getItemID() > assortmentID)
+					assortmentID = arrayListAssortment.get(i).getItemID();
+		assortmentID += 1;
 		String modelID = textFieldModelID.getText();
 		java.util.Date buyDate = null;
 		try {

@@ -279,11 +279,12 @@ public class ManageMaintenanceRepair {
 					return;
 				}
 				if (isRepair) {
-					int nextRepairID;
-					if (arrayListRepairs.size() == 0)
-						nextRepairID = 1;
-					else
-						nextRepairID = arrayListRepairs.get(arrayListRepairs.size() - 1).getRepairNumber() + 1;
+					int nextRepairID = 0;
+					if (arrayListRepairs.size() != 0)
+						for(int i = 0; i < arrayListRepairs.size(); i++)
+							if(arrayListRepairs.get(i).getRepairNumber() > nextRepairID)
+								nextRepairID = arrayListRepairs.get(i).getRepairNumber();
+					nextRepairID += 1;
 
 					for (Assortment a : arrayListAssortment)
 						for (Integer i : arrayListMRID)
@@ -296,12 +297,12 @@ public class ManageMaintenanceRepair {
 					arrayListRepairs.add(repair);
 					dbConnection.dbCreateRepair(repair);
 				} else {
-					int nextMaintenanceID;
-					if (arrayListMaintenances.size() == 0)
-						nextMaintenanceID = 1;
-					else
-						nextMaintenanceID = arrayListMaintenances.get(arrayListMaintenances.size() - 1)
-								.getMaintenanceNumber() + 1;
+					int nextMaintenanceID = 0;
+					if (arrayListMaintenances.size() != 0)
+						for(int i = 0; i < arrayListMaintenances.size(); i++)
+							if(arrayListMaintenances.get(i).getMaintenanceNumber() > nextMaintenanceID)
+								nextMaintenanceID = arrayListMaintenances.get(i).getMaintenanceNumber();
+					nextMaintenanceID += 1;
 
 					Date date = new Date();
 					date.setTime(date.getTime() + (315569088 * 100));

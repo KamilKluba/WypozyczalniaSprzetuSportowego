@@ -24,6 +24,7 @@ public class ManageModel {
 	private String[] dividedModel;
 	JPanel panelDBContent;
 	private Connect dbConnection;
+	int modelID;
 
 	JDialog dialogCreateModel;
 	JLabel labelModelID;
@@ -95,6 +96,11 @@ public class ManageModel {
 		textFieldModelID = new JTextField();
 		textFieldModelID.setBounds(200, 30, 150, 30);
 		textFieldModelID.setEnabled(false);
+		modelID = 0;
+		for(int i = 0; i < arrayListModels.size(); i++)
+				if(arrayListModels.get(i).getModelID() > modelID)
+					modelID = arrayListModels.get(i).getModelID();
+		modelID += 1;
 		textFieldModelID.setText("" + (arrayListModels.get(arrayListModels.size() - 1).getModelID() + 1));
 		if (!create) {
 			textFieldModelID.setText(dividedModel[0]);
@@ -186,7 +192,6 @@ public class ManageModel {
 
 	private void createModel() {
 		Connect oracle = new Connect();
-		String model_ID = textFieldModelID.getText();
 		String model_name = textFieldModelName.getText();
 		String producer = textFieldProducer.getText();
 		String equipment_type = textFieldEquipmentType.getText();
@@ -206,17 +211,11 @@ public class ManageModel {
 			JOptionPane.showMessageDialog(dialogCreateModel, "Pole kaucja za zniszczenie nie moze byc puste");
 
 		else {
-			for (Model m : arrayListModels)
-				if (Integer.toString(m.getModelID()).equals(model_ID)) {
-					JOptionPane.showMessageDialog(dialogCreateModel, "Model o podanym ID znajduje sie juz w bazie");
-					return;
-				}
-			int modelID2 = Integer.parseInt(textFieldModelID.getText());
 			int costPerDay = Integer.parseInt(textFieldPrice.getText());
 			int damageDeposit = Integer.parseInt(textFieldDeposit.getText());
 			int season_of_use2 = season_of_use ? 1 : 0;
 
-			Model model = new Model(modelID2, model_name, producer, equipment_type, season_of_use, costPerDay,
+			Model model = new Model(modelID, model_name, producer, equipment_type, season_of_use, costPerDay,
 					damageDeposit);
 
 			arrayListModels.add(model);
@@ -229,7 +228,6 @@ public class ManageModel {
 	}
 
 	private void editModel() {
-		String model_ID = textFieldModelID.getText();
 		String model_name = textFieldModelName.getText();
 		String producer = textFieldProducer.getText();
 		String equipment_type = textFieldEquipmentType.getText();

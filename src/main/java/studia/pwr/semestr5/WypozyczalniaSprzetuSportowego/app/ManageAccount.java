@@ -476,14 +476,29 @@ public class ManageAccount {
 					return;
 				}
 
-			int nextAddressID = mainWindow.getArrayListAddresses().get(mainWindow.getArrayListAddresses().size() - 1)
-					.getAdressID() + 1;
-			int nextPersonID = mainWindow.getArrayListPeople().get(mainWindow.getArrayListPeople().size() - 1)
-					.getPersonID() + 1;
-			int nextClientID = mainWindow.getArrayListClients().get(mainWindow.getArrayListClients().size() - 1)
-					.getClientID() + 1;
-			int nextWorkerID = mainWindow.getArrayListWorkers().get(mainWindow.getArrayListWorkers().size() - 1)
-					.getWorkerID() + 1;
+			int nextAddressID = 0;
+			for(int i = 0; i < mainWindow.getArrayListAddresses().size(); i++)
+					if(mainWindow.getArrayListAddresses().get(i).getAdressID() > nextAddressID)
+						nextAddressID = mainWindow.getArrayListAddresses().get(i).getAdressID();
+			nextAddressID += 1;
+			
+			int nextPersonID = 0;
+			for(int i = 0; i < mainWindow.getArrayListPeople().size(); i++)
+					if(mainWindow.getArrayListPeople().get(i).getPersonID() > nextPersonID)
+						nextPersonID = mainWindow.getArrayListPeople().get(i).getPersonID();
+			nextPersonID += 1;
+			
+			int nextClientID = 0;
+			for(int i = 0; i < mainWindow.getArrayListClients().size(); i++)
+					if(mainWindow.getArrayListClients().get(i).getClientID() > nextClientID)
+						nextClientID = mainWindow.getArrayListClients().get(i).getClientID();
+			nextClientID += 1;
+			
+			int nextWorkerID = 0;
+			for(int i = 0; i < mainWindow.getArrayListWorkers().size(); i++)
+					if(mainWindow.getArrayListWorkers().get(i).getWorkerID() > nextWorkerID)
+						nextWorkerID = mainWindow.getArrayListWorkers().get(i).getWorkerID();
+			nextWorkerID += 1;
 
 			Address address = new Address(nextAddressID, city, postal_code, street, house_number, flat_number);
 			mainWindow.getArrayListAddresses().add(address);
